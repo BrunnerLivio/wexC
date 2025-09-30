@@ -41,6 +41,85 @@ export const monkeyBall = ($el) => {
   const friction = 0.95;
   const minVelocity = 0.1; // Stop animation when velocity is very small
 
+  // Helper functions to get coordinates from mouse or touch events
+  const getClientX = (/** @type {MouseEvent | TouchEvent} */ e) => {
+    return e.type.startsWith('touch') ? 
+      (/** @type {TouchEvent} */ (e)).touches[0]?.clientX || (/** @type {TouchEvent} */ (e)).changedTouches[0]?.clientX :
+      (/** @type {MouseEvent} */ (e)).clientX;
+  };
+
+  const getClientY = (/** @type {MouseEvent | TouchEvent} */ e) => {
+    return e.type.startsWith('touch') ? 
+      (/** @type {TouchEvent} */ (e)).touches[0]?.clientY || (/** @type {TouchEvent} */ (e)).changedTouches[0]?.clientY :
+      (/** @type {MouseEvent} */ (e)).clientY;
+  };
+
+  // Generic start drag function
+  const startDrag = (/** @type {MouseEvent | TouchEvent} */ e) => {
+    isDragging = true;
+    lastX = getClientX(e);
+    lastY = getClientY(e);
+    lastTime = Date.now();
+
+    // Cancel any existing momentum animation
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+
+    // Reset velocity when starting a new drag
+    velocityX = 0;
+    velocityY = 0;
+    
+    // Prevent default behavior for touch events
+    if (e.type.startsWith('touch')) {
+      e.preventDefault();
+    }
+  };
+
+  // Generic drag function
+  const handleDrag = (/** @type {MouseEvent | TouchEvent} */ e) => {
+    if (isDragging) {
+      const currentTime = Date.now();
+      const deltaTime = Math.max(currentTime - lastTime, 1); // Prevent division by zero
+
+      const currentX = getClientX(e);
+      const currentY = getClientY(e);
+      const deltaX = currentX - lastX;
+      const deltaY = currentY - lastY;
+
+      // Calculate velocity (pixels per millisecond, scaled up for better effect)
+      velocityX = (deltaX / deltaTime) * 16; // Scale by ~16ms (60fps)
+      velocityY = (deltaY / deltaTime) * 16;
+
+      rotate(deltaX, deltaY);
+
+      lastX = currentX;
+      lastY = currentY;
+      lastTime = currentTime;
+      
+      // Prevent default behavior for touch events to avoid scrolling
+      if (e.type.startsWith('touch')) {
+        e.preventDefault();
+      }
+    }
+  };
+
+  // Generic end drag function
+  const endDrag = () => {
+    if (isDragging) {
+      isDragging = false;
+
+      // Start momentum animation if there's significant velocity
+      if (
+        Math.abs(velocityX) > minVelocity ||
+        Math.abs(velocityY) > minVelocity
+      ) {
+        animationId = requestAnimationFrame(applyMomentum);
+      }
+    }
+  };
+
   const applyMomentum = () => {
     if (
       Math.abs(velocityX) < minVelocity &&
@@ -61,54 +140,14 @@ export const monkeyBall = ($el) => {
     animationId = requestAnimationFrame(applyMomentum);
   };
 
-  $ball.addEventListener("mousedown", (/** @type {MouseEvent} */ e) => {
-    isDragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
-    lastTime = Date.now();
+  // Mouse event listeners
+  $ball.addEventListener("mousedown", startDrag);
+  window.addEventListener("mousemove", handleDrag);
+  window.addEventListener("mouseup", endDrag);
 
-    // Cancel any existing momentum animation
-    if (animationId) {
-      cancelAnimationFrame(animationId);
-      animationId = null;
-    }
-
-    // Reset velocity when starting a new drag
-    velocityX = 0;
-    velocityY = 0;
-  });
-
-  window.addEventListener("mousemove", (/** @type {MouseEvent} */ e) => {
-    if (isDragging) {
-      const currentTime = Date.now();
-      const deltaTime = Math.max(currentTime - lastTime, 1); // Prevent division by zero
-
-      const deltaX = e.clientX - lastX;
-      const deltaY = e.clientY - lastY;
-
-      // Calculate velocity (pixels per millisecond, scaled up for better effect)
-      velocityX = (deltaX / deltaTime) * 16; // Scale by ~16ms (60fps)
-      velocityY = (deltaY / deltaTime) * 16;
-
-      rotate(deltaX, deltaY);
-
-      lastX = e.clientX;
-      lastY = e.clientY;
-      lastTime = currentTime;
-    }
-  });
-
-  window.addEventListener("mouseup", () => {
-    if (isDragging) {
-      isDragging = false;
-
-      // Start momentum animation if there's significant velocity
-      if (
-        Math.abs(velocityX) > minVelocity ||
-        Math.abs(velocityY) > minVelocity
-      ) {
-        animationId = requestAnimationFrame(applyMomentum);
-      }
-    }
-  });
+  // Touch event listeners for mobile compatibility
+  $ball.addEventListener("touchstart", startDrag, { passive: false });
+  window.addEventListener("touchmove", handleDrag, { passive: false });
+  window.addEventListener("touchend", endDrag);
+  window.addEventListener("touchcancel", endDrag); // Handle touch cancellation
 };
