@@ -4,21 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  vite: npm:rolldown-vite@7.1.12
+
 importers:
 
-  .: {}
-
-  packages/client:
+  .:
     devDependencies:
       vite:
         specifier: npm:rolldown-vite@7.1.12
         version: rolldown-vite@7.1.12
-
-  packages/server:
-    dependencies:
-      ws:
-        specifier: ^8.18.3
-        version: 8.18.3
 
 packages:
 
@@ -294,18 +289,6 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
-  ws@8.18.3:
-    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
 snapshots:
 
   '@emnapi/core@1.5.0':
@@ -500,5 +483,3 @@ snapshots:
 
   tslib@2.8.1:
     optional: true
-
-  ws@8.18.3: {}

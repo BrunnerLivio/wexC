@@ -1,0 +1,267 @@
+/* The scene provides the area in which 3d visualizations and operations can take place
+   as well as setting the "camera position".
+   It also serves as the sensitive area for mouse & touch events to rotate the
+   coordinate system of the scene.
+*/
+.scene3d {
+  container: scene3d inline-size;
+  perspective: 200vmax;
+  perspective-origin: right top;
+  position: relative;
+}
+
+/* provides the logical group for the coordinate system */
+.coords {
+  position: absolute; /* position the 000 coords at the center of the scene */
+  top: 50cqh;
+  left: 50cqw;
+
+  --coord-length: 42cqmin;
+  width: var(--coord-length);
+  aspect-ratio: 1 / 1;
+
+  display: grid; /* child positioning  */
+  transform-style: preserve-3d; /* put children in our 3d space */
+  --coords-rotate-x: 0;
+  --coords-rotate-y: 0;
+  --coords-rotate-z: 0;
+  transform-origin: 0 0;
+  transform: rotateZ(calc(var(--coords-rotate-z) * 1deg))
+    rotateY(calc(var(--coords-rotate-y) * 1deg))
+    rotateX(calc(var(--coords-rotate-x) * 1deg));
+  transition: transform 0.25s ease-out; /* simulate a bit of momentum */
+}
+
+.plane {
+  grid-column: 1;
+  grid-row: 1;
+  width: inherit;
+  aspect-ratio: inherit;
+  border-left: 4px solid blue;
+  border-top: 4px solid red;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  font-family: "Helvetica Neue", system-ui;
+  font-size: calc(var(--coord-length) / 3);
+  font-weight: bold;
+  color: transparent;
+  &.show {
+    color: #0008;
+  }
+}
+
+.xz-plane {
+  border-left: 4px solid yellow;
+  transform-origin: center top;
+  transform: rotateX(90deg);
+}
+
+.noSelection {
+  -webkit-user-select: none; /* sadly still needed in 2024 */
+  user-select: none;
+}
+
+:root {
+  --box-width: 6;
+
+  --background-grid-color: white;
+  --background-fill-color: black;
+  --ghost-color: rgba(200, 200, 200, 0.8);
+
+  --grid-size: 57px;
+  --grid-border-size: 2px;
+}
+
+html {
+  overscroll-behavior: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 1fr max-content;
+  margin: 0;
+  background-color: var(--background-fill-color);
+}
+
+footer {
+  padding: 1lh;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 120%;
+}
+.floor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  border: var(--grid-border-size) solid var(--background-grid-color);
+  border-left: 0;
+  border-top: 0;
+  background-image: linear-gradient(
+      to left,
+      var(--background-grid-color) 0,
+      var(--background-grid-color) var(--grid-border-size),
+      transparent 1px,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      var(--background-grid-color) 0,
+      var(--background-grid-color) var(--grid-border-size),
+      transparent 1px,
+      transparent 100%
+    );
+  background-position: 0 0 0 0;
+  background-size: var(--grid-size) var(--grid-size),
+    var(--grid-size) var(--grid-size);
+  & .toplight {
+    position: absolute;
+    inset: 0;
+    /* background-image: radial-gradient(white 30%, black 80%); */
+    opacity: 0.85;
+  }
+}
+
+.tetromino {
+  transform-style: preserve-3d;
+  grid-area: 1/1;
+  display: grid;
+  --z-center: calc(1cqmin * var(--box-width) / 2);
+  --tetromino-x: 0;
+  --tetromino-y: 0;
+  --tetromino-z: 0;
+  translate: calc(var(--tetromino-x) * var(--box-width) * 1cqmin)
+    calc(var(--tetromino-y) * var(--box-width) * 1cqmin);
+  transform: translateZ(
+    calc(var(--tetromino-z) * var(--box-width) * 1cqmin + var(--z-center))
+  );
+  transition: translate 0.2s linear, transform 1s linear;
+}
+
+/* provides the logical group */
+.box {
+  grid-area: 1/1;
+  --x: 0;
+  --y: 0;
+  --z: 0;
+  width: calc(var(--box-width) * 1cqmin);
+  aspect-ratio: 1 / 1;
+  display: grid; /* child positioning  */
+  transform-style: preserve-3d; /* put children in our 3d space */
+  translate: calc(var(--x) * var(--box-width) * 1cqmin)
+    calc(var(--y) * var(--box-width) * 1cqmin)
+    calc(var(--z) * var(--box-width) * 1cqmin);
+  transition: all 0.1s linear;
+}
+
+/* all children go directly on top of each other */
+.box > * {
+  grid-area: 1/1;
+  background: var(--color);
+  opacity: 0.8;
+  border-radius: 3%;
+  border: var(--grid-border-size) solid var(--background-grid-color);
+}
+
+/* the transform origin for rotate is center by default, so rotations must first */
+/* put the respective face in the the center, then rotate.            */
+.box :nth-child(1) {
+  transform: translateZ(var(--z-center));
+} /* move front to center */
+.box :nth-child(2) {
+  transform: rotateY(180deg) translateZ(var(--z-center));
+} /* center, then around Y-axis to the back */
+.box :nth-child(3) {
+  transform: rotateY(-90deg) translateZ(var(--z-center));
+} /* center, then around Y-axis to the left */
+.box :nth-child(4) {
+  transform: rotateY(90deg) translateZ(var(--z-center));
+} /* center, then around Y-axis to the right */
+.box :nth-child(5) {
+  transform: rotateX(90deg) translateZ(var(--z-center));
+} /* center, then around X-axis to the top */
+.box :nth-child(6) {
+  transform: rotateX(-90deg) translateZ(var(--z-center));
+} /* center, then around X-axis to the bottom */
+
+.shapeI .box * {
+  --color: cyan;
+}
+.shapeT .box * {
+  --color: red;
+}
+.shapeO .box * {
+  --color: blueviolet;
+}
+.shapeS .box * {
+  --color: yellow;
+}
+.shapeZ .box * {
+  --color: lime;
+}
+.shapeL .box * {
+  --color: orange;
+}
+.shapeF .box * {
+  --color: white;
+}
+
+.box * {
+  background-color: var(--color);
+  box-shadow: 0 0 3cqmin var(--color);
+}
+
+.ghost .box * {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+.ghost .box :nth-child(2) {
+  /* floor face */
+  background-color: var(--ghost-color);
+  box-shadow: 0 0 3cqmin var(--ghost-color);
+  opacity: 1;
+}
+
+.plane {
+  border: var(--grid-border-size) solid var(--background-grid-color);
+
+  &.show {
+    background-image: linear-gradient(
+        to left,
+        var(--background-grid-color) 0,
+        var(--background-grid-color) var(--grid-border-size),
+        transparent 1px,
+        transparent 100%
+      ),
+      linear-gradient(
+        to bottom,
+        var(--background-grid-color) 0,
+        var(--background-grid-color) var(--grid-border-size),
+        transparent 1px,
+        transparent 100%
+      );
+    background-position: 0 0 0 0;
+    background-size: var(--grid-size) var(--grid-size),
+      var(--grid-size) var(--grid-size);
+  }
+}
+
+.xz-plane {
+  border-top: 0;
+  border-left: 0;
+}
+
+.yz-plane {
+  transform-origin: left top;
+  transform: rotateY(-90deg);
+}
