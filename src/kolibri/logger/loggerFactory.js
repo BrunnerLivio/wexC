@@ -17,7 +17,6 @@ import {
  * Constructs a logger for each log level using the given context.
  * @param { LogContextType } context
  * @returns { LoggerType }
- * @constructor
  * @example
  * const { trace, debug } = LoggerFactory("ch.fhnw");
  * trace("Tobias Wyss") // a log message appended on the loglevel {@link LOG_TRACE}

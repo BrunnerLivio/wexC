@@ -30,7 +30,6 @@ const GAME_STATE  = /** @type { ForeignKeyType } */ PREFIX_IMMORTAL + "GAME_STAT
  */
 
 /**
- * @constructor
  * @param { ObservableMapType } om
  * @param { Function } omPublishStrategy - the strategy on how to set values on the OM
  * @returns { GameStateControllerType }

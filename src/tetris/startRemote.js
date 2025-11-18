@@ -4,6 +4,7 @@ import {projectGame}           from "./game/gameProjector.js";
 import {connect}               from "../server/S8-OM-SSE/connect.js";
 import {LOG_DEBUG, LOG_WARN}   from "../kolibri/logger/logLevel.js";
 import {ObservableMap}         from "../kolibri/observable/observableMap.js";
+import { AxisController } from "./axisController/axisController.js";
 
 defaultConsoleLogging("ch.fhnw.tetris", LOG_INFO);
 
@@ -15,4 +16,5 @@ const gameController = GameController(om);
 
 gameController.startGame(_ => {
     document.body.append(...projectGame(gameController));
+    AxisController(gameController.tetrominoController, gameController);
 });

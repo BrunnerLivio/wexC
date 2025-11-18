@@ -29,7 +29,6 @@ const BOX_PREFIX = "BOX-";
  */
 
 /**
- * @constructor
  * @param { ObservableMapType } om
  * @param { Function } omPublishStrategy - strategy
  * @returns { BoxControllerType }

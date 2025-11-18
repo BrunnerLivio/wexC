@@ -37,7 +37,6 @@ const PLAYER_SELF_ID   = /** @type { ForeignKeyType } */ PLAYER_PREFIX + clientI
  */
 
 /**
- * @constructor
  * @param { ObservableMapType } om
  * @param { Function } omPublishStrategy - the strategy on how to set om values
  * @param { () => void } onSetupFinished - callback when setup is finished as indicated by the fact that we ourselves have become known.

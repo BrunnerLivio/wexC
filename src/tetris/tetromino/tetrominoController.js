@@ -42,7 +42,6 @@ const TETROMINO_CURRENT_ID  = /** @type { ForeignKeyType } */ PREFIX_IMMORTAL + 
  */
 
 /**
- * @constructor
  * @param { ObservableMapType } observableMap
  * @param { Function }          omPublishStrategy - the observableMap set value strategy
  * @param { BoxControllerType } boxController
