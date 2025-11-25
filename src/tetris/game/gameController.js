@@ -45,6 +45,7 @@ const log = LoggerFactory("ch.fhnw.tetris.game.gameController");
  * @property startGame
  * @property restart
  * @property moveRight
+ * @property switchModeController
  */
 
 /**
@@ -370,5 +371,6 @@ const GameController = (om) => {
     tetrominoController,
     restart,
     moveRight: () => movePosition(moveRight),
+    switchModeController,
   };
 };
