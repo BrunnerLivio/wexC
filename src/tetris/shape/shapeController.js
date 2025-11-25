@@ -69,7 +69,6 @@ const topplePitch = swapYZ;
 const rotateYaw = swapXY;
 
 // Bidirectional rotation functions
-// Since each rotation is 90 degrees, applying it 3 times gives the opposite direction (270° = -90°)
 
 /**
  * Roll left (same as base toppleRoll)

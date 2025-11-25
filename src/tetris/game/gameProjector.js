@@ -358,12 +358,6 @@ const projectAxisControl = (gameController) => {
     handle.addEventListener('pointercancel', endDrag);
   });
 
-  // Subscribe to axis state changes for additional visual feedback if needed
-  gameController.axisController?.onAxisStateChanged((state) => {
-    // Optional: Add visual feedback here (e.g., color changes, animations)
-    // Currently handled by the dragging state
-  });
-
   gameController.axisController?.notifySetupFinished(container);
 
   return view;
