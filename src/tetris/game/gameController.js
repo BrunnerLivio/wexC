@@ -20,6 +20,12 @@ import {
   rotateYaw,
   topplePitch,
   toppleRoll,
+  toppleRollLeft,
+  toppleRollRight,
+  topplePitchForward,
+  topplePitchBack,
+  rotateYawLeft,
+  rotateYawRight,
 } from "../shape/shapeController.js";
 import { Walk } from "../../kolibri/sequence/constructors/range/range.js";
 import { LoggerFactory } from "../../kolibri/logger/loggerFactory.js";
@@ -45,6 +51,7 @@ const log = LoggerFactory("ch.fhnw.tetris.game.gameController");
  * @property startGame
  * @property restart
  * @property moveRight
+ * @property axisController
  */
 
 /**
@@ -325,7 +332,15 @@ const GameController = (om) => {
     onSetupFinished
   );
   const joystickPositionController = JoystickPositionController(om);
-  const axisController = AxisController(om);
+  const axisController = AxisController(om, {
+    toppleRollLeft: () => turnShape(toppleRollLeft),
+    toppleRollRight: () => turnShape(toppleRollRight),
+    topplePitchForward: () => turnShape(topplePitchForward),
+    topplePitchBack: () => turnShape(topplePitchBack),
+    rotateYawLeft: () => turnShape(rotateYawLeft),
+    rotateYawRight: () => turnShape(rotateYawRight),
+    playerController,
+  });
   const switchModeController = SwitchModeController(om);
 
   playerController.onWeHaveBecomeActive((_) => {
@@ -370,5 +385,6 @@ const GameController = (om) => {
     tetrominoController,
     restart,
     moveRight: () => movePosition(moveRight),
+    axisController,
   };
 };

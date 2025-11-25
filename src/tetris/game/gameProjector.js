@@ -226,8 +226,75 @@ const projectMain = (gameController) => {
 
 const projectAxisControl = (gameController) => {
   const view = dom(`
-    <div class="axis-control">
-    </div>`);
+    <aside class="axis-control" data-in-charge="other">
+      <div class="axis-frame">
+        <div class="axis-buttons" role="group" aria-label="Rotate tetromino">
+          <button class="axis-button" data-axis="roll-left" aria-label="Roll left">
+            <span class="axis-label">Roll</span>
+            <span class="axis-symbol">←</span>
+          </button>
+          <button class="axis-button" data-axis="roll-right" aria-label="Roll right">
+            <span class="axis-symbol">→</span>
+          </button>
+          <button class="axis-button" data-axis="pitch-forward" aria-label="Pitch forward">
+            <span class="axis-label">Pitch</span>
+            <span class="axis-symbol">↑</span>
+          </button>
+          <button class="axis-button" data-axis="pitch-back" aria-label="Pitch back">
+            <span class="axis-symbol">↓</span>
+          </button>
+          <button class="axis-button" data-axis="yaw-left" aria-label="Yaw left">
+            <span class="axis-label">Yaw</span>
+            <span class="axis-symbol">↺</span>
+          </button>
+          <button class="axis-button" data-axis="yaw-right" aria-label="Yaw right">
+            <span class="axis-symbol">↻</span>
+          </button>
+        </div>
+      </div>
+    </aside>`);
+
+  const elements = Array.from(view);
+  const [container] = /** @type {HTMLElement[]} */ (elements);
+  const buttons = container.querySelectorAll('.axis-button');
+
+  // Bind button handlers
+  buttons.forEach((button) => {
+    const axis = button.getAttribute('data-axis');
+    
+    button.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      if (axis) {
+        button.classList.add('active');
+        gameController.axisController?.triggerRotation(axis);
+      }
+    });
+
+    button.addEventListener('pointerup', () => {
+      button.classList.remove('active');
+    });
+
+    button.addEventListener('pointerleave', () => {
+      button.classList.remove('active');
+    });
+
+    button.addEventListener('pointercancel', () => {
+      button.classList.remove('active');
+    });
+  });
+
+  // Subscribe to axis changes for visual feedback
+  gameController.axisController?.onAxisChanged((axis) => {
+    buttons.forEach((btn) => {
+      if (axis && btn.getAttribute('data-axis') === axis) {
+        btn.classList.add('rotating');
+        setTimeout(() => btn.classList.remove('rotating'), 300);
+      }
+    });
+  });
+
+  gameController.axisController?.notifySetupFinished(container);
+
   return view;
 };
 

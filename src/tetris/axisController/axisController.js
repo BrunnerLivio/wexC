@@ -1,42 +1,152 @@
 export { AxisController };
 
 /**
- *
- * @param {import("../../kolibri/observable/observableMap").ObservableMapType} om
+ * @typedef {"roll-left" | "roll-right" | "pitch-forward" | "pitch-back" | "yaw-left" | "yaw-right" | null} AxisRotation
  */
-const AxisController = (om) => {
-  const render = () => {
-    const $container = document.createElement("button");
-    $container.style.position = "absolute";
-    $container.style.bottom = "10px";
-    $container.style.right = "10px";
-    $container.style.width = "220px";
-    $container.style.height = "220px";
-    $container.style.zIndex = "1000"; // Ensure it's on top
 
-    $container.innerHTML = "Go right";
-    $container.onclick = () => {
-      // alert(1);
-      console.log("Move right");
-      gameController.moveRight();
-    };
+/**
+ * @typedef AxisDependencies
+ * @property {() => void} toppleRollLeft
+ * @property {() => void} toppleRollRight
+ * @property {() => void} topplePitchForward
+ * @property {() => void} topplePitchBack
+ * @property {() => void} rotateYawLeft
+ * @property {() => void} rotateYawRight
+ * @property {{
+ *   areWeInCharge: () => boolean,
+ *   takeCharge: () => void,
+ *   onActivePlayerIdChanged: (callback: Function) => void,
+ * }} playerController
+ */
 
-    // // Create nested ring controls for X and Y axes
-    // const axes = [
-    //   RadialModel({
-    //     axisName: "X",
-    //     radius: 100,
-    //     color: "red",
-    //     initialValue: 0,
-    //   }),
-    // ];
+/**
+ * @typedef {{
+ *   container: HTMLElement,
+ * }} AxisSetupPayload
+ */
 
-    // axes.forEach((axisModel, index) => {
-    //   RadialController(axisModel).render($container);
-    // });
+/**
+ * @param { import("../../kolibri/observable/observableMap").ObservableMapType } om
+ * @param {AxisDependencies} dependencies
+ */
+const AxisController = (om, dependencies) => {
+  const {
+    toppleRollLeft,
+    toppleRollRight,
+    topplePitchForward,
+    topplePitchBack,
+    rotateYawLeft,
+    rotateYawRight,
+    playerController,
+  } = dependencies;
 
-    document.body.appendChild($container);
+  /** @type {Array<(payload: AxisSetupPayload) => void>} */
+  const setupCallbacks = [];
+  /** @type {Array<(axis: AxisRotation) => void>} */
+  const axisObservers = [];
+
+  /** @type {HTMLElement | null} */
+  let containerElement = null;
+  /** @type {AxisRotation} */
+  let currentAxis = null;
+
+  const axisHandlers = {
+    "roll-left": toppleRollLeft,
+    "roll-right": toppleRollRight,
+    "pitch-forward": topplePitchForward,
+    "pitch-back": topplePitchBack,
+    "yaw-left": rotateYawLeft,
+    "yaw-right": rotateYawRight,
   };
 
-  render();
+  const ensureInCharge = () => {
+    if (!playerController) return true;
+    if (playerController.areWeInCharge()) {
+      return true;
+    }
+    playerController.takeCharge();
+    return playerController.areWeInCharge();
+  };
+
+  /**
+   * @param {AxisRotation} axis
+   */
+  const notifyAxisObservers = (axis) => {
+    axisObservers.forEach((observer) => observer(axis));
+  };
+
+  /**
+   * @param {AxisRotation} axis
+   */
+  const setAxis = (axis) => {
+    if (currentAxis === axis) return;
+    currentAxis = axis;
+    notifyAxisObservers(axis);
+  };
+
+  /**
+   * @param {AxisRotation} axis
+   */
+  const triggerRotation = (axis) => {
+    if (!axis) return;
+    if (!ensureInCharge()) return;
+    const action = axisHandlers[axis];
+    action?.();
+    setAxis(axis);
+    // Reset after a short delay for visual feedback
+    setTimeout(() => setAxis(null), 300);
+  };
+
+  /**
+   * @param {(payload: AxisSetupPayload) => void} callback
+   */
+  const onSetupFinished = (callback) => {
+    if (containerElement) {
+      callback({ container: containerElement });
+      return;
+    }
+    setupCallbacks.push(callback);
+  };
+
+  /**
+   * @param {(axis: AxisRotation) => void} observer
+   */
+  const onAxisChanged = (observer) => {
+    axisObservers.push(observer);
+  };
+
+  /**
+   * @param {HTMLElement} container
+   */
+  const notifySetupFinished = (container) => {
+    if (!(container instanceof HTMLElement)) return;
+    containerElement = container;
+    const payload = { container };
+    while (setupCallbacks.length > 0) {
+      const callback = setupCallbacks.shift();
+      callback && callback(payload);
+    }
+  };
+
+  const setupPlayerStateSync = (container) => {
+    if (!playerController) return;
+    const update = () => {
+      container.dataset.inCharge = playerController.areWeInCharge()
+        ? "self"
+        : "other";
+    };
+    playerController.onActivePlayerIdChanged(update);
+    update();
+  };
+
+  onSetupFinished(({ container }) => {
+    setupPlayerStateSync(container);
+  });
+
+  return {
+    onSetupFinished,
+    notifySetupFinished,
+    onAxisChanged,
+    triggerRotation,
+  };
 };
