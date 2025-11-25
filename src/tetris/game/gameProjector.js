@@ -224,10 +224,9 @@ const projectSwitchModeControl = (gameController) => {
         <input type="checkbox" id="mode-switch" aria-label="Switch mode">
         <span class="track"></span>
 
-        <!-- moving round dot that contains only one SVG at a time -->
+        <!-- moving round dot that shows only one SVG at a time -->
         <span class="dot">
-          <!-- left icon (green). preserveAspectRatio slice makes it fill the dot -->
-
+          <!-- left icon (green) -->
           <svg class="icon icon-left"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 45 45"
@@ -239,14 +238,14 @@ const projectSwitchModeControl = (gameController) => {
             </g>
           </svg>
 
-          <!-- right icon (red) -->
+          <!-- right icon (red). viewbox needs to correspond to --switch-width and the cx of the circle to half that -->
           <svg class="icon icon-right"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 168 45"
+              viewBox="0 0 140 45"
               preserveAspectRatio="xMidYMid slice"
               aria-hidden="true">
-            <circle cx="84" cy="22.5" r="22.5" fill="#FB0F5A"/>
-            <g transform="matrix(0.6 0 0 0.6 6 3)">
+            <circle cx="70" cy="22.5" r="22.5" fill="#FB0F5A"/>
+            <g transform="matrix(0.6 0 0 0.6 -6 3)">
               <path d="M147 25C147 24.24 146.58 23.58 145.94 23.24L130.14 14.36C129.82 14.12 129.42 14 129 14C128.58 14 128.18 14.12 127.86 14.36L112.06 23.24C111.42 23.58 111 24.24 111 25V43C111 43.76 111.42 44.42 112.06 44.76L127.86 53.64C128.18 53.88 128.58 54 129 54C129.42 54 129.82 53.88 130.14 53.64L145.94 44.76C146.58 44.42 147 43.76 147 43V25ZM115 26.18L127 19.42V32.84L115 39.58V26.18ZM143 26.18V39.58L131 32.84V19.42L143 26.18Z" fill="white"/>
             </g>
           </svg>

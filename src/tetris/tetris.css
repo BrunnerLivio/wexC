@@ -213,10 +213,10 @@ footer {
 }
 
 :root{
-  --switch-width: 168px;
+  --switch-width: 140px; /* corresponds to viewbox of right icon */
   --switch-height: 75px;
   --track-pad: 10px;
-  --dot-size: 45px;
+  --dot-size: 45px;  /* corresponds to viewbox properties of both left and right icon */
   --travel-gap: 6px; /* small extra offset so dot sits nicely inside stroke */
   --transition: 320ms cubic-bezier(.2,.9,.3,1);
 }
@@ -238,7 +238,6 @@ footer {
     cursor: pointer;
 }
 
-/* track (very plain) */
 .switch .track {
     position: absolute;
     left: var(--track-pad);
@@ -251,13 +250,12 @@ footer {
     pointer-events: none;
 }
 
-/* the dot: a round container that moves left/right */
 .switch .dot {
     position: absolute;
     width: var(--dot-size);
     height: var(--dot-size);
     top: calc((var(--switch-height) - var(--dot-size)) / 2); /* vertically center */
-    left: calc(var(--track-pad) + 3px); /* start a bit inset from left track edge */
+    left: calc(var(--track-pad) + 4px); /* start a bit inset from left track edge */
     border-radius: 50%;
     overflow: hidden; /* crop svg overflow */
     pointer-events: none; /* clicks go to input */
@@ -265,9 +263,9 @@ footer {
     background: transparent; /* icon provides color */
 }
 
-/* move to right when checked (simple calc) */
+/* move to right when checked */
 .switch input:checked + .track + .dot {
-    transform: translateX(calc((100% * 2 + var(--track-pad) - 3px)));
+    transform: translateX(calc((var(--switch-width) / 2) - 1.5px)); /* end a bit inset from right track edge */
 }
 
 /* SVG icons fill the dot */
@@ -288,6 +286,6 @@ footer {
 
 /* focus-visible (keyboard) hint */
 .switch input:focus + .track + .dot {
-    outline: 3px solid rgba(205, 206, 206, 0.18);
+    outline: 3px solid rgba(206, 206, 206, 0.4);
     outline-offset: 2px;
 }
