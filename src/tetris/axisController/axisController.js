@@ -1,7 +1,7 @@
 export { AxisController };
 
 /**
- * @typedef {"roll-left" | "roll-right" | "pitch-forward" | "pitch-back" | "yaw-left" | "yaw-right" | null} AxisRotation
+ * @typedef {"roll" | "pitch" | "yaw"} AxisType
  */
 
 /**
@@ -26,6 +26,15 @@ export { AxisController };
  */
 
 /**
+ * @typedef {{
+ *   axis: AxisType,
+ *   angle: number,
+ * }} AxisState
+ */
+
+const ROTATION_THRESHOLD = 45; // degrees needed to trigger one rotation
+
+/**
  * @param { import("../../kolibri/observable/observableMap").ObservableMapType } om
  * @param {AxisDependencies} dependencies
  */
@@ -42,21 +51,30 @@ const AxisController = (om, dependencies) => {
 
   /** @type {Array<(payload: AxisSetupPayload) => void>} */
   const setupCallbacks = [];
-  /** @type {Array<(axis: AxisRotation) => void>} */
-  const axisObservers = [];
+  /** @type {Array<(state: AxisState) => void>} */
+  const axisStateObservers = [];
 
   /** @type {HTMLElement | null} */
   let containerElement = null;
-  /** @type {AxisRotation} */
-  let currentAxis = null;
+
+  // Track rotation offset for each axis (in degrees)
+  const axisAngles = {
+    roll: 0,
+    pitch: 0,
+    yaw: 0,
+  };
+
+  // Track how many rotations have been applied for each axis
+  const appliedRotations = {
+    roll: 0,
+    pitch: 0,
+    yaw: 0,
+  };
 
   const axisHandlers = {
-    "roll-left": toppleRollLeft,
-    "roll-right": toppleRollRight,
-    "pitch-forward": topplePitchForward,
-    "pitch-back": topplePitchBack,
-    "yaw-left": rotateYawLeft,
-    "yaw-right": rotateYawRight,
+    roll: { left: toppleRollLeft, right: toppleRollRight },
+    pitch: { left: topplePitchForward, right: topplePitchBack },
+    yaw: { left: rotateYawLeft, right: rotateYawRight },
   };
 
   const ensureInCharge = () => {
@@ -69,32 +87,51 @@ const AxisController = (om, dependencies) => {
   };
 
   /**
-   * @param {AxisRotation} axis
+   * @param {AxisState} state
    */
-  const notifyAxisObservers = (axis) => {
-    axisObservers.forEach((observer) => observer(axis));
+  const notifyAxisStateObservers = (state) => {
+    axisStateObservers.forEach((observer) => observer(state));
   };
 
   /**
-   * @param {AxisRotation} axis
+   * Set the rotation angle for an axis and trigger rotations when threshold is crossed
+   * @param {AxisType} axis
+   * @param {number} angle - rotation angle in degrees
    */
-  const setAxis = (axis) => {
-    if (currentAxis === axis) return;
-    currentAxis = axis;
-    notifyAxisObservers(axis);
-  };
-
-  /**
-   * @param {AxisRotation} axis
-   */
-  const triggerRotation = (axis) => {
-    if (!axis) return;
+  const setAxisAngle = (axis, angle) => {
     if (!ensureInCharge()) return;
-    const action = axisHandlers[axis];
-    action?.();
-    setAxis(axis);
-    // Reset after a short delay for visual feedback
-    setTimeout(() => setAxis(null), 300);
+
+    axisAngles[axis] = angle;
+    notifyAxisStateObservers({ axis, angle });
+
+    // Calculate how many rotations should have been applied based on threshold
+    const targetRotations = Math.floor(angle / ROTATION_THRESHOLD);
+    const currentRotations = appliedRotations[axis];
+
+    if (targetRotations !== currentRotations) {
+      const diff = targetRotations - currentRotations;
+      const handlers = axisHandlers[axis];
+
+      // Apply the difference in rotations
+      const handler = diff > 0 ? handlers.right : handlers.left;
+      const count = Math.abs(diff);
+
+      for (let i = 0; i < count; i++) {
+        handler();
+      }
+
+      appliedRotations[axis] = targetRotations;
+    }
+  };
+
+  /**
+   * Reset an axis to zero
+   * @param {AxisType} axis
+   */
+  const resetAxis = (axis) => {
+    axisAngles[axis] = 0;
+    appliedRotations[axis] = 0;
+    notifyAxisStateObservers({ axis, angle: 0 });
   };
 
   /**
@@ -109,10 +146,10 @@ const AxisController = (om, dependencies) => {
   };
 
   /**
-   * @param {(axis: AxisRotation) => void} observer
+   * @param {(state: AxisState) => void} observer
    */
-  const onAxisChanged = (observer) => {
-    axisObservers.push(observer);
+  const onAxisStateChanged = (observer) => {
+    axisStateObservers.push(observer);
   };
 
   /**
@@ -146,7 +183,8 @@ const AxisController = (om, dependencies) => {
   return {
     onSetupFinished,
     notifySetupFinished,
-    onAxisChanged,
-    triggerRotation,
+    onAxisStateChanged,
+    setAxisAngle,
+    resetAxis,
   };
 };

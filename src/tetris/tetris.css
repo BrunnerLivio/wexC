@@ -246,80 +246,70 @@ footer {
   pointer-events: auto;
 }
 
-.axis-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5em;
-  width: 100%;
+.axis-rings {
+  width: 200px;
+  height: 200px;
+  overflow: visible;
 }
 
-.axis-button {
-  position: relative;
-  padding: 0.8em 1em;
-  background: var(--axis-button-bg);
-  border: 2px solid rgba(255, 116, 212, 0.3);
-  border-radius: 0.8em;
-  color: var(--axis-control-color);
-  font-size: 0.9rem;
+.axis-ring {
+  cursor: grab;
+  transition: opacity 0.2s ease;
+}
+
+.axis-ring.dragging {
+  cursor: grabbing;
+}
+
+.ring-track {
+  fill: none;
+  stroke: rgba(255, 116, 212, 0.3);
+  stroke-width: 2;
+  transition: stroke 0.2s ease;
+}
+
+.axis-ring:hover .ring-track {
+  stroke: rgba(255, 116, 212, 0.6);
+}
+
+.axis-ring.dragging .ring-track {
+  stroke: var(--axis-control-color);
+  stroke-width: 3;
+}
+
+.ring-handle {
+  fill: var(--axis-control-color);
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1;
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.axis-ring:hover .ring-handle {
+  fill: #ff8ee0;
+  r: 9;
+  filter: drop-shadow(0 0 8px rgba(255, 116, 212, 0.8));
+}
+
+.axis-ring.dragging .ring-handle {
+  cursor: grabbing;
+  fill: white;
+  r: 10;
+  filter: drop-shadow(0 0 12px rgba(255, 116, 212, 1));
+}
+
+.ring-label {
+  fill: var(--axis-control-color);
+  font-size: 10px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2em;
-  min-width: 3.5em;
-  touch-action: manipulation;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  pointer-events: none;
   user-select: none;
 }
 
-.axis-button:hover {
-  background: linear-gradient(135deg, #2a1d4e 0%, #3a2d6e 100%);
-  border-color: rgba(255, 116, 212, 0.6);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 116, 212, 0.3);
-}
-
-.axis-button:active,
-.axis-button.active {
-  transform: scale(0.95);
-  background: linear-gradient(135deg, #ff74d4 0%, #d45fb5 100%);
-  border-color: var(--axis-button-active);
-  color: white;
-  box-shadow: 0 0 20px rgba(255, 116, 212, 0.6),
-    inset 0 0 10px rgba(255, 255, 255, 0.3);
-}
-
-.axis-button.rotating {
-  animation: axis-button-blink 0.3s ease-in-out;
-}
-
-@keyframes axis-button-blink {
-  0%, 100% {
-    border-color: rgba(255, 116, 212, 0.3);
-    box-shadow: none;
-  }
-  50% {
-    border-color: var(--axis-button-active);
-    box-shadow: 0 0 20px rgba(255, 116, 212, 0.8),
-      inset 0 0 10px rgba(255, 116, 212, 0.4);
-  }
-}
-
-.axis-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.8;
-}
-
-.axis-symbol {
-  font-size: 1.3rem;
-  line-height: 1;
-}
-
-.axis-button:nth-child(2n) .axis-label {
-  display: none;
+.axis-ring.dragging .ring-label {
+  fill: white;
 }
 
 /* Responsive adjustments */
@@ -328,12 +318,8 @@ footer {
     inset: auto 1em 1em auto;
   }
   
-  .axis-button {
-    padding: 0.6em 0.8em;
-    min-width: 3em;
-  }
-  
-  .axis-symbol {
-    font-size: 1.1rem;
+  .axis-rings {
+    width: 160px;
+    height: 160px;
   }
 }
