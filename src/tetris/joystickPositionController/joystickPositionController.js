@@ -44,7 +44,7 @@ const JoystickPositionController = () => {
    */
   const startRepeatingMove = (direction) => {
     if (!direction) return;
-    emitDirectionEvent(direction);
+
     stopRepeatingMove();
     repeatHandle = window.setInterval(() => {
       emitDirectionEvent(direction);
@@ -57,6 +57,7 @@ const JoystickPositionController = () => {
   const setDirection = (direction) => {
     if (currentDirection === direction) return;
     currentDirection = direction;
+    emitDirectionEvent(direction);
     stopRepeatingMove();
     if (direction) {
       startRepeatingMove(direction);
@@ -78,12 +79,12 @@ const JoystickPositionController = () => {
     const x = event.clientX - rect.left - rect.width / 2;
     const y = event.clientY - rect.top - rect.height / 2;
 
-    const visualLimit = Math.min(rect.width, rect.height) * 0.3;
+    const visualLimit = 24;
     const clampedX = clamp(x, visualLimit);
     const clampedY = clamp(y, visualLimit);
     centerOffset.setValue({ x: clampedX, y: clampedY });
 
-    const deadZone = Math.min(rect.width, rect.height) * 0.12;
+    const deadZone = 12;
     if (Math.hypot(x, y) < deadZone) {
       return null;
     }

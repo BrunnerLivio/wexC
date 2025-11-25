@@ -327,12 +327,6 @@ const GameController = (om) => {
     onSetupFinished
   );
 
-  //  {
-  //   moveLeft: () => movePosition(moveLeft),
-  //   moveRight: () => movePosition(moveRight),
-  //   moveUp: () => movePosition(moveBack),
-  //   moveDown: () => movePosition(moveForw),
-  // }
   const joystickPositionController = JoystickPositionController();
   const axisController = AxisController(om);
   const switchModeController = SwitchModeController(om);
