@@ -48,7 +48,6 @@ function checkWarning(list) {
  * @template _T_
  * @param    {!_T_} value      - the initial value to set. Mandatory.
  * @returns  { IObservable<_T_> }
- * @constructor
  * @example
  * const obs = Observable("");
  * obs.onChange(val => console.log(val));

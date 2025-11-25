@@ -11,9 +11,14 @@ export { projectGame };
 const log = LoggerFactory("ch.fhnw.tetris.gameProjector");
 
 /**
+ * @param {HTMLCollection} collection
+ * @returns {HTMLElement[]}
+ */
+
+/**
  * Create the control panel view and bind to the controller actions
  * @param { import("./gameController.js").GameControllerType } gameController
- * @return { HTMLCollection }
+ * @return { HTMLElement[] }
  */
 const projectControlPanel = (gameController) => {
   const view = dom(`
@@ -77,10 +82,13 @@ const projectControlPanel = (gameController) => {
  * Create the main view and bind to the main key bindings
  * @impure sets the main view
  * @param { import("./gameController.js").GameControllerType } gameController
- * @return { HTMLCollection }
+ * @return { HTMLElement[] }
  */
 const projectMain = (gameController) => {
-  const boxFaceDivs = (6).times((_) => "<div class='face'></div>").join("");
+  const boxFaceDivs = Array.from(
+    { length: 6 },
+    () => "<div class='face'></div>"
+  ).join("");
 
   const mainElements = dom(`
         <main id="main" class="scene3d noSelection">
@@ -240,8 +248,42 @@ const projectSwitchModeControl = (gameController) => {
 
 const projectJoystickPositionControl = (gameController) => {
   const view = dom(`
-    <div class="joystick-position-control">
-    </div>`);
+    <aside class="joystick-position-control">
+      <div class="joystick-frame">
+        <div class="joystick-pad" role="group" aria-label="Move tetromino">
+          <div class="joystick-border joystick-border-up" data-direction="up"></div>
+          <div class="joystick-border joystick-border-right" data-direction="right"></div>
+          <div class="joystick-border joystick-border-down" data-direction="down"></div>
+          <div class="joystick-border joystick-border-left" data-direction="left"></div>
+          <div class="joystick-center">
+            <div class="joystick-center-ring"></div>
+            <div class="joystick-center-ring"></div>
+          </div>
+        </div>
+      </div>
+    </aside>`);
+
+  const mainElement = view[0];
+  const [padElement] = select(mainElement, ".joystick-pad");
+
+  gameController.joystickPositionController.registerPointerHandlers(padElement);
+  gameController.joystickPositionController.resetCenterOffset(padElement, 0, 0);
+
+  gameController.joystickPositionController.onCenterOffsetChanged(
+    ({ x, y }) => {
+      padElement.style.setProperty("--joystick-center-offset-x", `${x}px`);
+      padElement.style.setProperty("--joystick-center-offset-y", `${y}px`);
+    }
+  );
+
+  gameController.joystickPositionController.onDirectionChanged((direction) => {
+    if (direction) {
+      padElement.dataset.direction = direction;
+    } else {
+      delete padElement.dataset.direction;
+    }
+  });
+
   return view;
 };
 
