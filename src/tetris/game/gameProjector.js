@@ -286,6 +286,49 @@ const projectAxisControl = (gameController) => {
   // Track dragging state
   let dragState = null;
 
+  // Global pointer move handler
+  const handlePointerMove = /** @param {PointerEvent} event */ (event) => {
+    if (!dragState) return;
+    
+    event.preventDefault();
+    const currentPointerAngle = calculateAngle(event, svg);
+    
+    // Calculate relative rotation from start
+    let deltaAngle = currentPointerAngle - dragState.startAngle;
+    
+    // Handle 360° wrap-around
+    if (deltaAngle > 180) deltaAngle -= 360;
+    if (deltaAngle < -180) deltaAngle += 360;
+    
+    dragState.currentAngle = deltaAngle;
+    
+    // Update visual rotation
+    updateRingRotation(dragState.ring, deltaAngle);
+    
+    // Notify controller (which will trigger rotations at threshold)
+    gameController.axisController?.setAxisAngle(dragState.axis, Math.abs(deltaAngle));
+  };
+
+  // Global pointer end handler
+  const handlePointerEnd = () => {
+    if (!dragState) return;
+    
+    dragState.ring.classList.remove('dragging');
+    
+    // Reset visual rotation
+    updateRingRotation(dragState.ring, 0);
+    
+    // Reset controller state
+    gameController.axisController?.resetAxis(dragState.axis);
+    
+    // Remove global listeners
+    document.removeEventListener('pointermove', handlePointerMove);
+    document.removeEventListener('pointerup', handlePointerEnd);
+    document.removeEventListener('pointercancel', handlePointerEnd);
+    
+    dragState = null;
+  };
+
   // Bind ring drag handlers
   rings.forEach((ring) => {
     const axis = ring.getAttribute('data-axis');
@@ -295,54 +338,21 @@ const projectAxisControl = (gameController) => {
 
     handle.addEventListener('pointerdown', /** @param {PointerEvent} event */ (event) => {
       event.preventDefault();
-      handle.setPointerCapture(event.pointerId);
+      event.stopPropagation();
       
       ring.classList.add('dragging');
       dragState = {
         axis,
+        ring,
         startAngle: calculateAngle(event, svg),
         currentAngle: 0,
       };
+      
+      // Add global listeners for move and end
+      document.addEventListener('pointermove', handlePointerMove);
+      document.addEventListener('pointerup', handlePointerEnd);
+      document.addEventListener('pointercancel', handlePointerEnd);
     });
-
-    handle.addEventListener('pointermove', /** @param {PointerEvent} event */ (event) => {
-      if (!dragState || dragState.axis !== axis) return;
-      
-      event.preventDefault();
-      const currentPointerAngle = calculateAngle(event, svg);
-      
-      // Calculate relative rotation from start
-      let deltaAngle = currentPointerAngle - dragState.startAngle;
-      
-      // Handle 360° wrap-around
-      if (deltaAngle > 180) deltaAngle -= 360;
-      if (deltaAngle < -180) deltaAngle += 360;
-      
-      dragState.currentAngle = deltaAngle;
-      
-      // Update visual rotation
-      updateRingRotation(ring, deltaAngle);
-      
-      // Notify controller (which will trigger rotations at threshold)
-      gameController.axisController?.setAxisAngle(axis, Math.abs(deltaAngle));
-    });
-
-    const endDrag = () => {
-      if (!dragState || dragState.axis !== axis) return;
-      
-      ring.classList.remove('dragging');
-      
-      // Reset visual rotation
-      updateRingRotation(ring, 0);
-      
-      // Reset controller state
-      gameController.axisController?.resetAxis(axis);
-      
-      dragState = null;
-    };
-
-    handle.addEventListener('pointerup', endDrag);
-    handle.addEventListener('pointercancel', endDrag);
   });
 
   gameController.axisController?.notifySetupFinished(container);
