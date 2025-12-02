@@ -1,4 +1,4 @@
-export { registerForMouseAndTouch }
+export { registerForMouseAndTouch };
 
 const registerForMouseAndTouch = (scene, consumeEvents=false) => {
     const coords = scene.querySelector(".coords");
@@ -52,6 +52,4 @@ const registerForMouseAndTouch = (scene, consumeEvents=false) => {
         scene.onmousemove = undefined;
         scene.ontouchmove = undefined;
     };
-    scene.ontouchstart = scene.onmousedown;   // handle mouse and touch events identically
-    scene.ontouchend   = scene.onmouseup;
 };
