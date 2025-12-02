@@ -242,7 +242,7 @@ footer {
 
 .joystick-position-control {
   position: fixed;
-  inset: 6.5em auto auto 1.6em;
+  inset: 1.5em auto auto 1.5em;
   z-index: 12;
   display: grid;
   gap: 0.6em;
@@ -402,7 +402,9 @@ footer {
     display: inline-block;
     width: var(--switch-width);
     height: var(--switch-height);
-    position: relative;
+    position: fixed;
+    inset: auto auto 2em 1.5em;
+    z-index: 12;
 }
 
 /* keep input accessible but visually hidden */
@@ -469,12 +471,16 @@ footer {
 
 .axis-control {
   position: fixed;
-  inset: 6.5em 1.6em auto auto;
+  inset: 0 2em 0 auto;
   z-index: 12;
-  display: grid;
-  gap: 0.6em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3em;
   color: var(--axis-control-color);
   pointer-events: none;
+  width: 200px;
 }
 
 .axis-control[data-in-charge="other"] .axis-frame {
@@ -482,27 +488,29 @@ footer {
 }
 
 .axis-frame {
-  padding: 0.9em;
-  border-radius: 1.5em;
-  background: linear-gradient(135deg, #1a0d2e 0%, #2a1d4e 100%);
-  box-shadow: 0 8px 32px rgba(255, 116, 212, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  width: 100%;
+  padding: 0;
+  border-radius: 50%;
+  box-shadow: none;
   display: grid;
   place-items: center;
   transition: opacity 0.2s ease-out;
   pointer-events: auto;
+  position: relative;
 }
 
 .axis-rings {
-  width: 200px;
-  height: 200px;
+  position: absolute;
+  right: -100%;
+  width: 400px;
+  height: 500px;
   overflow: visible;
   touch-action: none;
 }
 
 .axis-ring {
   cursor: grab;
-  transition: opacity 0.2s ease;
+  transition: all 0.3s ease;
   touch-action: none;
 }
 
@@ -512,48 +520,52 @@ footer {
 
 .ring-track {
   fill: none;
-  stroke: rgba(255, 116, 212, 0.3);
+  opacity: 0.2;
   stroke-width: 2;
-  transition: stroke 0.2s ease;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 15px currentColor);
 }
 
 .axis-ring:hover .ring-track {
-  stroke: rgba(255, 116, 212, 0.6);
+  opacity: 0.4;
+  filter: drop-shadow(0 0 25px currentColor);
 }
 
 .axis-ring.dragging .ring-track {
-  stroke: var(--axis-control-color);
+  opacity: 0.6;
   stroke-width: 3;
+  filter: drop-shadow(0 0 35px currentColor);
 }
 
 .ring-handle {
-  fill: var(--axis-control-color);
-  stroke: rgba(255, 255, 255, 0.3);
-  stroke-width: 1;
+  fill: rgba(255, 255, 255, 0.8);
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 2;
   cursor: grab;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   touch-action: none;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
 }
 
 .axis-ring:hover .ring-handle {
-  fill: #ff8ee0;
-  r: 9;
-  filter: drop-shadow(0 0 8px rgba(255, 116, 212, 0.8));
+  fill: white;
+  r: 10;
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1));
 }
 
 .axis-ring.dragging .ring-handle {
   cursor: grabbing;
   fill: white;
-  r: 10;
-  filter: drop-shadow(0 0 12px rgba(255, 116, 212, 1));
+  r: 12;
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 1));
 }
 
 .ring-label {
-  fill: var(--axis-control-color);
-  font-size: 10px;
-  font-weight: 600;
+  fill: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   pointer-events: none;
   user-select: none;
 }
@@ -562,14 +574,31 @@ footer {
   fill: white;
 }
 
+/* Color rings differently based on axis */
+.axis-ring[data-axis="roll"] .ring-track,
+.axis-ring[data-axis="roll"] .ring-handle {
+  stroke: #00ffff;
+}
+
+.axis-ring[data-axis="pitch"] .ring-track,
+.axis-ring[data-axis="pitch"] .ring-handle {
+  stroke: #afff02;
+}
+
+.axis-ring[data-axis="yaw"] .ring-track,
+.axis-ring[data-axis="yaw"] .ring-handle {
+  stroke: #fff;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .axis-control {
-    inset: auto 1em 1em auto;
+    inset: 0 1em 0 auto;
+    gap: 2em;
   }
   
   .axis-rings {
-    width: 160px;
-    height: 160px;
+    width: 150px;
+    height: 400px;
   }
 }

@@ -235,21 +235,21 @@ const projectAxisControl = (gameController) => {
           <!-- Roll ring (outer) -->
           <g class="axis-ring" data-axis="roll">
             <circle class="ring-track" cx="100" cy="100" r="85" />
-            <circle class="ring-handle" cx="100" cy="15" r="8" />
+            <circle class="ring-handle" cx="15" cy="100" r="8" />
             <text class="ring-label" x="100" y="8" text-anchor="middle">Roll</text>
           </g>
           
           <!-- Pitch ring (middle) -->
           <g class="axis-ring" data-axis="pitch">
             <circle class="ring-track" cx="100" cy="100" r="65" />
-            <circle class="ring-handle" cx="100" cy="35" r="8" />
+            <circle class="ring-handle" cx="35" cy="100" r="8" />
             <text class="ring-label" x="100" y="28" text-anchor="middle">Pitch</text>
           </g>
           
           <!-- Yaw ring (inner) -->
           <g class="axis-ring" data-axis="yaw">
             <circle class="ring-track" cx="100" cy="100" r="45" />
-            <circle class="ring-handle" cx="100" cy="55" r="8" />
+            <circle class="ring-handle" cx="55" cy="100" r="8" />
             <text class="ring-label" x="100" y="48" text-anchor="middle">Yaw</text>
           </g>
         </svg>
