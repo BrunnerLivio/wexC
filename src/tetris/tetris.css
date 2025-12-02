@@ -542,17 +542,14 @@ footer {
 
 .axis-frame {
     width: 100%;
-    padding: 0;
-    border-radius: 50%;
-    box-shadow: none;
-    display: grid;
-    place-items: center;
-    pointer-events: auto;
+    height: 100%;
     position: relative;
 }
 
 .axis-rings {
     position: absolute;
+    top: 50%;
+    margin-top: -250px;
     right: -100%;
     width: 400px;
     height: 500px;
