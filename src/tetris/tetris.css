@@ -86,7 +86,11 @@ body {
     grid-template-columns: 100%;
     grid-template-rows: 1fr max-content;
     margin: 0;
-    background: linear-gradient(in srgb-linear, blue, orange);
+    /* todo! design animation for use orientation horizontal */
+    background-image: url('../../img/background/synthwave-bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 footer {
@@ -103,7 +107,7 @@ footer {
     width: 100%;
     height: 100%;
     background-image: repeating-conic-gradient(
-        transparent 0deg 90deg,
+        cyan 0deg 90deg,
         black 90deg 180deg
     );
     background-size: calc(var(--box-width) * 2) calc(var(--box-width) * 2);
@@ -168,7 +172,7 @@ footer {
     background: grey;
     opacity: 0.8;
     border-radius: 3%;
-    border: 1px solid #c9ff;
+    border: 1px solid #9c5bb2ae;
 }
 
 /* the transform origin for rotate is center by default, so rotations must first */
@@ -205,34 +209,34 @@ footer {
 /* center, then around X-axis to the bottom */
 
 .charI .face {
-    background-color: cyan;
+    background-color: rgb(42, 255, 255);
 }
 .charT .face {
-    background-color: red;
+    background-color: rgb(108, 255, 35);
 }
 .charO .face {
-    background-color: blueviolet;
+    background-color: rgb(155, 49, 255);
 }
 .charS .face {
-    background-color: yellow;
+    background-color: rgb(255, 255, 46);
 }
 .charZ .face {
-    background-color: lime;
+    background-color: rgb(47, 252, 146);
 }
 .charL .face {
-    background-color: orange;
+    background-color: rgb(254, 182, 49);
 }
 .charF .face {
     background-color: white;
 }
 .branch .face {
-    background-color: magenta;
+    background-color: rgb(255, 41, 255);
 }
 .screwRight .face {
-    background-color: yellow;
+    background-color: rgb(56, 42, 255);
 }
 .screwLeft .face {
-    background-color: lime;
+    background-color: rgb(255, 42, 145);
 }
 
 .ghost .face {
@@ -242,16 +246,16 @@ footer {
 
 .ghost.show .face:nth-child(2) {
     /* floor face */
-    background-color: yellow;
-    box-shadow: 0 0 3cqmin yellow;
+    background-color: cyan;
+    box-shadow: 0 0 3cqmin cyan;
     opacity: 1;
 }
 
 .plane {
-    border: 4px solid #99fe;
+    border: 4px solid #9c5bb2ae;
 
     &.show {
-        background: #99f9;
+        background: #9c5bb26c;
     }
 }
 
