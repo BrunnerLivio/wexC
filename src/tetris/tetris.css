@@ -17,7 +17,7 @@
     --color-green-300: #ECFFC2FF;
     --color-green-200: #F5FFE0FF;
     --color-red-500: #FB0F5AFF;
-    --color-red-400: #ff6e9c;
+    --color-red-400: #FF6D9BFF;
     --color-red-300: #FFC2D6FF;
     --color-red-200: #FFE0EAFF;
     --color-blue-500: #5DA9FFFF;
@@ -555,6 +555,7 @@ footer {
     height: 500px;
     overflow: visible;
     touch-action: none;
+    pointer-events: auto;
 }
 
 .axis-ring {
@@ -574,7 +575,7 @@ footer {
 }
 
 /* Drop shadows for each ring color */
-.axis-ring[data-axis='roll'] .ring-track-tetronimo {
+.axis-ring[data-axis='roll'] .ring-track-tetromino {
     filter: drop-shadow(0 0 4px #5DA9FF);
 }
 
@@ -582,7 +583,7 @@ footer {
     filter: drop-shadow(0 0 4px #8447FF);
 }
 
-.axis-ring[data-axis='pitch'] .ring-track-tetronimo {
+.axis-ring[data-axis='pitch'] .ring-track-tetromino {
     filter: drop-shadow(0 0 4px #02FFFF);
 }
 
@@ -590,7 +591,7 @@ footer {
     filter: drop-shadow(0 0 4px #FF35D0);
 }
 
-.axis-ring[data-axis='yaw'] .ring-track-tetronimo {
+.axis-ring[data-axis='yaw'] .ring-track-tetromino {
     filter: drop-shadow(0 0 4px #AFFF02);
 }
 
@@ -598,13 +599,13 @@ footer {
     filter: drop-shadow(0 0 4px #FB0F5A);
 }
 
-/* Show tetronimo gradients by default, hide room gradients */
+/* Show tetromino gradients by default, hide room gradients */
 .ring-track-room {
     display: none;
 }
 
-/* In room mode, show room gradients and hide tetronimo gradients */
-.mode-room .ring-track-tetronimo {
+/* In room mode, show room gradients and hide tetromino gradients */
+.mode-room .ring-track-tetromino {
     display: none;
 }
 

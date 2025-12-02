@@ -46,6 +46,6 @@ const NO_TETROMINO = Tetromino({
  *
  * Remotely stored with a unique key see {@link TETROMINO_CURRENT_ID}
  *
- * @typedef CurrentTetronimoModelType
+ * @typedef CurrenttetrominoModelType
  * @property { ForeignKeyType } tetroId - the id of tetromino that is considered the "current" one, foreign key
  */
