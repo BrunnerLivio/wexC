@@ -4,6 +4,34 @@
     --unit:      1cqmin;
     --box-width: calc( 6 * var(--unit));
 
+    --joystick-size: 9em;
+    --joystick-border-thickness: 0.75em;
+    --joystick-border-radius: 26px;
+    --joystick-color-up: #d9ff5f;
+    --joystick-color-right: #a082ff;
+    --joystick-color-down: #4ae1ff;
+    --joystick-color-left: #ff6f82;
+    --joystick-center-outer: #f5f6ff;
+    --joystick-center-inner: #dfe9ff;
+    --joystick-frame-color: #9d74ff;
+    --joystick-title-color: #744ef5;
+    --joystick-border-active-opacity: 1;
+    --joystick-blink-duration: 0.32s;
+
+    --joystick-stroke: #fff;
+    --joystick-glow: rgba(130, 157, 255, 0.22);
+
+    --switch-width: 140px; /* corresponds to viewbox of right icon */
+    --switch-height: 75px;
+    --track-pad: 10px;
+    --dot-size: 45px;  /* corresponds to viewbox properties of both left and right icon */
+    --travel-gap: 6px; /* small extra offset so dot sits nicely inside stroke */
+    --transition: 320ms cubic-bezier(.2,.9,.3,1);
+    
+    --axis-control-color: #ff74d4;
+    --axis-button-bg: #1a0d2e;
+    --axis-button-active: #ff74d4;
+    --axis-frame-color: #ff74d4;
 }
 
 html {
@@ -212,12 +240,230 @@ footer {
     transform:        rotateY(-90deg);
 }
 
-/* Axis Control Styles */
-:root {
-  --axis-control-color: #ff74d4;
-  --axis-button-bg: #1a0d2e;
-  --axis-button-active: #ff74d4;
-  --axis-frame-color: #ff74d4;
+.joystick-position-control {
+  position: fixed;
+  inset: 6.5em auto auto 1.6em;
+  z-index: 12;
+  display: grid;
+  gap: 0.6em;
+  color: var(--joystick-title-color);
+  pointer-events: none;
+}
+
+.joystick-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  letter-spacing: 0.02em;
+}
+
+.joystick-title span {
+  font-size: 1rem;
+}
+
+.joystick-frame {
+  padding: 0.9em;
+  border-radius: 1.5em;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.2s ease-out;
+}
+
+.joystick-pad {
+  position: relative;
+  width: var(--joystick-size);
+  aspect-ratio: 1 / 1;
+  border-radius: 20%;
+  background: radial-gradient(
+    circle at center,
+    #ffffff22 0%,
+    #ffffff0a 60%,
+    transparent 100%
+  );
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.25));
+  cursor: grab;
+  pointer-events: auto;
+  transition: transform 0.18s ease;
+  --joystick-center-offset-x: 0px;
+  --joystick-center-offset-y: 0px;
+  --joystick-center-scale: 1;
+}
+
+.joystick-pad:active {
+  cursor: grabbing;
+}
+
+.joystick-border {
+  position: absolute;
+  stroke: var(--border-color);
+  filter: drop-shadow(0 0 4px var(--border-color));
+}
+
+.joystick-border-up {
+  --border-color: var(--joystick-color-up);
+  top: 0;
+}
+
+.joystick-border-down {
+  --border-color: var(--joystick-color-down);
+  bottom: 0;
+}
+
+.joystick-border-left {
+  --border-color: var(--joystick-color-left);
+  left: 0;
+}
+
+.joystick-border-right {
+  --border-color: var(--joystick-color-right);
+  right: 0;
+}
+
+.joystick-pad[data-direction="up"] .joystick-border-up {
+  fill: url(#gradient-up);
+}
+
+.joystick-pad[data-direction="right"] .joystick-border-right {
+  fill: url(#gradient-right);
+}
+
+.joystick-pad[data-direction="down"] .joystick-border-down {
+  fill: url(#gradient-down);
+}
+
+.joystick-pad[data-direction="left"] .joystick-border-left {
+  fill: url(#gradient-left);
+}
+
+.joystick-center {
+  position: relative;
+  width: 70px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    var(--joystick-center-outer) 0%,
+    #fff 60%,
+    transparent 100%
+  );
+  display: grid;
+  place-items: center;
+  transform: translate(
+      var(--joystick-center-offset-x, 0px),
+      var(--joystick-center-offset-y, 0px)
+    )
+    scale(var(--joystick-center-scale, 1));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  pointer-events: none;
+  border: 1px solid var(--joystick-stroke);
+  box-shadow: 0 0 10.4px 5px var(--joystick-glow);
+}
+
+.joystick-center-ring {
+  position: absolute;
+  width: 76%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid var(--joystick-stroke);
+  box-shadow: 0 0 8.5px 4px var(--joystick-glow);
+}
+
+.joystick-pad[data-direction] .joystick-center {
+  --joystick-center-scale: 1.04;
+  box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.85),
+    0 0 38px rgba(255, 255, 255, 0.5);
+}
+
+.joystick-center-base {
+  position: absolute;
+  width: 70px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    var(--joystick-center-inner) 0%,
+    #bbbfff 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  border: 1px solid var(--joystick-stroke);
+  box-shadow: 0 0 10.4px 5px var(--joystick-glow);
+  z-index: -1;
+}
+
+.switch {
+    display: inline-block;
+    width: var(--switch-width);
+    height: var(--switch-height);
+    position: relative;
+}
+
+/* keep input accessible but visually hidden */
+.switch input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    z-index: 2; /* stays on top for clicks and keyboard */
+    cursor: pointer;
+}
+
+.switch .track {
+    position: absolute;
+    left: var(--track-pad);
+    right: var(--track-pad);
+    top: var(--track-pad);
+    bottom: var(--track-pad);
+    border-radius: 27px;
+    background: transparent;
+    border: 1px solid #eeeeee;
+    pointer-events: none;
+}
+
+.switch .dot {
+    position: absolute;
+    width: var(--dot-size);
+    height: var(--dot-size);
+    top: calc((var(--switch-height) - var(--dot-size)) / 2); /* vertically center */
+    left: calc(var(--track-pad) + 4px); /* start a bit inset from left track edge */
+    border-radius: 50%;
+    overflow: hidden; /* crop svg overflow */
+    pointer-events: none; /* clicks go to input */
+    transition: transform 220ms ease;
+    background: transparent; /* icon provides color */
+}
+
+/* move to right when checked */
+.switch input:checked + .track + .dot {
+    transform: translateX(calc((var(--switch-width) / 2) - 1.5px)); /* end a bit inset from right track edge */
+}
+
+/* SVG icons fill the dot */
+.switch .icon {
+    width: 100%;
+    height: 100%;
+    display: none; /* hide by default */
+    pointer-events: none;
+}
+
+/* show left icon when unchecked, right when checked */
+.switch input:not(:checked) + .track + .dot .icon-left {
+    display: block;
+}
+.switch input:checked + .track + .dot .icon-right {
+    display: block;
+}
+
+/* focus-visible (keyboard) hint */
+.switch input:focus + .track + .dot {
+    outline: 3px solid rgba(206, 206, 206, 0.4);
+    outline-offset: 2px;
 }
 
 .axis-control {
