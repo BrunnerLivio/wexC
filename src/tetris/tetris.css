@@ -637,3 +637,10 @@ footer {
         height: 400px;
     }
 }
+
+#fisheye {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+}
