@@ -1,6 +1,6 @@
 // noinspection GrazieInspection
 
-import { Pair } from "../lambda/pair.js";
+import { Pair } from '../lambda/pair.js'
 
 export { from }
 
@@ -45,15 +45,15 @@ export { from }
  *   .select(dev => dev.salary)
  *   .result();
  */
-const jinq = monad => ({
-  pairWith:     pairWith(monad),
-  combine:      combine (monad),
-  where:        where   (monad),
-  select:       select  (monad),
-  map:          map     (monad),
-  inside:       inside  (monad),
-  result:       () =>    monad
-});
+const jinq = (monad) => ({
+    pairWith: pairWith(monad),
+    combine: combine(monad),
+    where: where(monad),
+    select: select(monad),
+    map: map(monad),
+    inside: inside(monad),
+    result: () => monad,
+})
 
 /**
  * Serves as starting point to enter JINQ and specifies a data source.
@@ -74,8 +74,7 @@ const jinq = monad => ({
  * console.log(result);
  * // => Logs '0 2 4 6'
  */
-const from = jinq;
-
+const from = jinq
 
 /**
  * Transforms each element of a collection using a selector function.
@@ -111,10 +110,10 @@ const from = jinq;
  * // => Logs 'Paul'
  *
  */
-const inside = monad => f => {
-  const processed = monad.and(f);
-  return jinq(processed);
-};
+const inside = (monad) => (f) => {
+    const processed = monad.and(f)
+    return jinq(processed)
+}
 
 /**
  * Combines elementwise two {@link MonadType}s.
@@ -137,12 +136,10 @@ const inside = monad => f => {
  * console.log(result);
  * // => Logs '0 0 1 1 2 2 3 3'
  */
-const pairWith = monad1 => monad2 => {
-  const processed = monad1.and(x =>
-    monad2.fmap(y => Pair(x)(y))
-  );
-  return jinq(processed)
-};
+const pairWith = (monad1) => (monad2) => {
+    const processed = monad1.and((x) => monad2.fmap((y) => Pair(x)(y)))
+    return jinq(processed)
+}
 
 /**
  * Combines elementwise two {@link MonadType monad}s much like
@@ -170,12 +167,10 @@ const pairWith = monad1 => monad2 => {
  *
  *   assert.is( [...result].join(" - "), "3 4 5 - 6 8 10");
  */
-const combine = monad1 => monad2ctor => {
-  const processed = monad1.and(x =>
-    monad2ctor(x).fmap(y => Pair(x)(y))
-  );
-  return jinq(processed)
-};
+const combine = (monad1) => (monad2ctor) => {
+    const processed = monad1.and((x) => monad2ctor(x).fmap((y) => Pair(x)(y)))
+    return jinq(processed)
+}
 
 /**
  * Filters elements based on a given condition.
@@ -198,10 +193,12 @@ const combine = monad1 => monad2ctor => {
  * // => Logs '0 2 4 6'
 
  */
-const where = monad => predicate => {
-  const processed = monad.and(a => predicate(a) ? monad.pure(a) : monad.empty());
-  return jinq(processed);
-};
+const where = (monad) => (predicate) => {
+    const processed = monad.and((a) =>
+        predicate(a) ? monad.pure(a) : monad.empty()
+    )
+    return jinq(processed)
+}
 
 /**
  * Applies a function to each element of the collection.
@@ -224,10 +221,10 @@ const where = monad => predicate => {
  * console.log(result);
  * // => Logs '0, 2, 4, 6'
  */
-const select = monad => mapper => {
-  const processed = monad.fmap(mapper);
-  return jinq(processed);
-};
+const select = (monad) => (mapper) => {
+    const processed = monad.fmap(mapper)
+    return jinq(processed)
+}
 
 /**
  * Applies a function to each element of the collection.
@@ -250,4 +247,4 @@ const select = monad => mapper => {
  * console.log(result);
  * // => Logs '0, 2, 4, 6'
  */
-const map = select;
+const map = select

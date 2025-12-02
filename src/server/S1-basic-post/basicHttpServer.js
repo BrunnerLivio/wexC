@@ -1,14 +1,14 @@
 // start/debug through IDE or from console via
 // node basicHttpServer.js
 
-import http from 'node:http';
+import http from 'node:http'
 
-const port     = 8080;
-const hostname = 'localhost';
+const port = 8080
+const hostname = 'localhost'
 
-const handleGET = (req, res, data ="") => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
+const handleGET = (req, res, data = '') => {
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'text/html')
 
     res.write(`
   <!doctype html>
@@ -27,12 +27,12 @@ const handleGET = (req, res, data ="") => {
       Server received the headers:      
     </p>
     <div style="display:grid; grid-template-columns: max-content 1fr;gap: .3lh 2em;">      
-      ${
-        Object.entries(req.headers).map(([name, value]) =>
-                                            "<div>" + name + "</div>" +
-                                            "<div>" + value + "</div>"
-        ).join("")
-    }
+      ${Object.entries(req.headers)
+          .map(
+              ([name, value]) =>
+                  '<div>' + name + '</div>' + '<div>' + value + '</div>'
+          )
+          .join('')}
     </div>    
     <div>
     <form action="/" method="POST">
@@ -46,37 +46,37 @@ const handleGET = (req, res, data ="") => {
     </pre>
   </body>
   </html>
-    `);
-    res.end("");
-};
+    `)
+    res.end('')
+}
 
 const handlePOST = (req, res) => {
-    let incomingData = "";
-    req.on("data", arg => {
-        incomingData += String(arg);
-    });
-    req.on("end", arg => {
+    let incomingData = ''
+    req.on('data', (arg) => {
+        incomingData += String(arg)
+    })
+    req.on('end', (arg) => {
         if (arg) {
-            incomingData += String(arg);
+            incomingData += String(arg)
         }
-        handleGET(req, res, incomingData);
-    });
-};
+        handleGET(req, res, incomingData)
+    })
+}
 
-const server = http.createServer( (req, res) => {
-    console.log(req.method, req.url);
+const server = http.createServer((req, res) => {
+    console.log(req.method, req.url)
     switch (req.method) {
-        case "GET":
-            handleGET(req, res);
-            return;
-        case "POST":
-            handlePOST(req, res);
-            return;
+        case 'GET':
+            handleGET(req, res)
+            return
+        case 'POST':
+            handlePOST(req, res)
+            return
         default:
-            console.error("cannot handle request method", req.method);
+            console.error('cannot handle request method', req.method)
     }
-});
+})
 
 server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+    console.log(`Server running at http://${hostname}:${port}/`)
+})

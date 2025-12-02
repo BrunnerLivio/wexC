@@ -5,17 +5,31 @@
  * Helper functions to work with the DOM.
  */
 
-import { LoggerFactory } from "../logger/loggerFactory.js";
-import { toSeq }         from "../sequence/util/helpers.js";
+import { LoggerFactory } from '../logger/loggerFactory.js'
+import { toSeq } from '../sequence/util/helpers.js'
 
 export {
-    dom, select, fireEvent, fireChangeEvent,
-    CLICK, INPUT, CHANGE,
-    TEXT, TIME, DATE, CHECKBOX, NUMBER, COLOR, RANGE,
-    TEXT_BUTTON, ICON_BUTTON, LEADING_ICON_BUTTON, TRAILING_ICON_BUTTON
+    dom,
+    select,
+    fireEvent,
+    fireChangeEvent,
+    CLICK,
+    INPUT,
+    CHANGE,
+    TEXT,
+    TIME,
+    DATE,
+    CHECKBOX,
+    NUMBER,
+    COLOR,
+    RANGE,
+    TEXT_BUTTON,
+    ICON_BUTTON,
+    LEADING_ICON_BUTTON,
+    TRAILING_ICON_BUTTON,
 }
 
-const { warn } = LoggerFactory("ch.fhnw.kolibri.util.dom");
+const { warn } = LoggerFactory('ch.fhnw.kolibri.util.dom')
 
 /**
  * Create DOM objects from an HTML string.
@@ -28,20 +42,20 @@ const { warn } = LoggerFactory("ch.fhnw.kolibri.util.dom");
  *      <input type="text" id="myId" name="myName" value="myValue">
  * `);
  */
-const dom = innerString => {
-    const holder = document.createElement("DIV");
-    holder.innerHTML = innerString;
-    return holder.children;
-};
+const dom = (innerString) => {
+    const holder = document.createElement('DIV')
+    holder.innerHTML = innerString
+    return holder.children
+}
 
 /**
  * @typedef {'change'|'input'|'click'} EventTypeString
  * Feel free to extend this type with new unique type strings as needed for other DOM events.
  */
 
-/** @type EventTypeString */ const CHANGE  = "change";
-/** @type EventTypeString */ const INPUT   = "input";
-/** @type EventTypeString */ const CLICK   = "click";
+/** @type EventTypeString */ const CHANGE = 'change'
+/** @type EventTypeString */ const INPUT = 'input'
+/** @type EventTypeString */ const CLICK = 'click'
 
 /**
  * When a user interacts with an HTML element in the browser, various events might be fired. For example, typing text
@@ -57,30 +71,30 @@ const dom = innerString => {
  * fireEvent(input, CHANGE);
  */
 const fireEvent = (element, eventTypeString) => {
-    const event = new Event(eventTypeString);
-    element.dispatchEvent(event);
-};
+    const event = new Event(eventTypeString)
+    element.dispatchEvent(event)
+}
 
 /**
  * Convenience function for {@link fireEvent} function with value "change".
  * @param { HTMLElement } element - The "target" element that fires the event.
  */
-const fireChangeEvent = element => fireEvent(element, CHANGE);
+const fireChangeEvent = (element) => fireEvent(element, CHANGE)
 
 /** @typedef { "text" | "number" | "checkbox" | "time" | "date" | "color" | "range" } InputTypeString */
-/** @type InputTypeString */ const TEXT         = "text";
-/** @type InputTypeString */ const NUMBER       = "number";
-/** @type InputTypeString */ const CHECKBOX     = "checkbox";
-/** @type InputTypeString */ const TIME         = "time";
-/** @type InputTypeString */ const DATE         = "date";
-/** @type InputTypeString */ const COLOR        = "color";
-/** @type InputTypeString */ const RANGE        = "range";
+/** @type InputTypeString */ const TEXT = 'text'
+/** @type InputTypeString */ const NUMBER = 'number'
+/** @type InputTypeString */ const CHECKBOX = 'checkbox'
+/** @type InputTypeString */ const TIME = 'time'
+/** @type InputTypeString */ const DATE = 'date'
+/** @type InputTypeString */ const COLOR = 'color'
+/** @type InputTypeString */ const RANGE = 'range'
 
 /** @typedef { "textBtn" | "iconBtn" | "leadingIconBtn" | "trailingIconBtn" } ButtonTypeString */
-/** @type ButtonTypeString */ const TEXT_BUTTON             = "textBtn";
-/** @type ButtonTypeString */ const ICON_BUTTON             = "iconBtn";
-/** @type ButtonTypeString */ const LEADING_ICON_BUTTON     = "leadingIconBtn";
-/** @type ButtonTypeString */ const TRAILING_ICON_BUTTON    = "trailingIconBtn";
+/** @type ButtonTypeString */ const TEXT_BUTTON = 'textBtn'
+/** @type ButtonTypeString */ const ICON_BUTTON = 'iconBtn'
+/** @type ButtonTypeString */ const LEADING_ICON_BUTTON = 'leadingIconBtn'
+/** @type ButtonTypeString */ const TRAILING_ICON_BUTTON = 'trailingIconBtn'
 
 /**
  * Utility function that works like {@link Element.querySelectorAll} but logs a descriptive warning when
@@ -92,9 +106,13 @@ const fireChangeEvent = element => fireEvent(element, CHANGE);
  * @return { SequenceType<Node> }
  */
 const select = (element, selector) => {
-    const result = toSeq( /** @type { Iterable<Node> } */ element.querySelectorAll(selector));
+    const result = toSeq(
+        /** @type { Iterable<Node> } */ element.querySelectorAll(selector)
+    )
     if (result.isEmpty()) {
-        warn(`Selector "${selector}" did not select any nodes in "${element.outerHTML}"`);
+        warn(
+            `Selector "${selector}" did not select any nodes in "${element.outerHTML}"`
+        )
     }
-    return result;
-};
+    return result
+}

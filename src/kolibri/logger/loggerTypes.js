@@ -22,7 +22,6 @@
  * @typedef { String | ProducerType<String> } LogMeType
  */
 
-
 /**
  * A function that takes logging arguments and creates a formatted string.
  * @typedef LogMessageFormatterType

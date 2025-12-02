@@ -21,8 +21,9 @@ export { arrayEq, removeItem, removeAt, times, sum }
  * arrayEq ([])  ([])  === true;
  * arrayEq ([1]) ([2]) === false;
  */
-const arrayEq = arrayA => arrayB =>
-    arrayA.length === arrayB.length && arrayA.every( (it, idx) => it === arrayB[idx]);
+const arrayEq = (arrayA) => (arrayB) =>
+    arrayA.length === arrayB.length &&
+    arrayA.every((it, idx) => it === arrayB[idx])
 
 /**
  * From the {@link array}, remove the item at position "index". The arguments are given in curried style.
@@ -38,7 +39,7 @@ const arrayEq = arrayA => arrayB =>
  * removeAt(array)(0);
  * arrayEq(array)([2,3]);
  */
-const removeAt = array => index => array.splice(index, 1);
+const removeAt = (array) => (index) => array.splice(index, 1)
 
 /**
  * From the {@link array}, remove the "item". The arguments are given in curried style.
@@ -54,13 +55,13 @@ const removeAt = array => index => array.splice(index, 1);
  * removeItem(array)("b");
  * arrayEq(array)(["a","c"]);
  */
-const removeItem = array => item => {
-    const i = array.indexOf(item);
+const removeItem = (array) => (item) => {
+    const i = array.indexOf(item)
     if (i >= 0) {
-        return removeAt(array)(i);
+        return removeAt(array)(i)
     }
-    return [];
-};
+    return []
+}
 
 /**
  * @typedef { <_T_> (!Number) => _T_ } TimesCallback<_T_>
@@ -80,13 +81,15 @@ const removeItem = array => item => {
  * times(3)(i => console.log(i)); // logs 0, 1, 2
  * times(5)(x=>x*x); // returns [0, 1, 4, 9, 16]
  */
-const times = soMany => (callback) => {
-    const number = Number(soMany.valueOf());
+const times = (soMany) => (callback) => {
+    const number = Number(soMany.valueOf())
     if (isNaN(number)) {
-        throw new TypeError("Object '" + soMany + "' is not a valid number.");
+        throw new TypeError("Object '" + soMany + "' is not a valid number.")
     }
-    return Array.from({length: number}, (it, idx) => callback ? callback(idx) : idx);
-};
+    return Array.from({ length: number }, (it, idx) =>
+        callback ? callback(idx) : idx
+    )
+}
 
 /**
  * @typedef { <_T_> (!_T_, index: ?Number) => Number } SumCallback<_T_>
@@ -102,8 +105,9 @@ const times = soMany => (callback) => {
  * sum([1,2,3])()     === 1 + 2 + 3;
  * sum(["1"])(Number) === 1;
  */
-const sum = array => (callback = Number) => {
-    const cb = /** @type {ProducerType<Number> | ?SumCallback} */ callback;
-    return array.reduce( (acc, cur, idx) => acc + cb(cur, idx), 0);
-};
-
+const sum =
+    (array) =>
+    (callback = Number) => {
+        const cb = /** @type {ProducerType<Number> | ?SumCallback} */ callback
+        return array.reduce((acc, cur, idx) => acc + cb(cur, idx), 0)
+    }

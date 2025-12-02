@@ -1,5 +1,5 @@
-import {Just, Nothing} from "../../../lambda/maybe.js";
-import {iteratorOf}    from "../../util/helpers.js";
+import { Just, Nothing } from '../../../lambda/maybe.js'
+import { iteratorOf } from '../../util/helpers.js'
 
 export { safeMax$ }
 
@@ -45,27 +45,23 @@ export { safeMax$ }
  * @type { SafeMaxOperationType<_T_> }
  */
 const safeMax$ = (iterable, comparator = (a, b) => a < b) => {
-  const inner = iteratorOf(iterable);
+    const inner = iteratorOf(iterable)
 
-  let {
-    value: currentMax,
-    done: isEmpty
-  } = inner.next();
+    let { value: currentMax, done: isEmpty } = inner.next()
 
-
-  if (isEmpty) {
-    // iterable is empty, no max can be found
-    return Nothing;
-  }
-
-  while (!isEmpty) {
-    const nextEl = inner.next();
-    isEmpty = nextEl.done;
-
-    if (!isEmpty && comparator(currentMax, nextEl.value)) {
-      currentMax = nextEl.value;
+    if (isEmpty) {
+        // iterable is empty, no max can be found
+        return Nothing
     }
-  }
 
-  return Just(currentMax);
-};
+    while (!isEmpty) {
+        const nextEl = inner.next()
+        isEmpty = nextEl.done
+
+        if (!isEmpty && comparator(currentMax, nextEl.value)) {
+            currentMax = nextEl.value
+        }
+    }
+
+    return Just(currentMax)
+}

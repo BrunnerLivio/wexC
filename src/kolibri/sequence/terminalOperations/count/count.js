@@ -1,4 +1,4 @@
-import { reduce$ } from "../reduce/reduce.js";
+import { reduce$ } from '../reduce/reduce.js'
 
 export { count$ }
 
@@ -37,4 +37,5 @@ export { count$ }
  * see {@link CountOperationType}
  * @type { CountOperationType }
  */
-const count$ = iterable => /** @type { Number } */ reduce$( (acc, _cur) => acc + 1, 0)(iterable);
+const count$ = (iterable) =>
+    /** @type { Number } */ reduce$((acc, _cur) => acc + 1, 0)(iterable)

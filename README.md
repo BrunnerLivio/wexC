@@ -1,4 +1,3 @@
-
 # Workshop Web Experience Template
 
 ## Getting started
@@ -11,4 +10,3 @@ pnpm dev
 ```
 
 ## Happy Coding !
-

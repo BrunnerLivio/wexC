@@ -1,5 +1,5 @@
-import {createMonadicSequence} from "../../sequencePrototype.js";
-import {iteratorOf}            from "../../util/helpers.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
+import { iteratorOf } from '../../util/helpers.js'
 
 export { takeWhere }
 
@@ -32,20 +32,19 @@ export { takeWhere }
  * @template _T_
  * @type { TakeWhereOperationType<_T_> }
  */
-const takeWhere = predicate => iterable => {
+const takeWhere = (predicate) => (iterable) => {
+    const retainAllIterator = () => {
+        const inner = iteratorOf(iterable)
 
-  const retainAllIterator = () => {
-    const inner = iteratorOf(iterable);
+        const next = () => {
+            while (true) {
+                const { done, value } = inner.next()
+                const result = done || predicate(value)
+                if (result) return { /**@type boolean */ done, value }
+            }
+        }
+        return { next }
+    }
 
-    const next = () => {
-      while(true) {
-        const { done, value } = inner.next();
-        const result = done || predicate(value);
-        if (result) return { /**@type boolean */done, value } ;
-      }
-    };
-    return { next };
-  };
-
-  return createMonadicSequence(retainAllIterator);
-};
+    return createMonadicSequence(retainAllIterator)
+}

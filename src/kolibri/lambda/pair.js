@@ -50,13 +50,13 @@ export { Pair }
  * console.log(tobi, andri);
  * // => Logs '"Tobi", "Andri"'
  */
-const Pair = x => y => {
-  /**
-   * @template _T_, _U_
-   * @type { PairType<_T_,_U_> }
-   */
-  const pair = selector => selector(x)(y);
+const Pair = (x) => (y) => {
+    /**
+     * @template _T_, _U_
+     * @type { PairType<_T_,_U_> }
+     */
+    const pair = (selector) => selector(x)(y)
 
-  pair[Symbol.iterator] = () => [x,y][Symbol.iterator]();
-  return pair;
-};
+    pair[Symbol.iterator] = () => [x, y][Symbol.iterator]()
+    return pair
+}

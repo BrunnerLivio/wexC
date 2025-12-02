@@ -1,56 +1,56 @@
-export { SwitchModeController };
+export { SwitchModeController }
 
 /**
  * @typedef {"tetronimo" | "room"} ControllerMode
  */
 
 /** @type {Array<ControllerMode>} */
-const modes = ['tetronimo', 'room'];
+const modes = ['tetronimo', 'room']
 
 /**
  * @param {import("../../kolibri/observable/observableMap").ObservableMapType} om
  */
 const SwitchModeController = (om) => {
-    let currentMode = modes[0];
-    
+    let currentMode = modes[0]
+
     /** @type {Array<(mode: ControllerMode) => void>} */
-    const modeObservers = [];
+    const modeObservers = []
 
     const changeMode = (value) => {
         if (value) {
-            currentMode = modes[1];
+            currentMode = modes[1]
         } else {
-            currentMode = modes[0];
+            currentMode = modes[0]
         }
 
-        console.log('new mode', currentMode);
-        modeObservers.forEach(observer => observer(currentMode));
-    };
+        console.log('new mode', currentMode)
+        modeObservers.forEach((observer) => observer(currentMode))
+    }
 
     /**
      * @param {HTMLElement} container
      */
     const notifySetupFinished = (container) => {
-        const input = container.querySelector('input');
+        const input = container.querySelector('input')
 
         // Listen to the checkbox state change
         input.addEventListener('change', () => {
-            const isChecked = input.checked; // true / false
-            changeMode(isChecked);
-        });
-    };
+            const isChecked = input.checked // true / false
+            changeMode(isChecked)
+        })
+    }
 
     /** @returns {ControllerMode} */
     const getCurrentMode = () => {
-        return currentMode;
-    };
-    
+        return currentMode
+    }
+
     /**
      * @param {(mode: ControllerMode) => void} observer
      */
     const onModeChanged = (observer) => {
-        modeObservers.push(observer);
-    };
+        modeObservers.push(observer)
+    }
 
-    return { notifySetupFinished, getCurrentMode, onModeChanged };
-};
+    return { notifySetupFinished, getCurrentMode, onModeChanged }
+}

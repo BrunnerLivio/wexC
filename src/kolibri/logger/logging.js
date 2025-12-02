@@ -1,25 +1,22 @@
-import { id }                         from "../lambda/church.js";
-import { Observable, ObservableList } from "../observable.js";
-import { LOG_INFO }                   from "./logLevel.js";
+import { id } from '../lambda/church.js'
+import { Observable, ObservableList } from '../observable.js'
+import { LOG_INFO } from './logLevel.js'
 
 export {
-  getLoggingLevel,
-  setLoggingLevel,
-  onLoggingLevelChanged,
-
-  getLoggingContext,
-  setLoggingContext,
-  onLoggingContextChanged,
-
-  getGlobalMessageFormatter,
-  setGlobalMessageFormatter,
-  onGlobalMessageFormatterChanged,
-
-  getAppenderList,
-  addToAppenderList,
-  removeFromAppenderList,
-  onAppenderAdded,
-  onAppenderRemoved,
+    getLoggingLevel,
+    setLoggingLevel,
+    onLoggingLevelChanged,
+    getLoggingContext,
+    setLoggingContext,
+    onLoggingContextChanged,
+    getGlobalMessageFormatter,
+    setGlobalMessageFormatter,
+    onGlobalMessageFormatterChanged,
+    getAppenderList,
+    addToAppenderList,
+    removeFromAppenderList,
+    onAppenderAdded,
+    onAppenderRemoved,
 }
 
 //                                                                -- logging level --
@@ -32,7 +29,8 @@ export {
  * @type { IObservable<LogLevelType> }
  * @private
  */
-const loggingLevelObs = /** @type { IObservable<LogLevelType> } */ Observable(LOG_INFO);
+const loggingLevelObs =
+    /** @type { IObservable<LogLevelType> } */ Observable(LOG_INFO)
 
 /**
  * This function can be used to set the logging level for the logging framework.
@@ -41,20 +39,20 @@ const loggingLevelObs = /** @type { IObservable<LogLevelType> } */ Observable(LO
  * @example
  * setLoggingLevel(LOG_DEBUG);
  */
-const setLoggingLevel  = loggingLevelObs.setValue;
+const setLoggingLevel = loggingLevelObs.setValue
 
 /**
  * Getter for the loggingLevel.
  * @return { LogLevelType } - the currently active logging level
  */
-const getLoggingLevel = loggingLevelObs.getValue;
+const getLoggingLevel = loggingLevelObs.getValue
 
 /**
  * What to do when the logging level changes.
  * @impure
  * @type { (cb:ValueChangeCallback<LogLevelType>) => void }
  */
-const onLoggingLevelChanged = loggingLevelObs.onChange;
+const onLoggingLevelChanged = loggingLevelObs.onChange
 
 //                                                                -- logging context --
 
@@ -65,7 +63,7 @@ const onLoggingLevelChanged = loggingLevelObs.onChange;
  * @type { IObservable<LogContextType> }
  * @private
  */
-const loggingContextObs = Observable("");
+const loggingContextObs = Observable('')
 
 /**
  * This function can be used to define a logging context for the logging framework.
@@ -76,21 +74,21 @@ const loggingContextObs = Observable("");
  * // logging context is now set to "ch.fhnw"
  * // loggers with the context "ch.fhnw*" will be logged, all other messages will be ignored.
  */
-const setLoggingContext = loggingContextObs.setValue;
+const setLoggingContext = loggingContextObs.setValue
 
 // noinspection JSUnusedGlobalSymbols
 /**
  * Getter for the logging context.
  * @return { LogContextType } - the current logging context
  */
-const getLoggingContext = loggingContextObs.getValue;
+const getLoggingContext = loggingContextObs.getValue
 
 /**
  * What to do when the logging context changes.
  * @impure
  * @type { (cb:ValueChangeCallback<LogContextType>) => void }
  */
-const onLoggingContextChanged = loggingContextObs.onChange;
+const onLoggingContextChanged = loggingContextObs.onChange
 
 //                                                                -- logging message formatter --
 
@@ -99,7 +97,7 @@ const onLoggingContextChanged = loggingContextObs.onChange;
  * @type { IObservable<LogMessageFormatterType> }
  * @private
  */
-const globalMessageFormatterObs = Observable(_context => _logLevel => id);
+const globalMessageFormatterObs = Observable((_context) => (_logLevel) => id)
 
 /**
  * This function can be used to specify a global formatting function for log messages.
@@ -114,21 +112,21 @@ const globalMessageFormatterObs = Observable(_context => _logLevel => id);
  * }
  * setGlobalMessageFormatter(formatLogMsg);
  */
-const setGlobalMessageFormatter = globalMessageFormatterObs.setValue;
+const setGlobalMessageFormatter = globalMessageFormatterObs.setValue
 
 /**
  * Returns the currently used global formatting function.
  * @impure **Warning:** different values by come at different times.
  * @type { () => LogMessageFormatterType }
  */
-const getGlobalMessageFormatter = globalMessageFormatterObs.getValue;
+const getGlobalMessageFormatter = globalMessageFormatterObs.getValue
 
 /**
  * What to do when the log formatting function changes.
  * @impure will typically change the side effects of logging.
  * @type { (cb:ValueChangeCallback<LogMessageFormatterType>) => void }
  */
-const onGlobalMessageFormatterChanged = globalMessageFormatterObs.onChange;
+const onGlobalMessageFormatterChanged = globalMessageFormatterObs.onChange
 
 //                                                                -- logging appender list --
 
@@ -137,7 +135,7 @@ const onGlobalMessageFormatterChanged = globalMessageFormatterObs.onChange;
  * @private
  * @type { Array<AppenderType> }
  */
-const appenders = [];
+const appenders = []
 
 /**
  * This is a singleton state.
@@ -145,35 +143,35 @@ const appenders = [];
  * @type { IObservableList<AppenderType> }
  * @private
  */
-const appenderListObs = ObservableList(appenders);
+const appenderListObs = ObservableList(appenders)
 
 /**
  * @type { () => Array<AppenderType> }
  */
-const getAppenderList = () => appenders;
+const getAppenderList = () => appenders
 
 /**
  * Adds one or multiple {@link AppenderType}s to the appender list.
  * @param { ...AppenderType } newAppender
  */
-const addToAppenderList = (...newAppender) => newAppender.forEach(app => appenderListObs.add(app));
+const addToAppenderList = (...newAppender) =>
+    newAppender.forEach((app) => appenderListObs.add(app))
 
 /**
  * Removes a given {@link AppenderType} from the current appender list.
  * @impure
  * @param   { AppenderType } appender
  */
-const removeFromAppenderList = appenderListObs.del;
+const removeFromAppenderList = appenderListObs.del
 
 /**
  * @impure
  * @type { (cb: ConsumerType<AppenderType>) => void }
  */
-const onAppenderAdded   = appenderListObs.onAdd;
+const onAppenderAdded = appenderListObs.onAdd
 
 /**
  * @impure
  * @type { (cb: ConsumerType<AppenderType>) => void }
  */
-const onAppenderRemoved = appenderListObs.onDel;
-
+const onAppenderRemoved = appenderListObs.onDel

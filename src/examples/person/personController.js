@@ -4,9 +4,9 @@
  * We do it anyway to follow the canonical structure of classical MVC where
  * views only ever know the controller API, not the model directly.
  */
-import { ObservableList, Observable } from "../../kolibri/observable.js";
-import { EDITABLE, VALUE }            from "../../kolibri/presentationModel.js"
-import { Person, reset }              from "./person.js"
+import { ObservableList, Observable } from '../../kolibri/observable.js'
+import { EDITABLE, VALUE } from '../../kolibri/presentationModel.js'
+import { Person, reset } from './person.js'
 
 export { ListController, SelectionController }
 
@@ -27,17 +27,16 @@ export { ListController, SelectionController }
  * @return { ListControllerType<_T_> }
  * @constructor
  */
-const ListController = modelConstructor => {
-
-    const listModel = ObservableList([]); // observable array of models, this state is private
+const ListController = (modelConstructor) => {
+    const listModel = ObservableList([]) // observable array of models, this state is private
 
     return {
-        addModel        : () => listModel.add(modelConstructor()),
-        removeModel     : listModel.del,
-        onModelAdd      : listModel.onAdd,
-        onModelRemove   : listModel.onDel,
+        addModel: () => listModel.add(modelConstructor()),
+        removeModel: listModel.del,
+        onModelAdd: listModel.onAdd,
+        onModelRemove: listModel.onDel,
     }
-};
+}
 
 /**
  * Representing a selection when no person is selected.
@@ -45,18 +44,18 @@ const ListController = modelConstructor => {
  * @private
  */
 const createNoSelection = () => {
-    const result = reset(Person());
-    result.firstname.setQualifier("Person.none.firstname");
-    result.lastname .setQualifier("Person.none.lastname");
-    result.detailed .setQualifier("Person.none.detailed");
-    result.firstname.getObs(EDITABLE).setValue(false); // the non-selection is not editable
-    result.lastname .getObs(EDITABLE).setValue(false);
-    result.detailed .getObs(VALUE)   .setValue(false);    // detail view can fold
+    const result = reset(Person())
+    result.firstname.setQualifier('Person.none.firstname')
+    result.lastname.setQualifier('Person.none.lastname')
+    result.detailed.setQualifier('Person.none.detailed')
+    result.firstname.getObs(EDITABLE).setValue(false) // the non-selection is not editable
+    result.lastname.getObs(EDITABLE).setValue(false)
+    result.detailed.getObs(VALUE).setValue(false) // detail view can fold
     return result
-};
-const noSelection = createNoSelection(); // the value to pass around, it's qualifiers might get changed
-createNoSelection(); // create a second noSelection that can never be passed around and keeps the attributes in the ModelWorld
-                     // dk: we should find a nicer way to do that.
+}
+const noSelection = createNoSelection() // the value to pass around, it's qualifiers might get changed
+createNoSelection() // create a second noSelection that can never be passed around and keeps the attributes in the ModelWorld
+// dk: we should find a nicer way to do that.
 
 /**
  * @typedef SelectionControllerType<_T_>
@@ -76,14 +75,13 @@ createNoSelection(); // create a second noSelection that can never be passed aro
  * @return { SelectionControllerType<_T_>}
  * @constructor
  */
-const SelectionController = model => {
-
-    const selectedModelObs = Observable(model);
+const SelectionController = (model) => {
+    const selectedModelObs = Observable(model)
 
     return {
-        setSelectedModel : selectedModelObs.setValue,
-        getSelectedModel : selectedModelObs.getValue,
-        onModelSelected  : selectedModelObs.onChange,
-        clearSelection   : () => selectedModelObs.setValue(noSelection),
+        setSelectedModel: selectedModelObs.setValue,
+        getSelectedModel: selectedModelObs.getValue,
+        onModelSelected: selectedModelObs.onChange,
+        clearSelection: () => selectedModelObs.setValue(noSelection),
     }
-};
+}

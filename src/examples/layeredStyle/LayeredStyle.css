@@ -12,7 +12,7 @@
    It also must be in this sequence or it won't work.
  */
 /*noinspection CssInvalidImport*/
-@import "../../../css/kolibri-base.css" layer(kolibri-base);
+@import '../../../css/kolibri-base.css' layer(kolibri-base);
 
 @layer example-application {
     /* put all rules here that shall not accidentally overwrite the kolibri defaults */

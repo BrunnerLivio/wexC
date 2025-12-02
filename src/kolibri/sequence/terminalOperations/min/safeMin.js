@@ -1,4 +1,4 @@
-import { safeMax$ } from "../max/safeMax.js";
+import { safeMax$ } from '../max/safeMax.js'
 
 export { safeMin$ }
 
@@ -42,4 +42,5 @@ export { safeMin$ }
  * @template _T_
  * @type { SafeMinOperationType<_T_> }
  */
-const safeMin$ = (iterable, comparator = (a, b) => a < b) => safeMax$(iterable, (a,b) => ! comparator(a,b));
+const safeMin$ = (iterable, comparator = (a, b) => a < b) =>
+    safeMax$(iterable, (a, b) => !comparator(a, b))

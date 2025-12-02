@@ -1,56 +1,63 @@
 <!doctype html>
-<html lang=en>
-<head>
-	<meta charset="UTF-8">
-	<title>Kolibri</title>
-	<link rel="shortcut icon" type="image/png" href="./img/logo/logo-60x54.png"/>
-	<link rel="stylesheet"                     href="./css/kolibri-base.css">
-    <style>
-        body {
-			max-width: 		42em;
-			margin: 		3em auto 3em auto;
-        }
-		header {
-			display: 		flex;
-			flex-direction: column;
-			align-items: 	center;
-		}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Kolibri</title>
+        <link
+            rel="shortcut icon"
+            type="image/png"
+            href="./img/logo/logo-60x54.png"
+        />
+        <link rel="stylesheet" href="./css/kolibri-base.css" />
+        <style>
+            body {
+                max-width: 42em;
+                margin: 3em auto 3em auto;
+            }
+            header {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="#main" class="skip-link">Skip to main content</a>
+        <!-- a11y support skip link -->
+        <header>
+            <h1>App with Kolibri</h1>
+        </header>
 
-    </style>
-</head>
-<body>
-<a href="#main" class="skip-link">Skip to main content</a> <!-- a11y support skip link -->
-<header>
+        <main id="main" tabindex="-1">
+            <!-- a11y support: can be tabbed to -->
 
-    <h1>App with Kolibri</h1>
-</header>
+            <section>
+                <h2>Purpose</h2>
+                <p>
+                    This is an example of an application that starts as a fork
+                    of
+                    <a
+                        href="https://webengineering-fhnw.github.io/Kolibri/index.html"
+                        >Kolibri</a
+                    >
+                    and develops from there.
+                </p>
+            </section>
 
-<main id="main" tabindex="-1"> <!-- a11y support: can be tabbed to -->
+            <section>
+                <h2>Tests</h2>
+                <p>
+                    We come with an
+                    <a href="src/allTests.html">automated test suite</a>.
+                </p>
+            </section>
+        </main>
 
-    <section>
-        <h2>Purpose</h2>
-        <p>
-            This is an example of an application that starts as a fork of
-            <a href="https://webengineering-fhnw.github.io/Kolibri/index.html">Kolibri</a> and develops from there.
-        </p>
-    </section>
-
-    <section>
-        <h2>Tests</h2>
-        <p>
-            We come with an
-            <a href="src/allTests.html">automated test suite</a>.
-        </p>
-    </section>
-
-
-</main>
-
-<footer>
-    <h2>Contact</h2>
-    <address>
-        <a href="https://dierk.github.io/Home">Prof. Dierk König</a>
-    </address>
-</footer>
-</body>
+        <footer>
+            <h2>Contact</h2>
+            <address>
+                <a href="https://dierk.github.io/Home">Prof. Dierk König</a>
+            </address>
+        </footer>
+    </body>
 </html>

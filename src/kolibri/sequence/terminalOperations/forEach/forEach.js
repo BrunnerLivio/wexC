@@ -35,8 +35,8 @@ export { forEach$ }
  * @template _T_
  * @type {ForEachOperationType<_T_>}
  */
-const forEach$ = callback => iterable => {
-  for (const current of iterable) {
-    callback(current);
-  }
-};
+const forEach$ = (callback) => (iterable) => {
+    for (const current of iterable) {
+        callback(current)
+    }
+}

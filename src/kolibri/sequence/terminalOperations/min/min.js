@@ -1,4 +1,4 @@
-import { max$ } from "../max/max.js";
+import { max$ } from '../max/max.js'
 
 export { min$ }
 
@@ -42,4 +42,5 @@ export { min$ }
  * @template _T_
  * @type { MinOperationType<_T_> }
  */
-const min$ = (iterable, comparator = (a, b) => a < b) => max$(iterable, (a,b) => ! comparator(a,b));
+const min$ = (iterable, comparator = (a, b) => a < b) =>
+    max$(iterable, (a, b) => !comparator(a, b))

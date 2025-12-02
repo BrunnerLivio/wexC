@@ -1,4 +1,4 @@
-import { takeWhere } from "../takeWhere/takeWhere.js";
+import { takeWhere } from '../takeWhere/takeWhere.js'
 
 export { dropWhere }
 
@@ -22,13 +22,13 @@ export { dropWhere }
  *
  * console.log(...filtered);
  * // => Logs '1, 3, 5'
-*/
+ */
 
 /**
  * see {@link DropWhereOperationType}
  * @template _T_
  * @type  { DropWhereOperationType<_T_> }
  */
-const dropWhere = predicate => iterable =>
-  // flip the predicate and call takeWhere
-  takeWhere(el => !predicate(el))(iterable);
+const dropWhere = (predicate) => (iterable) =>
+    // flip the predicate and call takeWhere
+    takeWhere((el) => !predicate(el))(iterable)

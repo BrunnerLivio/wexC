@@ -1,17 +1,16 @@
-
 // Testing special functions in the test facility itself.
 
-import { TestSuite } from "./test.js";
-import { Range }     from "../sequence/constructors/range/range.js"
+import { TestSuite } from './test.js'
+import { Range } from '../sequence/constructors/range/range.js'
 
-const testSuite = TestSuite("util/test");
+const testSuite = TestSuite('util/test')
 
-testSuite.add("iterableEq pass", assert => {
-     assert.iterableEq([],          []);             // empty iterables
-     assert.iterableEq([1],         [1]);            // single valued iterables
-     assert.iterableEq([1,2,3,4],   [1,2,3,4]);      // any iterable
-     assert.iterableEq(Range(1,4),  [1,2,3,4]);      // any iterable
-});
+testSuite.add('iterableEq pass', (assert) => {
+    assert.iterableEq([], []) // empty iterables
+    assert.iterableEq([1], [1]) // single valued iterables
+    assert.iterableEq([1, 2, 3, 4], [1, 2, 3, 4]) // any iterable
+    assert.iterableEq(Range(1, 4), [1, 2, 3, 4]) // any iterable
+})
 
 // uncomment the test below to see how it fails and how errors are logged and reported
 /*
@@ -28,4 +27,4 @@ testSuite.add("iterableEq fail", assert => {
 });
 */
 
-testSuite.run();
+testSuite.run()

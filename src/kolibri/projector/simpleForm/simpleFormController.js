@@ -1,5 +1,4 @@
-
-import { SimpleInputController } from "./simpleInputController.js";
+import { SimpleInputController } from './simpleInputController.js'
 
 export { SimpleFormController }
 
@@ -20,9 +19,9 @@ export { SimpleFormController }
            { value: 0,       type: "number" },
        ]);
  */
-const SimpleFormController = inputAttributesArray => {
+const SimpleFormController = (inputAttributesArray) => {
     // noinspection UnnecessaryLocalVariableJS
-    const inputControllers = inputAttributesArray.map(SimpleInputController);
+    const inputControllers = inputAttributesArray.map(SimpleInputController)
     // set up any business rules (we do not have any, yet)
-    return inputControllers ;
-};
+    return inputControllers
+}

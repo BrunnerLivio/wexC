@@ -1,41 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+    </head>
+    <body>
+        <p>
+            The output should be updated only when the input has a quiet time,
+            not while typing quickly
+        </p>
 
-<p> The output should be updated only when the input has a quiet time, not while typing quickly</p>
+        <div id="input"></div>
+        <button id="btn">Button</button>
+        <span id="out"></span>
 
-  <div id="input"></div>
-  <button id="btn">Button</button>
-  <span id="out"></span>
+        <script type="module">
+            import { SimpleInputController } from '../../kolibri/projector/simpleForm/simpleInputController.js'
+            import { InputProjector } from '../../kolibri/projector/simpleForm/simpleInputProjector.js'
 
-<script type="module">
+            const controller = SimpleInputController({
+                value: 'Tobias',
+                label: 'First Name',
+                name: 'firstname',
+                type: 'text',
+            })
 
-  import { SimpleInputController } from "../../kolibri/projector/simpleForm/simpleInputController.js";
-  import { InputProjector }        from "../../kolibri/projector/simpleForm/simpleInputProjector.js";
+            const [label, input] = InputProjector.projectDebounceInput(200)(
+                controller,
+                'Wyss'
+            )
 
-  const controller = SimpleInputController({
-    value:  "Tobias",
-    label:  "First Name",
-    name:   "firstname",
-    type:   "text",
-  });
+            const el = document.getElementById('input')
+            const button = document.getElementById('btn')
+            const output = document.getElementById('out')
+            el.append(label, input)
 
-    const [label, input] = InputProjector.projectDebounceInput(200)(controller, "Wyss");
+            button.onclick = () => controller.setValue('Wild')
 
-    const el        = document.getElementById("input");
-    const button    = document.getElementById("btn");
-    const output    = document.getElementById("out");
-    el.append(label,input);
-
-    button.onclick = () => controller.setValue("Wild");
-
-    controller.onValueChanged(text => output.textContent += text + "\n" );
-
-</script>
-
-</body>
+            controller.onValueChanged(
+                (text) => (output.textContent += text + '\n')
+            )
+        </script>
+    </body>
 </html>

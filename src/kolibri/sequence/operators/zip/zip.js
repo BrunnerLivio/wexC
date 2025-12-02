@@ -1,5 +1,5 @@
-import { Pair }    from "../../../lambda/pair.js";
-import { zipWith } from "../zipWith/zipWith.js";
+import { Pair } from '../../../lambda/pair.js'
+import { zipWith } from '../zipWith/zipWith.js'
 
 export { zip }
 
@@ -30,4 +30,4 @@ export { zip }
  * @template _T_
  * @type { ZipOperationType<_T_> }
  */
-const zip = it1 => it2 => zipWith((i,j) => Pair(i)(j))(it1)(it2);
+const zip = (it1) => (it2) => zipWith((i, j) => Pair(i)(j))(it1)(it2)

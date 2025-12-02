@@ -1,5 +1,5 @@
-import { append } from "../append/append.js";
-import { Seq }    from "../../constructors/seq/seq.js";
+import { append } from '../append/append.js'
+import { Seq } from '../../constructors/seq/seq.js'
 
 export { cons }
 
@@ -25,4 +25,4 @@ export { cons }
  * @type { ConsOperationType<_T_> }
  *
  */
-const cons = element => append( Seq(element) )  ;
+const cons = (element) => append(Seq(element))

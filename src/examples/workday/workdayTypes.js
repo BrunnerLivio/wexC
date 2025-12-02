@@ -1,4 +1,3 @@
-
 /**
  * Creating views and bindings for a day from projecting simple inputs.
  * @typedef  DayProjectionType

@@ -1,11 +1,33 @@
 // noinspection JSValidateTypes
 
-import { Range, map, zip, foldl$, pipe, nil, max$, min$, isEmpty } from "../../../kolibri/sequence/sequence.js";
-import { from }                                                    from "../../../kolibri/jinq/jinq.js";
-import { Pair }                                                    from "../../../kolibri/lambda/pair.js";
-import { snd }                                                     from "../../../kolibri/stdlib.js";
+import {
+    Range,
+    map,
+    zip,
+    foldl$,
+    pipe,
+    nil,
+    max$,
+    min$,
+    isEmpty,
+} from '../../../kolibri/sequence/sequence.js'
+import { from } from '../../../kolibri/jinq/jinq.js'
+import { Pair } from '../../../kolibri/lambda/pair.js'
+import { snd } from '../../../kolibri/stdlib.js'
 
-export { nextBoard, nowValue, opponent, stone, Computer, Human, NoPlayer, moves, hasWon, treeMap, evaluate }
+export {
+    nextBoard,
+    nowValue,
+    opponent,
+    stone,
+    Computer,
+    Human,
+    NoPlayer,
+    moves,
+    hasWon,
+    treeMap,
+    evaluate,
+}
 
 /**
  * @template _T_
@@ -17,7 +39,10 @@ export { nextBoard, nowValue, opponent, stone, Computer, Human, NoPlayer, moves,
  * @typedef { PairSelectorType<_T_, TreeSequence<_T_>> } Tree
  */
 
-const treeMap = f => ([a, sub]) => Pair(f(a))(map(treeMap(f))(sub));
+const treeMap =
+    (f) =>
+    ([a, sub]) =>
+        Pair(f(a))(map(treeMap(f))(sub))
 
 /**
  * @typedef { "Computer" | "Human" | "NoPlayer" } Player
@@ -34,75 +59,79 @@ const treeMap = f => ([a, sub]) => Pair(f(a))(map(treeMap(f))(sub));
  */
 
 /** @type { Player } */
-const Computer = "Computer";
+const Computer = 'Computer'
 
 /** @type { Player } */
-const Human = "Human";
+const Human = 'Human'
 
 /** @type { Player } */
-const NoPlayer = "NoPlayer";
+const NoPlayer = 'NoPlayer'
 
 /**
  *
  * @param { Player } player
  * @return Player
  */
-const opponent = player => {
-  const pairings = {
-    "Computer" : Human,
-    "Human"    : Computer,
-    "NoPlayer" : NoPlayer,
-  };
-  return pairings[player];
-};
+const opponent = (player) => {
+    const pairings = {
+        Computer: Human,
+        Human: Computer,
+        NoPlayer: NoPlayer,
+    }
+    return pairings[player]
+}
 
 /**
  *
  * @param { Player } player
  * @returns Stone
  */
-const stone = player => {
-  const pairings = {
-    "Computer" : 1,
-    "Human"    : -1,
-    "NoPlayer" : 0,
-  };
- return pairings[player];
-};
+const stone = (player) => {
+    const pairings = {
+        Computer: 1,
+        Human: -1,
+        NoPlayer: 0,
+    }
+    return pairings[player]
+}
 
 /**
  * @param { Iterable<Stone>} fields
  * @return {SequenceType<PairType<Stone, Number>>}
  */
-const indexFields = fields => zip(fields)(Range(1,9));
+const indexFields = (fields) => zip(fields)(Range(1, 9))
 
 /**
  *
  * @param { Board } board
  * @return SequenceType<Board>
  */
-const moves = board => {
-  if (hasWon(board)(Computer)) return /**@type {SequenceType<Board>} */nil;
-  if (hasWon(board)(Human))    return /**@type {SequenceType<Board>} */nil;
+const moves = (board) => {
+    if (hasWon(board)(Computer)) return /**@type {SequenceType<Board>} */ nil
+    if (hasWon(board)(Human)) return /**@type {SequenceType<Board>} */ nil
 
-  const otherPlayer   = opponent(board.whosTurn);
-  const indexedFields = indexFields(board.fields);
+    const otherPlayer = opponent(board.whosTurn)
+    const indexedFields = indexFields(board.fields)
 
-  const blankIndices =
-    from(indexedFields)
-      .where( ([content, _]) => content === stone(NoPlayer))
-      .select( ([_, i]) => i)
-      .result();
+    const blankIndices = from(indexedFields)
+        .where(([content, _]) => content === stone(NoPlayer))
+        .select(([_, i]) => i)
+        .result()
 
-  const fieldsWithPlayerPlacedAt = pos =>
-    from(indexedFields)
-      .select(([content, i]) => i === pos ? stone(board.whosTurn) : content)
-      .result();
+    const fieldsWithPlayerPlacedAt = (pos) =>
+        from(indexedFields)
+            .select(([content, i]) =>
+                i === pos ? stone(board.whosTurn) : content
+            )
+            .result()
 
-  const boardFieldsAfterMove = map(fieldsWithPlayerPlacedAt)(blankIndices);
+    const boardFieldsAfterMove = map(fieldsWithPlayerPlacedAt)(blankIndices)
 
-  return /** @type SequenceType<Board> */ map(fields => ({fields, whosTurn: otherPlayer}) )(boardFieldsAfterMove);
-};
+    return /** @type SequenceType<Board> */ map((fields) => ({
+        fields,
+        whosTurn: otherPlayer,
+    }))(boardFieldsAfterMove)
+}
 
 /**
  *
@@ -112,30 +141,34 @@ const moves = board => {
  *    => Boolean
  * }
  */
-const hasWon = board => player => {
-  const winTriples = [
-    [1,2,3], [4,5,6], [7,8,9], // row
-    [1,4,7], [2,5,8], [3,6,9], // col
-    [1,5,9], [3,5,7]           // diag
-  ];
+const hasWon = (board) => (player) => {
+    const winTriples = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9], // row
+        [1, 4, 7],
+        [2, 5, 8],
+        [3, 6, 9], // col
+        [1, 5, 9],
+        [3, 5, 7], // diag
+    ]
 
-  const checkTriple = triple => {
-    const actualStone   = stone(player);
-    const indexedFields = indexFields(board.fields);
+    const checkTriple = (triple) => {
+        const actualStone = stone(player)
+        const indexedFields = indexFields(board.fields)
 
-    const playerOnFields =
-      from(indexedFields)
-      .where( ([_, i])        => triple.includes(i))
-      .select( ([content, _]) => content === actualStone)
-      .result();
+        const playerOnFields = from(indexedFields)
+            .where(([_, i]) => triple.includes(i))
+            .select(([content, _]) => content === actualStone)
+            .result()
 
-    return foldl$((acc, cur) => acc && cur, true)(playerOnFields);
-  };
-  return pipe(
-    map(checkTriple),
-    foldl$((acc, cur) => acc || cur, false)
-  )(winTriples)
-};
+        return foldl$((acc, cur) => acc && cur, true)(playerOnFields)
+    }
+    return pipe(
+        map(checkTriple),
+        foldl$((acc, cur) => acc || cur, false)
+    )(winTriples)
+}
 
 /**
  * @template _T_
@@ -145,29 +178,29 @@ const hasWon = board => player => {
  *    => Tree<_T_>
  * }
  */
-const buildTree = unfold => a => {
-  const as = unfold(a);
-  const children = map(buildTree(unfold))(as);
-  return Pair(a)(children);
-};
+const buildTree = (unfold) => (a) => {
+    const as = unfold(a)
+    const children = map(buildTree(unfold))(as)
+    return Pair(a)(children)
+}
 
 /**
  *
  * @param { Board } board
  * @returns Tree<Board>
  */
-const gameTree = board => buildTree(moves)(board);
+const gameTree = (board) => buildTree(moves)(board)
 
 /**
  *
  * @param { Board } board
  * @returns Number
  */
-const staticEval = board => {
-  if (hasWon(board)(Computer)) return 1.0;
-  if (hasWon(board)(Human))    return -1.0;
-  return 0.0;
-};
+const staticEval = (board) => {
+    if (hasWon(board)(Computer)) return 1.0
+    if (hasWon(board)(Human)) return -1.0
+    return 0.0
+}
 
 /**
  * @template _T_
@@ -175,9 +208,9 @@ const staticEval = board => {
  * @return { _T_ }
  */
 const maximize = ([a, sub]) => {
-  if (sub ["=="] (nil)) return a;
-  return max$ (map(minimize)(sub))
-};
+    if (sub['=='](nil)) return a
+    return max$(map(minimize)(sub))
+}
 
 /**
  * @template _T_
@@ -185,9 +218,9 @@ const maximize = ([a, sub]) => {
  * @return { _T_ }
  */
 const minimize = ([a, sub]) => {
-  if (sub ["=="] (nil)) return a;
-  return min$ (map(maximize)(sub))
-};
+    if (sub['=='](nil)) return a
+    return min$(map(maximize)(sub))
+}
 
 /**
  *
@@ -199,11 +232,11 @@ const minimize = ([a, sub]) => {
  * }
  * @param n
  */
-const prune = n => tree => {
-  const [a, sub] = tree;
-  if (n === 0) return Pair(a)(nil);
-  else return Pair(a)(map(prune(n-1))(sub));
-};
+const prune = (n) => (tree) => {
+    const [a, sub] = tree
+    if (n === 0) return Pair(a)(nil)
+    else return Pair(a)(map(prune(n - 1))(sub))
+}
 
 /**
  * Evaluates a given Board by building a tree
@@ -213,11 +246,11 @@ const prune = n => tree => {
  *         => Number
  * }
  */
-const evaluate = lookahead => board => {
-  const prunedTree = prune(lookahead)(gameTree(board));
-  const mappedTree = treeMap(staticEval)(prunedTree);
-  return minimize(mappedTree);
-};
+const evaluate = (lookahead) => (board) => {
+    const prunedTree = prune(lookahead)(gameTree(board))
+    const mappedTree = treeMap(staticEval)(prunedTree)
+    return minimize(mappedTree)
+}
 
 /**
  * @type { <_T_>
@@ -226,30 +259,33 @@ const evaluate = lookahead => board => {
  *         => PairSelectorType<_T_, Board>
  * }
  */
-const nowValue = lookahead => board =>
-  Pair(evaluate(lookahead)(board))(board);
+const nowValue = (lookahead) => (board) =>
+    Pair(evaluate(lookahead)(board))(board)
 
-const nextBoard = lookahead => inFields => {
-  const currentBoard = { whosTurn: Computer, fields: inFields };
+const nextBoard = (lookahead) => (inFields) => {
+    const currentBoard = { whosTurn: Computer, fields: inFields }
 
-  // get all possible
-  const possibleMoves  = moves (currentBoard);
-  if (isEmpty(possibleMoves)) return currentBoard;
-  // evaluate each move by looking ahead how good it is
-  let evaluatedMoves = /** @type {SequenceType<PairSelectorType<Number, Board>>} */ map (nowValue(lookahead)) (possibleMoves);
+    // get all possible
+    const possibleMoves = moves(currentBoard)
+    if (isEmpty(possibleMoves)) return currentBoard
+    // evaluate each move by looking ahead how good it is
+    let evaluatedMoves =
+        /** @type {SequenceType<PairSelectorType<Number, Board>>} */ map(
+            nowValue(lookahead)
+        )(possibleMoves)
 
-  // if the computer is sure to lose, only look one place ahead to prevent the "nearest" loss
-  if (onlyLoses(evaluatedMoves)) {
-    evaluatedMoves = map (nowValue(1)) (possibleMoves);
-  }
+    // if the computer is sure to lose, only look one place ahead to prevent the "nearest" loss
+    if (onlyLoses(evaluatedMoves)) {
+        evaluatedMoves = map(nowValue(1))(possibleMoves)
+    }
 
-  /**
-   * Gets the highest ranked board of the passed board
-   * @param {SequenceType<PairSelectorType<Number, Board>>} boards
-   * @return Board
-   */
-  return bestOf(evaluatedMoves);
-};
+    /**
+     * Gets the highest ranked board of the passed board
+     * @param {SequenceType<PairSelectorType<Number, Board>>} boards
+     * @return Board
+     */
+    return bestOf(evaluatedMoves)
+}
 
 // noinspection JSCheckFunctionSignatures
 /**
@@ -258,20 +294,23 @@ const nextBoard = lookahead => inFields => {
  * @param { SequenceType<PairSelectorType<Number, Board>> } boards
  * @returns boolean
  */
-const onlyLoses = boards =>
-  boards.pipe(
-    map(([v, _]) => v),
-    foldl$((acc, cur) => acc && cur === -1, true)
-  );
+const onlyLoses = (boards) =>
+    boards.pipe(
+        map(([v, _]) => v),
+        foldl$((acc, cur) => acc && cur === -1, true)
+    )
 
 /**
  * gets the best possible turn for the computer from possible boards
  * @param { SequenceType<PairSelectorType<Number, Board>> } boards
  * @return Board
  */
-const bestOf = boards => {
-  if (isEmpty(boards)) return { whosTurn: NoPlayer, fields: [] };
-  const max = /** @type {PairSelectorType} */ max$(boards, ([a, _b1],[b, _b2]) => a < b );
-  // noinspection JSValidateTypes
-  return max(snd);
-};
+const bestOf = (boards) => {
+    if (isEmpty(boards)) return { whosTurn: NoPlayer, fields: [] }
+    const max = /** @type {PairSelectorType} */ max$(
+        boards,
+        ([a, _b1], [b, _b2]) => a < b
+    )
+    // noinspection JSValidateTypes
+    return max(snd)
+}
