@@ -1,4 +1,5 @@
 import { Observable } from "../../kolibri/observable.js";
+import { RecklessObservable } from "../../kolibri/observable/recklessObservable.js";
 import { clamp } from "../util/util.js";
 
 export { JoystickPositionController };
@@ -10,12 +11,8 @@ export { JoystickPositionController };
 const REPEAT_DELAY = 180;
 
 const JoystickPositionController = () => {
-  // We are using EventTarget here instead of Observable to avoid emitting
-  // duplicate events when the same direction is set multiple times in a row.
-  const directionEmitter = new EventTarget();
-
-  /** @type {JoystickDirection} */
-  let currentDirection = null;
+  /** @type {Observable<JoystickDirection>} */
+  let currentDirection = RecklessObservable(null);
   /** @type {number | null} */
   let repeatHandle = null;
   /** @type {number | null} */
@@ -33,12 +30,6 @@ const JoystickPositionController = () => {
 
   const resetCenterOffset = () => centerOffset.setValue({ x: 0, y: 0 });
 
-  const emitDirectionEvent = (direction) => {
-    directionEmitter.dispatchEvent(
-      new CustomEvent("direction", { detail: direction })
-    );
-  };
-
   /**
    * @param {JoystickDirection} direction
    */
@@ -47,7 +38,7 @@ const JoystickPositionController = () => {
 
     stopRepeatingMove();
     repeatHandle = window.setInterval(() => {
-      emitDirectionEvent(direction);
+      currentDirection.setValue(direction);
     }, REPEAT_DELAY);
   };
 
@@ -55,9 +46,8 @@ const JoystickPositionController = () => {
    * @param {JoystickDirection} direction
    */
   const setDirection = (direction) => {
-    if (currentDirection === direction) return;
-    currentDirection = direction;
-    emitDirectionEvent(direction);
+    if (currentDirection.getValue() === direction) return;
+    currentDirection.setValue(direction);
     stopRepeatingMove();
     if (direction) {
       startRepeatingMove(direction);
@@ -139,10 +129,6 @@ const JoystickPositionController = () => {
     registerPointerHandlers,
     resetCenterOffset,
     onCenterOffsetChanged: centerOffset.onChange,
-    onDirectionChanged: (callback) => {
-      directionEmitter.addEventListener("direction", (event) =>
-        callback(event.detail)
-      );
-    },
+    onDirectionChanged: currentDirection.onChange,
   };
 };

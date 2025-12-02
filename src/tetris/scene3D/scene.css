@@ -33,7 +33,6 @@
     transition:         transform .25s ease-out;            /* simulate a bit of momentum */
 }
 
-
 .plane {
     grid-column:        1;
     grid-row:           1;
