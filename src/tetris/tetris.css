@@ -87,6 +87,11 @@ body {
     grid-template-rows:     1fr max-content;
     margin:                 0;
     background:             linear-gradient(in srgb-linear, blue, orange);
+  /* todo! design animation for use orientation horizontal */
+  background-image: url("../../img/background/synthwave-bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 footer {
