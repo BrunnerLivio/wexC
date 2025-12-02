@@ -98,37 +98,41 @@ const JoystickPositionController = () => {
    * @param {HTMLElement} pad
    */
   const registerPointerHandlers = (pad) => {
-    pad.addEventListener("pointerdown", (event) => {
-      const pointerEvent = /** @type {PointerEvent} */ (event);
-      pointerEvent.preventDefault();
-      pad.setPointerCapture(pointerEvent.pointerId);
-      activePointerId = pointerEvent.pointerId;
-      setDirection(computeDirectionFromPointer(pointerEvent, pad));
-    });
-
-    pad.addEventListener("pointermove", (event) => {
+    const handlePointerMove = (event) => {
       const pointerEvent = /** @type {PointerEvent} */ (event);
       if (activePointerId !== pointerEvent.pointerId) {
         return;
       }
+      pointerEvent.preventDefault();
       setDirection(computeDirectionFromPointer(pointerEvent, pad));
-    });
+    };
 
     const handlePointerEnd = (event) => {
       const pointerEvent = /** @type {PointerEvent} */ (event);
       if (activePointerId !== pointerEvent.pointerId) {
         return;
       }
-      if (pad.hasPointerCapture(pointerEvent.pointerId)) {
-        pad.releasePointerCapture(pointerEvent.pointerId);
-      }
       activePointerId = null;
       resetDirection();
+      
+      // Remove document-level listeners
+      document.removeEventListener("pointermove", handlePointerMove);
+      document.removeEventListener("pointerup", handlePointerEnd);
+      document.removeEventListener("pointercancel", handlePointerEnd);
     };
 
-    pad.addEventListener("pointerup", handlePointerEnd);
-    pad.addEventListener("pointercancel", handlePointerEnd);
-    pad.addEventListener("pointerleave", handlePointerEnd);
+    pad.addEventListener("pointerdown", (event) => {
+      const pointerEvent = /** @type {PointerEvent} */ (event);
+      pointerEvent.preventDefault();
+      pointerEvent.stopPropagation();
+      activePointerId = pointerEvent.pointerId;
+      setDirection(computeDirectionFromPointer(pointerEvent, pad));
+      
+      // Add document-level listeners for move and end
+      document.addEventListener("pointermove", handlePointerMove);
+      document.addEventListener("pointerup", handlePointerEnd);
+      document.addEventListener("pointercancel", handlePointerEnd);
+    });
   };
 
   return {

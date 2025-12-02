@@ -12,11 +12,18 @@ export { AxisController };
  * @property {() => void} topplePitchBack
  * @property {() => void} rotateYawLeft
  * @property {() => void} rotateYawRight
+ * @property {(angle: number) => void} rotateRoomX
+ * @property {(angle: number) => void} rotateRoomY
+ * @property {(angle: number) => void} rotateRoomZ
  * @property {{
  *   areWeInCharge: () => boolean,
  *   takeCharge: () => void,
  *   onActivePlayerIdChanged: (callback: Function) => void,
  * }} playerController
+ * @property {{
+ *   getCurrentMode: () => ("tetronimo" | "room"),
+ *   onModeChanged: (callback: Function) => void,
+ * }} switchModeController
  */
 
 /**
@@ -39,17 +46,19 @@ const ROTATION_THRESHOLD = 45; // degrees needed to trigger one rotation
  * @param {AxisDependencies} dependencies
  */
 const AxisController = (om, dependencies) => {
-  const {
-    toppleRollLeft,
-    toppleRollRight,
-    topplePitchForward,
-    topplePitchBack,
-    rotateYawLeft,
-    rotateYawRight,
-    playerController,
-  } = dependencies;
-
-  /** @type {Array<(payload: AxisSetupPayload) => void>} */
+    const {
+        toppleRollLeft,
+        toppleRollRight,
+        topplePitchForward,
+        topplePitchBack,
+        rotateYawLeft,
+        rotateYawRight,
+        rotateRoomX,
+        rotateRoomY,
+        rotateRoomZ,
+        playerController,
+        switchModeController,
+    } = dependencies;  /** @type {Array<(payload: AxisSetupPayload) => void>} */
   const setupCallbacks = [];
   /** @type {Array<(state: AxisState) => void>} */
   const axisStateObservers = [];
@@ -59,6 +68,13 @@ const AxisController = (om, dependencies) => {
 
   // Track rotation offset for each axis (in degrees)
   const axisAngles = {
+    roll: 0,
+    pitch: 0,
+    yaw: 0,
+  };
+  
+  // Track last angle for calculating delta in room mode
+  const lastRoomAngles = {
     roll: 0,
     pitch: 0,
     yaw: 0,
@@ -104,23 +120,38 @@ const AxisController = (om, dependencies) => {
     axisAngles[axis] = angle;
     notifyAxisStateObservers({ axis, angle });
 
-    // Calculate how many rotations should have been applied based on threshold
-    const targetRotations = Math.floor(angle / ROTATION_THRESHOLD);
-    const currentRotations = appliedRotations[axis];
-
-    if (targetRotations !== currentRotations) {
-      const diff = targetRotations - currentRotations;
-      const handlers = axisHandlers[axis];
-
-      // Apply the difference in rotations
-      const handler = diff > 0 ? handlers.right : handlers.left;
-      const count = Math.abs(diff);
-
-      for (let i = 0; i < count; i++) {
-        handler();
+    const currentMode = switchModeController?.getCurrentMode();
+    
+    if (currentMode === 'room') {
+      const delta = angle - lastRoomAngles[axis];
+      lastRoomAngles[axis] = angle;
+      
+      if (axis === 'roll') {
+        rotateRoomZ(delta); // Roll rotates around Z axis (barrel roll)
+      } else if (axis === 'pitch') {
+        rotateRoomX(delta); // Pitch rotates around X axis (nose up/down)
+      } else if (axis === 'yaw') {
+        rotateRoomY(delta); // Yaw rotates around Y axis (turn left/right)
       }
+    } else {
+      const absAngle = Math.abs(angle);
+      const direction = angle >= 0 ? 1 : -1;
+      const targetRotations = Math.floor(absAngle / ROTATION_THRESHOLD) * direction;
+      const currentRotations = appliedRotations[axis];
 
-      appliedRotations[axis] = targetRotations;
+      if (targetRotations !== currentRotations) {
+        const diff = targetRotations - currentRotations;
+        const handlers = axisHandlers[axis];
+
+        const handler = diff > 0 ? handlers.right : handlers.left;
+        const count = Math.abs(diff);
+
+        for (let i = 0; i < count; i++) {
+          handler();
+        }
+
+        appliedRotations[axis] = targetRotations;
+      }
     }
   };
 
@@ -131,6 +162,7 @@ const AxisController = (om, dependencies) => {
   const resetAxis = (axis) => {
     axisAngles[axis] = 0;
     appliedRotations[axis] = 0;
+    lastRoomAngles[axis] = 0;
     notifyAxisStateObservers({ axis, angle: 0 });
   };
 

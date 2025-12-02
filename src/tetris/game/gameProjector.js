@@ -116,6 +116,22 @@ const projectMain = (gameController) => {
     const [...ghostBoxesDivs] = select(ghostDiv, '.box');
 
     registerForMouseAndTouch(main); // the general handling of living in a 3D scene
+    
+    // Connect scene rotation to axis controller for room mode
+    gameController.setRoomRotationCallbacks({
+        rotateX: (deltaAngle) => {
+            const currentX = parseFloat(window.getComputedStyle(coordsDiv).getPropertyValue('--coords-rotate-x')) || 0;
+            coordsDiv.style.setProperty('--coords-rotate-x', String(currentX - deltaAngle));
+        },
+        rotateY: (deltaAngle) => {
+            const currentY = parseFloat(window.getComputedStyle(coordsDiv).getPropertyValue('--coords-rotate-y')) || 0;
+            coordsDiv.style.setProperty('--coords-rotate-y', String(currentY + deltaAngle));
+        },
+        rotateZ: (deltaAngle) => {
+            const currentZ = parseFloat(window.getComputedStyle(coordsDiv).getPropertyValue('--coords-rotate-z')) || 0;
+            coordsDiv.style.setProperty('--coords-rotate-z', String(currentZ + deltaAngle));
+        },
+    });
 
     gameController.tetrominoController.onCurrentTetrominoIdChanged((tetroId) => {
         // show ghost only if we have a current tetro
@@ -219,21 +235,21 @@ const projectAxisControl = (gameController) => {
           <!-- Roll ring (outer) -->
           <g class="axis-ring" data-axis="roll">
             <circle class="ring-track" cx="100" cy="100" r="85" />
-            <circle class="ring-handle" cx="100" cy="15" r="8" />
+            <circle class="ring-handle" cx="15" cy="100" r="8" />
             <text class="ring-label" x="100" y="8" text-anchor="middle">Roll</text>
           </g>
           
           <!-- Pitch ring (middle) -->
           <g class="axis-ring" data-axis="pitch">
             <circle class="ring-track" cx="100" cy="100" r="65" />
-            <circle class="ring-handle" cx="100" cy="35" r="8" />
+            <circle class="ring-handle" cx="35" cy="100" r="8" />
             <text class="ring-label" x="100" y="28" text-anchor="middle">Pitch</text>
           </g>
           
           <!-- Yaw ring (inner) -->
           <g class="axis-ring" data-axis="yaw">
             <circle class="ring-track" cx="100" cy="100" r="45" />
-            <circle class="ring-handle" cx="100" cy="55" r="8" />
+            <circle class="ring-handle" cx="55" cy="100" r="8" />
             <text class="ring-label" x="100" y="48" text-anchor="middle">Yaw</text>
           </g>
         </svg>
@@ -283,10 +299,42 @@ const projectAxisControl = (gameController) => {
     ring.setAttribute('transform', `rotate(${angle} 100 100)`);
   };
 
-  // Track dragging state
   let dragState = null;
 
-  // Bind ring drag handlers
+  const handlePointerMove = /** @param {PointerEvent} event */ (event) => {
+    if (!dragState) return;
+    
+    event.preventDefault();
+    const currentPointerAngle = calculateAngle(event, svg);
+    
+    let deltaAngle = currentPointerAngle - dragState.startAngle;
+    
+    if (deltaAngle > 180) deltaAngle -= 360;
+    if (deltaAngle < -180) deltaAngle += 360;
+    
+    dragState.currentAngle = deltaAngle;
+    
+    updateRingRotation(dragState.ring, deltaAngle);
+    
+    gameController.axisController?.setAxisAngle(dragState.axis, deltaAngle);
+  };
+
+  const handlePointerEnd = () => {
+    if (!dragState) return;
+    
+    dragState.ring.classList.remove('dragging');
+    
+    updateRingRotation(dragState.ring, 0);
+    
+    gameController.axisController?.resetAxis(dragState.axis);
+    
+    document.removeEventListener('pointermove', handlePointerMove);
+    document.removeEventListener('pointerup', handlePointerEnd);
+    document.removeEventListener('pointercancel', handlePointerEnd);
+    
+    dragState = null;
+  };
+
   rings.forEach((ring) => {
     const axis = ring.getAttribute('data-axis');
     const handle = ring.querySelector('.ring-handle');
@@ -295,54 +343,20 @@ const projectAxisControl = (gameController) => {
 
     handle.addEventListener('pointerdown', /** @param {PointerEvent} event */ (event) => {
       event.preventDefault();
-      handle.setPointerCapture(event.pointerId);
+      event.stopPropagation();
       
       ring.classList.add('dragging');
       dragState = {
         axis,
+        ring,
         startAngle: calculateAngle(event, svg),
         currentAngle: 0,
       };
+      
+      document.addEventListener('pointermove', handlePointerMove);
+      document.addEventListener('pointerup', handlePointerEnd);
+      document.addEventListener('pointercancel', handlePointerEnd);
     });
-
-    handle.addEventListener('pointermove', /** @param {PointerEvent} event */ (event) => {
-      if (!dragState || dragState.axis !== axis) return;
-      
-      event.preventDefault();
-      const currentPointerAngle = calculateAngle(event, svg);
-      
-      // Calculate relative rotation from start
-      let deltaAngle = currentPointerAngle - dragState.startAngle;
-      
-      // Handle 360° wrap-around
-      if (deltaAngle > 180) deltaAngle -= 360;
-      if (deltaAngle < -180) deltaAngle += 360;
-      
-      dragState.currentAngle = deltaAngle;
-      
-      // Update visual rotation
-      updateRingRotation(ring, deltaAngle);
-      
-      // Notify controller (which will trigger rotations at threshold)
-      gameController.axisController?.setAxisAngle(axis, Math.abs(deltaAngle));
-    });
-
-    const endDrag = () => {
-      if (!dragState || dragState.axis !== axis) return;
-      
-      ring.classList.remove('dragging');
-      
-      // Reset visual rotation
-      updateRingRotation(ring, 0);
-      
-      // Reset controller state
-      gameController.axisController?.resetAxis(axis);
-      
-      dragState = null;
-    };
-
-    handle.addEventListener('pointerup', endDrag);
-    handle.addEventListener('pointercancel', endDrag);
   });
 
   gameController.axisController?.notifySetupFinished(container);

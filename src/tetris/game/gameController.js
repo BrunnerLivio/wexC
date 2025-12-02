@@ -18,21 +18,21 @@ import { GameStateController } from "../gameState/gameStateController.js";
 import { JoystickPositionController } from "../joystickPositionController/joystickPositionController.js";
 import { PlayerController } from "../player/playerController.js";
 import {
-    moveBack,
-    moveDown,
-    moveForw,
-    moveLeft,
-    moveRight,
-    normalize,
-    rotateYaw,
-    topplePitch,
-    toppleRoll,
-  toppleRollLeft,
-  toppleRollRight,
-  topplePitchForward,
-  topplePitchBack,
+  moveBack,
+  moveDown,
+  moveForw,
+  moveLeft,
+  moveRight,
+  normalize,
+  rotateYaw,
   rotateYawLeft,
   rotateYawRight,
+  topplePitch,
+  topplePitchBack,
+  topplePitchForward,
+  toppleRoll,
+  toppleRollLeft,
+  toppleRollRight,
 } from "../shape/shapeController.js";
 import { SwitchModeController } from "../switchModeController/switchModeController.js";
 import { TetrominoController } from "../tetromino/tetrominoController.js";
@@ -53,6 +53,7 @@ const log = LoggerFactory("ch.fhnw.tetris.game.gameController");
  * @property joystickPositionController
  * @property switchModeController
  * @property axisController
+ * @property setRoomRotationCallbacks
  */
 
 /**
@@ -317,17 +318,31 @@ const GameController = (om) => {
   const tetrominoController = TetrominoController(om, omPublishStrategy, boxController);
   const playerController = PlayerController(om, omPublishStrategy, onSetupFinished);
 
-  const joystickPositionController = JoystickPositionController();
-  const axisController = AxisController(om, {
-    toppleRollLeft: () => turnShape(toppleRollLeft),
-    toppleRollRight: () => turnShape(toppleRollRight),
-    topplePitchForward: () => turnShape(topplePitchForward),
-    topplePitchBack: () => turnShape(topplePitchBack),
-    rotateYawLeft: () => turnShape(rotateYawLeft),
-    rotateYawRight: () => turnShape(rotateYawRight),
-    playerController,
-  });
-  const switchModeController = SwitchModeController(om);
+    const joystickPositionController = JoystickPositionController();
+    const switchModeController = SwitchModeController(om);
+
+    // room rotation callbacks (will be set by projector)
+    let roomRotationCallbacks = {
+        rotateX: (angle) => {},
+        rotateY: (angle) => {},
+        rotateZ: (angle) => {},
+    };
+
+    const axisController = AxisController(om, {
+        toppleRollLeft: () => turnShape(toppleRollLeft),
+        toppleRollRight: () => turnShape(toppleRollRight),
+        topplePitchForward: () => turnShape(topplePitchForward),
+        topplePitchBack: () => turnShape(topplePitchBack),
+        rotateYawLeft: () => turnShape(rotateYawLeft),
+        rotateYawRight: () => turnShape(rotateYawRight),
+        rotateRoomX: (angle) => roomRotationCallbacks.rotateX(angle),
+        rotateRoomY: (angle) => roomRotationCallbacks.rotateY(angle),
+        rotateRoomZ: (angle) => roomRotationCallbacks.rotateZ(angle),
+        playerController,
+        switchModeController,
+    });  const setRoomRotationCallbacks = (callbacks) => {
+    roomRotationCallbacks = callbacks;
+  };
 
   playerController.onWeHaveBecomeActive((_) => {
     registerNextFallTask(); // we are now responsible for keeping the fall task alive
@@ -390,5 +405,6 @@ const GameController = (om) => {
     joystickPositionController,
     switchModeController,
     axisController,
+    setRoomRotationCallbacks,
   };
 };
