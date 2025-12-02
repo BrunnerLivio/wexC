@@ -543,6 +543,16 @@ const projectJoystickPositionControl = (gameController) => {
     return view
 }
 
+const projectLeftSideControl = (gameController) => {
+    const view = dom(`<aside class="left-side-control"></aside>`)
+    const mainElement = view[0]
+    mainElement.append(
+        ...projectJoystickPositionControl(gameController),
+        ...projectSwitchModeControl(gameController)
+    )
+    return view
+}
+
 /**
  * @param { import("./gameController.js").GameControllerType} gameController
  * @return { Array<HTMLElement> }
@@ -551,8 +561,8 @@ const projectGame = (gameController) => {
     return [
         ...projectControlPanel(gameController),
         ...projectMain(gameController),
-        ...projectJoystickPositionControl(gameController),
+        ...projectControlPanel(gameController),
+        ...projectLeftSideControl(gameController),
         ...projectAxisControl(gameController),
-        ...projectSwitchModeControl(gameController),
     ]
 }

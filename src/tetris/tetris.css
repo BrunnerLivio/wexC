@@ -21,9 +21,9 @@
     --joystick-stroke: #fff;
     --joystick-glow: rgba(130, 157, 255, 0.22);
 
-    --switch-width: 140px; /* corresponds to viewbox of right icon */
-    --switch-height: 75px;
-    --track-pad: 10px;
+    --switch-width: 120px; /* corresponds to viewbox of right icon */
+    --switch-height: 55px;
+    --track-pad: 5px;
     --dot-size: 45px; /* corresponds to viewbox properties of both left and right icon */
     --travel-gap: 6px; /* small extra offset so dot sits nicely inside stroke */
     --transition: 320ms cubic-bezier(0.2, 0.9, 0.3, 1);
@@ -150,8 +150,7 @@ footer {
     scale: 10;
     translate: calc(var(--x) * var(--box-width))
         calc(var(--y) * var(--box-width)) calc((-1 / 2) * var(--box-width));
-    transition:
-        translate 0.7s cubic-bezier(1, 0.7, 1, 1),
+    transition: translate 0.7s cubic-bezier(1, 0.7, 1, 1),
         scale 0.6s 0.6s ease-out;
 }
 
@@ -159,9 +158,7 @@ footer {
     opacity: 0;
     filter: blur(0.2cqmin);
     transform: rotateY(0deg) rotateX(0deg);
-    transition:
-        transform 1s 0.4s linear,
-        opacity 0.5s 1s linear,
+    transition: transform 1s 0.4s linear, opacity 0.5s 1s linear,
         filter 0.6s 0.5s linear;
 }
 
@@ -263,10 +260,19 @@ footer {
     transform: rotateY(-90deg);
 }
 
-.joystick-position-control {
+.left-side-control {
     position: fixed;
-    inset: 1.5em auto auto 1.5em;
+    top: 50%;
+    left: 1.5em;
+    transform: translateY(-50%);
     z-index: 12;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.joystick-position-control {
     display: grid;
     gap: 0.6em;
     color: var(--joystick-title-color);
@@ -382,9 +388,7 @@ footer {
             var(--joystick-center-offset-y, 0px)
         )
         scale(var(--joystick-center-scale, 1));
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     pointer-events: none;
     border: 1px solid var(--joystick-stroke);
     box-shadow: 0 0 10.4px 5px var(--joystick-glow);
@@ -402,8 +406,7 @@ footer {
 
 .joystick-pad[data-direction] .joystick-center {
     --joystick-center-scale: 1.04;
-    box-shadow:
-        inset 0 0 18px rgba(255, 255, 255, 0.85),
+    box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.85),
         0 0 38px rgba(255, 255, 255, 0.5);
 }
 
@@ -425,17 +428,14 @@ footer {
 }
 
 .switch {
+    position: relative;
     display: inline-block;
     width: var(--switch-width);
     height: var(--switch-height);
-    position: fixed;
-    inset: auto auto 2em 1.5em;
-    z-index: 12;
 }
 
 /* keep input accessible but visually hidden */
 .switch input {
-    position: absolute;
     inset: 0;
     margin: 0;
     opacity: 0;
@@ -445,11 +445,10 @@ footer {
 
 .switch .track {
     position: absolute;
-    left: var(--track-pad);
-    right: var(--track-pad);
-    top: var(--track-pad);
-    bottom: var(--track-pad);
-    border-radius: 27px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
     background: transparent;
     border: 1px solid #eeeeee;
     pointer-events: none;
