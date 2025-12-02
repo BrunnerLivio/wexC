@@ -1,11 +1,11 @@
 export { SwitchModeController }
 
 /**
- * @typedef {"tetronimo" | "room"} ControllerMode
+ * @typedef {"tetromino" | "room"} ControllerMode
  */
 
 /** @type {Array<ControllerMode>} */
-const modes = ['tetronimo', 'room']
+const modes = ['tetromino', 'room']
 
 /**
  * @param {import("../../kolibri/observable/observableMap").ObservableMapType} om
@@ -19,6 +19,7 @@ const SwitchModeController = (om) => {
     const changeMode = (value) => {
         if (value) {
             currentMode = modes[1]
+            document.body.classList.toggle('mode-room')
         } else {
             currentMode = modes[0]
         }

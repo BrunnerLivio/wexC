@@ -12,7 +12,7 @@ export { GameState, NO_GAME_STATE }
  * Game state. The active user has to care for updating this.
  * @typedef GameStateModelType
  * @property { ForeignKeyType } id
- * @property { Boolean } fallingDown - Whether the current tetronimo is supposed to be falling.
+ * @property { Boolean } fallingDown - Whether the current tetromino is supposed to be falling.
  * @property { Number  } score
  */
 

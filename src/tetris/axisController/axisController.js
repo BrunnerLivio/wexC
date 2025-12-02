@@ -21,7 +21,7 @@ export { AxisController }
  *   onActivePlayerIdChanged: (callback: Function) => void,
  * }} playerController
  * @property {{
- *   getCurrentMode: () => ("tetronimo" | "room"),
+ *   getCurrentMode: () => ("tetromino" | "room"),
  *   onModeChanged: (callback: Function) => void,
  * }} switchModeController
  */
