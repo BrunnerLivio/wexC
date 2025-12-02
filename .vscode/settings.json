@@ -1,12 +1,7 @@
 {
-    "editor.tabSize": 2,
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "always",
-        "source.fixAll.eslint": "always"
-    },
+    "editor.tabSize": 4,
     "files.insertFinalNewline": true,
-    "prettier.tabWidth": 2,
+    "prettier.tabWidth": 4,
     "prettier.singleQuote": false,
     "[html]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -23,5 +18,5 @@
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "javascript.preferences.quoteStyle": "double",
+    "javascript.preferences.quoteStyle": "double"
 }
