@@ -1,4 +1,4 @@
-import { createMonadicSequence } from "../../sequencePrototype.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
 
 export { Seq }
 
@@ -19,20 +19,20 @@ export { Seq }
  * // => Logs '1' '2'
  */
 const Seq = (...values) => {
+    const seqIterator = () => {
+        let index = 0
 
-  const seqIterator = () => {
-    let index = 0;
+        const next = () => {
+            const result =
+                index > values.length - 1
+                    ? { done: true, value: undefined }
+                    : { done: false, value: values[index] }
+            index++
+            return result
+        }
 
-    const next = () => {
-      const result = ( index > values.length -1 )
-        ?  { done: true,  value: undefined }
-        :  { done: false, value: values[index] };
-      index++;
-      return result;
-    };
+        return { next }
+    }
 
-    return { next }
-  };
-
-  return createMonadicSequence( seqIterator )
-};
+    return createMonadicSequence(seqIterator)
+}

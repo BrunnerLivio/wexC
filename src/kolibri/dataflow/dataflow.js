@@ -23,14 +23,16 @@ export { DataFlowVariable, Scheduler }
  *     const y = DataFlowVariable(() => 1);
  *     x() === 2
  */
-const DataFlowVariable = createValue => {
-    let value = undefined;
+const DataFlowVariable = (createValue) => {
+    let value = undefined
     return () => {
-        if (value !== undefined) { return value }
-        value = createValue();
-        return value;
+        if (value !== undefined) {
+            return value
+        }
+        value = createValue()
+        return value
     }
-};
+}
 
 /**
  * @callback onResolveCallback
@@ -68,25 +70,29 @@ const DataFlowVariable = createValue => {
  *     // log contains first A, then B
  */
 const Scheduler = () => {
-    let inProcess = false;
-    const tasks = [];
+    let inProcess = false
+    const tasks = []
     function process() {
-        if (inProcess) return;
-        if (tasks.length === 0) return;
-        inProcess = true;
-        const task = tasks.pop();
-        const prom = new Promise( ok => task(ok) );
-        prom.then( _ => {
-            inProcess = false;
-            process();
-        });
+        if (inProcess) return
+        if (tasks.length === 0) return
+        inProcess = true
+        const task = tasks.pop()
+        const prom = new Promise((ok) => task(ok))
+        prom.then((_) => {
+            inProcess = false
+            process()
+        })
     }
     function add(task) {
-        tasks.unshift(task);
-        process();
+        tasks.unshift(task)
+        process()
     }
     return {
-        add:   add,
-        addOk: task => add( ok => { task(); ok(); }) // convenience
+        add: add,
+        addOk: (task) =>
+            add((ok) => {
+                task()
+                ok()
+            }), // convenience
     }
-};
+}

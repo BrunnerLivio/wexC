@@ -1,31 +1,31 @@
-export { RadialController };
+export { RadialController }
 
 /**
  *
  * @param {import("./radialModel").RadialModelType} RadialModel
  */
 const RadialController = (RadialModel) => {
-  /**
-   * @param {HTMLDivElement} $element
-   */
-  const render = ($element) => {
-    // Render SVG circle control
-    // const svgNS = "http://www.w3.org/2000/svg";
-    // const svg = document.createElementNS(svgNS, "svg");
-    // svg.setAttribute("width", "200");
-    // svg.setAttribute("height", "200");
-    // $element.appendChild(svg);
+    /**
+     * @param {HTMLDivElement} $element
+     */
+    const render = ($element) => {
+        // Render SVG circle control
+        // const svgNS = "http://www.w3.org/2000/svg";
+        // const svg = document.createElementNS(svgNS, "svg");
+        // svg.setAttribute("width", "200");
+        // svg.setAttribute("height", "200");
+        // $element.appendChild(svg);
 
-    // const circle = document.createElementNS(svgNS, "circle");
-    // circle.setAttribute("cx", "100");
-    // circle.setAttribute("cy", "100");
-    // circle.setAttribute("r", RadialModel.radius.toString());
-    // circle.setAttribute("stroke", RadialModel.color);
-    // circle.setAttribute("stroke-width", "10");
-    // circle.setAttribute("fill", "none");
-    // svg.appendChild(circle);
+        // const circle = document.createElementNS(svgNS, "circle");
+        // circle.setAttribute("cx", "100");
+        // circle.setAttribute("cy", "100");
+        // circle.setAttribute("r", RadialModel.radius.toString());
+        // circle.setAttribute("stroke", RadialModel.color);
+        // circle.setAttribute("stroke-width", "10");
+        // circle.setAttribute("fill", "none");
+        // svg.appendChild(circle);
 
-    $element.innerHTML = `
+        $element.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" width="225" height="393" viewBox="0 0 225 393" fill="none">
   <g filter="url(#filter0_dg_1330_139)">
     <circle cx="224.463" cy="195.866" r="120.439" transform="rotate(11.3768 224.463 195.866)" stroke="url(#paint0_linear_1330_139)" stroke-width="8"/>
@@ -52,10 +52,10 @@ const RadialController = (RadialModel) => {
       <stop offset="1" stop-color="#AFFF02"/>
     </linearGradient>
   </defs>
-</svg>`;
-  };
+</svg>`
+    }
 
-  return {
-    render,
-  };
-};
+    return {
+        render,
+    }
+}

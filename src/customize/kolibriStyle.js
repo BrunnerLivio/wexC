@@ -8,17 +8,39 @@
  */
 
 export {
-    colorAccent, colorOk, colorNeutral, colorSelect, colorOutput, colorShadow, shadowCss,
-    hsl, hsla,
-    KOLIBRI_LOGO_SVG
+    colorAccent,
+    colorOk,
+    colorNeutral,
+    colorSelect,
+    colorOutput,
+    colorShadow,
+    shadowCss,
+    hsl,
+    hsla,
+    KOLIBRI_LOGO_SVG,
 }
 
 export {
-    colorPrimaryDark,     colorPrimaryAccent, colorPrimaryBg,    colorPrimaryLight,
-    colorSecondaryAccent, colorSecondaryDark, colorSecondaryBg,  colorSecondaryLight,
-    colorSuccessAccent,   colorSuccessDark,   colorSuccessLight, colorSuccessBg,
-    colorWarningAccent,   colorWarningDark,   colorWarningBg,    colorWarningLight,
-    colorDangerAccent,    colorDangerDark,    colorDangerBg,     colorDangerLight
+    colorPrimaryDark,
+    colorPrimaryAccent,
+    colorPrimaryBg,
+    colorPrimaryLight,
+    colorSecondaryAccent,
+    colorSecondaryDark,
+    colorSecondaryBg,
+    colorSecondaryLight,
+    colorSuccessAccent,
+    colorSuccessDark,
+    colorSuccessLight,
+    colorSuccessBg,
+    colorWarningAccent,
+    colorWarningDark,
+    colorWarningBg,
+    colorWarningLight,
+    colorDangerAccent,
+    colorDangerDark,
+    colorDangerBg,
+    colorDangerLight,
 }
 
 /* note to FA: spacers and font constants have been removed here (DK) */
@@ -32,7 +54,7 @@ export {
  * @example
  * const fireTruckRed = hsl(0, 100, 50);
  */
-const hsl  = (hue, sat, light)        => `hsl(${hue}, ${sat}%, ${light}%)`;
+const hsl = (hue, sat, light) => `hsl(${hue}, ${sat}%, ${light}%)`
 
 /**
  * Css string value for the given color. We keep values as HSL to allow easier manipulation.
@@ -44,136 +66,137 @@ const hsl  = (hue, sat, light)        => `hsl(${hue}, ${sat}%, ${light}%)`;
  * @example
  * const paleRose = hsla(0, 100, 50, 0.3);
  */
-const hsla = (hue, sat, light, alpha) => `hsl(${hue}, ${sat}%, ${light}%, ${alpha})`;
+const hsla = (hue, sat, light, alpha) =>
+    `hsl(${hue}, ${sat}%, ${light}%, ${alpha})`
 
-const colorAccent  = "var(--kolibri-color-accent)";
-const colorOk      = "var(--kolibri-color-ok)";
-const colorNeutral = "var(--kolibri-color-neutral)";
-const colorSelect  = "var(--kolibri-color-select)";
+const colorAccent = 'var(--kolibri-color-accent)'
+const colorOk = 'var(--kolibri-color-ok)'
+const colorNeutral = 'var(--kolibri-color-neutral)'
+const colorSelect = 'var(--kolibri-color-select)'
 
-const colorOutput = "var(--kolibri-color-output)";
-const colorShadow = "var(--kolibri-color-shadow)";
+const colorOutput = 'var(--kolibri-color-output)'
+const colorShadow = 'var(--kolibri-color-shadow)'
 
-const shadowCss   = "var(--kolibri-box-shadow)";
+const shadowCss = 'var(--kolibri-box-shadow)'
 
 // -- All colors according to Design File in Figma --
 
 /* --- purple --- */
-const palette_purple800     = "var(--kolibri-palette-purple-800)";
-const palette_purple700     = "var(--kolibri-palette-purple-700)";
-const palette_purple600     = "var(--kolibri-palette-purple-600)";
-const palette_purple500     = "var(--kolibri-palette-purple-500)";
-const palette_purple400     = "var(--kolibri-palette-purple-400)";
-const palette_purple300     = "var(--kolibri-palette-purple-300)";
-const palette_purple200     = "var(--kolibri-palette-purple-200)";
-const palette_purple100     = "var(--kolibri-palette-purple-100)";
+const palette_purple800 = 'var(--kolibri-palette-purple-800)'
+const palette_purple700 = 'var(--kolibri-palette-purple-700)'
+const palette_purple600 = 'var(--kolibri-palette-purple-600)'
+const palette_purple500 = 'var(--kolibri-palette-purple-500)'
+const palette_purple400 = 'var(--kolibri-palette-purple-400)'
+const palette_purple300 = 'var(--kolibri-palette-purple-300)'
+const palette_purple200 = 'var(--kolibri-palette-purple-200)'
+const palette_purple100 = 'var(--kolibri-palette-purple-100)'
 
 /* --- lavender --- */
-const palette_lavender800   = "var(--kolibri-palette-lavender-800)";
-const palette_lavender700   = "var(--kolibri-palette-lavender-700)";
-const palette_lavender600   = "var(--kolibri-palette-lavender-600)";
-const palette_lavender500   = "var(--kolibri-palette-lavender-500)";
-const palette_lavender400   = "var(--kolibri-palette-lavender-400)";
-const palette_lavender300   = "var(--kolibri-palette-lavender-300)";
-const palette_lavender200   = "var(--kolibri-palette-lavender-200)";
-const palette_lavender100   = "var(--kolibri-palette-lavender-100)";
+const palette_lavender800 = 'var(--kolibri-palette-lavender-800)'
+const palette_lavender700 = 'var(--kolibri-palette-lavender-700)'
+const palette_lavender600 = 'var(--kolibri-palette-lavender-600)'
+const palette_lavender500 = 'var(--kolibri-palette-lavender-500)'
+const palette_lavender400 = 'var(--kolibri-palette-lavender-400)'
+const palette_lavender300 = 'var(--kolibri-palette-lavender-300)'
+const palette_lavender200 = 'var(--kolibri-palette-lavender-200)'
+const palette_lavender100 = 'var(--kolibri-palette-lavender-100)'
 
 /* --- blue --- */
-const palette_blue800       = "var(--kolibri-palette-blue-800)";
-const palette_blue700       = "var(--kolibri-palette-blue-700)";
-const palette_blue600       = "var(--kolibri-palette-blue-600)";
-const palette_blue500       = "var(--kolibri-palette-blue-500)";
-const palette_blue400       = "var(--kolibri-palette-blue-400)";
-const palette_blue300       = "var(--kolibri-palette-blue-300)";
-const palette_blue200       = "var(--kolibri-palette-blue-200)";
-const palette_blue100       = "var(--kolibri-palette-blue-100)";
+const palette_blue800 = 'var(--kolibri-palette-blue-800)'
+const palette_blue700 = 'var(--kolibri-palette-blue-700)'
+const palette_blue600 = 'var(--kolibri-palette-blue-600)'
+const palette_blue500 = 'var(--kolibri-palette-blue-500)'
+const palette_blue400 = 'var(--kolibri-palette-blue-400)'
+const palette_blue300 = 'var(--kolibri-palette-blue-300)'
+const palette_blue200 = 'var(--kolibri-palette-blue-200)'
+const palette_blue100 = 'var(--kolibri-palette-blue-100)'
 
 /* --- green --- */
-const palette_green800      = "var(--kolibri-palette-green-800)";
-const palette_green700      = "var(--kolibri-palette-green-700)";
-const palette_green600      = "var(--kolibri-palette-green-600)";
-const palette_green500      = "var(--kolibri-palette-green-500)";
-const palette_green400      = "var(--kolibri-palette-green-400)";
-const palette_green300      = "var(--kolibri-palette-green-300)";
-const palette_green200      = "var(--kolibri-palette-green-200)";
-const palette_green100      = "var(--kolibri-palette-green-100)";
+const palette_green800 = 'var(--kolibri-palette-green-800)'
+const palette_green700 = 'var(--kolibri-palette-green-700)'
+const palette_green600 = 'var(--kolibri-palette-green-600)'
+const palette_green500 = 'var(--kolibri-palette-green-500)'
+const palette_green400 = 'var(--kolibri-palette-green-400)'
+const palette_green300 = 'var(--kolibri-palette-green-300)'
+const palette_green200 = 'var(--kolibri-palette-green-200)'
+const palette_green100 = 'var(--kolibri-palette-green-100)'
 
 /* --- yellow --- */
-const palette_yellow800     = "var(--kolibri-palette-yellow-800)";
-const palette_yellow700     = "var(--kolibri-palette-yellow-700)";
-const palette_yellow600     = "var(--kolibri-palette-yellow-600)";
-const palette_yellow500     = "var(--kolibri-palette-yellow-500)";
-const palette_yellow400     = "var(--kolibri-palette-yellow-400)";
-const palette_yellow300     = "var(--kolibri-palette-yellow-300)";
-const palette_yellow200     = "var(--kolibri-palette-yellow-200)";
-const palette_yellow100     = "var(--kolibri-palette-yellow-100)";
+const palette_yellow800 = 'var(--kolibri-palette-yellow-800)'
+const palette_yellow700 = 'var(--kolibri-palette-yellow-700)'
+const palette_yellow600 = 'var(--kolibri-palette-yellow-600)'
+const palette_yellow500 = 'var(--kolibri-palette-yellow-500)'
+const palette_yellow400 = 'var(--kolibri-palette-yellow-400)'
+const palette_yellow300 = 'var(--kolibri-palette-yellow-300)'
+const palette_yellow200 = 'var(--kolibri-palette-yellow-200)'
+const palette_yellow100 = 'var(--kolibri-palette-yellow-100)'
 
 /* --- pink --- */
-const palette_pink800       = "var(--kolibri-palette-pink-800)";
-const palette_pink700       = "var(--kolibri-palette-pink-700)";
-const palette_pink600       = "var(--kolibri-palette-pink-600)";
-const palette_pink500       = "var(--kolibri-palette-pink-500)";
-const palette_pink400       = "var(--kolibri-palette-pink-400)";
-const palette_pink300       = "var(--kolibri-palette-pink-300)";
-const palette_pink200       = "var(--kolibri-palette-pink-200)";
-const palette_pink100       = "var(--kolibri-palette-pink-100)";
+const palette_pink800 = 'var(--kolibri-palette-pink-800)'
+const palette_pink700 = 'var(--kolibri-palette-pink-700)'
+const palette_pink600 = 'var(--kolibri-palette-pink-600)'
+const palette_pink500 = 'var(--kolibri-palette-pink-500)'
+const palette_pink400 = 'var(--kolibri-palette-pink-400)'
+const palette_pink300 = 'var(--kolibri-palette-pink-300)'
+const palette_pink200 = 'var(--kolibri-palette-pink-200)'
+const palette_pink100 = 'var(--kolibri-palette-pink-100)'
 
 /* --- monochrome --- */
 /* todo dk: these names make issues when used through the production bundle. Better prefix with "color-" or so.*/
-const colorBlack            = hsl(240,  15,  9);
-const colorBody             = hsl(247,  15, 35);
-const colorLabel            = hsl(235,  14, 50);
-const colorPlaceholder      = hsl(234,  18, 68);
-const colorBackgroundDark   = hsl(249,  23, 18);
-const colorLine             = hsl(233,  27, 88);
-const colorBackgroundLight  = hsl(231,  28, 95);
-const colorWhite            = hsl(240,  45, 98);
+const colorBlack = hsl(240, 15, 9)
+const colorBody = hsl(247, 15, 35)
+const colorLabel = hsl(235, 14, 50)
+const colorPlaceholder = hsl(234, 18, 68)
+const colorBackgroundDark = hsl(249, 23, 18)
+const colorLine = hsl(233, 27, 88)
+const colorBackgroundLight = hsl(231, 28, 95)
+const colorWhite = hsl(240, 45, 98)
 
 /* --- transparent - dark --- */
-const palette_black95       = hsla(...colorBlack, 0.95);
-const palette_black75       = hsla(...colorBlack, 0.75);
-const palette_black65       = hsla(...colorBlack, 0.65);
-const palette_black40       = hsla(...colorBlack, 0.40);
-const palette_black25       = hsla(...colorBlack, 0.25);
-const palette_black10       = hsla(...colorBlack, 0.10);
+const palette_black95 = hsla(...colorBlack, 0.95)
+const palette_black75 = hsla(...colorBlack, 0.75)
+const palette_black65 = hsla(...colorBlack, 0.65)
+const palette_black40 = hsla(...colorBlack, 0.4)
+const palette_black25 = hsla(...colorBlack, 0.25)
+const palette_black10 = hsla(...colorBlack, 0.1)
 
 /* --- transparent - white --- */
-const palette_white95       = hsla(...colorWhite, 0.95);
-const palette_white75       = hsla(...colorWhite, 0.75);
-const palette_white65       = hsla(...colorWhite, 0.65);
-const palette_white40       = hsla(...colorWhite, 0.40);
-const palette_white25       = hsla(...colorWhite, 0.25);
-const palette_white10       = hsla(...colorWhite, 0.10);
+const palette_white95 = hsla(...colorWhite, 0.95)
+const palette_white75 = hsla(...colorWhite, 0.75)
+const palette_white65 = hsla(...colorWhite, 0.65)
+const palette_white40 = hsla(...colorWhite, 0.4)
+const palette_white25 = hsla(...colorWhite, 0.25)
+const palette_white10 = hsla(...colorWhite, 0.1)
 
 /* --- primary --- */
-const colorPrimaryDark   = palette_purple700;
-const colorPrimaryAccent = palette_purple500;
-const colorPrimaryLight  = palette_purple200;
-const colorPrimaryBg     = palette_purple100;
+const colorPrimaryDark = palette_purple700
+const colorPrimaryAccent = palette_purple500
+const colorPrimaryLight = palette_purple200
+const colorPrimaryBg = palette_purple100
 
 /* --- secondary --- */
-const colorSecondaryDark   = palette_blue800;
-const colorSecondaryAccent = palette_blue500;
-const colorSecondaryLight  = palette_blue200;
-const colorSecondaryBg     = palette_blue100;
+const colorSecondaryDark = palette_blue800
+const colorSecondaryAccent = palette_blue500
+const colorSecondaryLight = palette_blue200
+const colorSecondaryBg = palette_blue100
 
 /* --- success --- */
-const colorSuccessDark   = palette_green800;
-const colorSuccessAccent = palette_green500;
-const colorSuccessLight  = palette_green200;
-const colorSuccessBg     = palette_green100;
+const colorSuccessDark = palette_green800
+const colorSuccessAccent = palette_green500
+const colorSuccessLight = palette_green200
+const colorSuccessBg = palette_green100
 
 /* --- warning --- */
-const colorWarningDark   = palette_yellow600;
-const colorWarningAccent = palette_yellow500;
-const colorWarningLight  = palette_yellow200;
-const colorWarningBg     = palette_yellow100;
+const colorWarningDark = palette_yellow600
+const colorWarningAccent = palette_yellow500
+const colorWarningLight = palette_yellow200
+const colorWarningBg = palette_yellow100
 
 /* --- danger --- */
-const colorDangerDark   = palette_pink800;
-const colorDangerAccent = palette_pink500;
-const colorDangerLight  = palette_pink200;
-const colorDangerBg     = palette_pink100;
+const colorDangerDark = palette_pink800
+const colorDangerAccent = palette_pink500
+const colorDangerLight = palette_pink200
+const colorDangerBg = palette_pink100
 
 const KOLIBRI_LOGO_SVG = `
 <svg class="kolibri-logo-svg" viewBox="0 0 305 342" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -186,4 +209,4 @@ const KOLIBRI_LOGO_SVG = `
     <path class="wing" opacity="0.7" d="M128 158C163.892 67.1818 241.575 130.021 305 47C263.208 149.285 161.925 132.314 128 158Z" fill="#4C2EEC"/>
     <path class="wing" opacity="0.7" d="M128 178.895C162.922 103.67 248.073 126.739 305 47C278.211 119.718 247.116 181.904 128 178.895Z" fill="#FF2CA5"/>
 </svg>
-`;
+`

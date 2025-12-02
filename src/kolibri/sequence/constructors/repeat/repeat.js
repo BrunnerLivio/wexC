@@ -1,5 +1,5 @@
-import { Sequence} from "../sequence/Sequence.js";
-import { forever } from "../../util/helpers.js";
+import { Sequence } from '../sequence/Sequence.js'
+import { forever } from '../../util/helpers.js'
 
 export { repeat }
 
@@ -21,4 +21,4 @@ export { repeat }
  * console.log(...result);
  * // => Logs '1, 1, 1'
  */
-const repeat = arg => Sequence(arg, forever, _ => arg);
+const repeat = (arg) => Sequence(arg, forever, (_) => arg)

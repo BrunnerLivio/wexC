@@ -6,13 +6,18 @@
  */
 
 export {
-    id, c,
-    Tuple, Choice,
-    Pair, fst, snd,
-    Left, Right,
-    Nothing, Just
-} from "./lambda/churchExports.js";
-
+    id,
+    c,
+    Tuple,
+    Choice,
+    Pair,
+    fst,
+    snd,
+    Left,
+    Right,
+    Nothing,
+    Just,
+} from './lambda/churchExports.js'
 
 // to do
 // Eq typeclass, symmetry, reflexivity

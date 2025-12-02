@@ -1,15 +1,28 @@
-import {id}                                                                                 from "../lambda/church.js";
-import {getAppenderList, getLoggingContext, getLoggingLevel, getGlobalMessageFormatter}     from "./logging.js";
-import {contains, toString, LOG_DEBUG, LOG_ERROR, LOG_FATAL, LOG_INFO, LOG_TRACE, LOG_WARN} from "./logLevel.js";
-
+import { id } from '../lambda/church.js'
+import {
+    getAppenderList,
+    getLoggingContext,
+    getLoggingLevel,
+    getGlobalMessageFormatter,
+} from './logging.js'
+import {
+    contains,
+    toString,
+    LOG_DEBUG,
+    LOG_ERROR,
+    LOG_FATAL,
+    LOG_INFO,
+    LOG_TRACE,
+    LOG_WARN,
+} from './logLevel.js'
 
 export {
-  traceLogger,
-  debugLogger,
-  infoLogger,
-  warnLogger,
-  errorLogger,
-  fatalLogger,
+    traceLogger,
+    debugLogger,
+    infoLogger,
+    warnLogger,
+    errorLogger,
+    fatalLogger,
 }
 
 /**
@@ -49,56 +62,67 @@ export {
  * log("Andri Wild");
  * // logs "Andri Wild" to console
  */
-const logger = loggerLevel => loggerContext => msg =>
-  messageShouldBeLogged(loggerLevel)(loggerContext)
-  ? getAppenderList()
-      .map(appender => {
-          const levelName      = toString(loggerLevel);
-          const levelCallback  = appender[levelName.toLowerCase()];
-          let success          = true;
-          let evaluatedMessage = "Error: cannot evaluate log message: '" + msg + "'!";
-          try {
-              evaluatedMessage = evaluateMessage(msg);                                    // message eval can fail
-          } catch (e) {
-              success = false;
-          }
-          let formattedMessage = "Error: cannot format log message! '" + evaluatedMessage + "'!";
-          try {
-              const formatter = appender.getFormatter()       // Maybe<LogMessageFormatterType>
-                   ( _ => getGlobalMessageFormatter() )       // use global formatter if no specific formatter is set
-                   ( id );                                    // use appender-specific formatter if set
-              formattedMessage = formatter (loggerContext) (levelName) (evaluatedMessage); // formatting can fail
-          } catch (e) {
-              success = false;
-          }
-          // because of evaluation order, a possible eval or formatting error message will be logged
-          // at the current level, context, and appender and will thus be visible. See test case.
-          return levelCallback(formattedMessage) && success;
-      })
-      .every(id) // all appenders must succeed
-  : false ;
+const logger = (loggerLevel) => (loggerContext) => (msg) =>
+    messageShouldBeLogged(loggerLevel)(loggerContext)
+        ? getAppenderList()
+              .map((appender) => {
+                  const levelName = toString(loggerLevel)
+                  const levelCallback = appender[levelName.toLowerCase()]
+                  let success = true
+                  let evaluatedMessage =
+                      "Error: cannot evaluate log message: '" + msg + "'!"
+                  try {
+                      evaluatedMessage = evaluateMessage(msg) // message eval can fail
+                  } catch (e) {
+                      success = false
+                  }
+                  let formattedMessage =
+                      "Error: cannot format log message! '" +
+                      evaluatedMessage +
+                      "'!"
+                  try {
+                      const formatter = appender.getFormatter()(
+                          // Maybe<LogMessageFormatterType>
+                          (_) => getGlobalMessageFormatter()
+                      )(
+                          // use global formatter if no specific formatter is set
+                          id
+                      ) // use appender-specific formatter if set
+                      formattedMessage =
+                          formatter(loggerContext)(levelName)(evaluatedMessage) // formatting can fail
+                  } catch (e) {
+                      success = false
+                  }
+                  // because of evaluation order, a possible eval or formatting error message will be logged
+                  // at the current level, context, and appender and will thus be visible. See test case.
+                  return levelCallback(formattedMessage) && success
+              })
+              .every(id) // all appenders must succeed
+        : false
 
 /**
  * Decides if a logger fulfills the conditions to be logged.
  * @type { (loggerLevel: LogLevelType) => (loggerContext: LogContextType) => Boolean }
  * @private
  */
-const messageShouldBeLogged = loggerLevel => loggerContext =>
-  logLevelActivated(loggerLevel) && contextActivated (loggerContext) ;
+const messageShouldBeLogged = (loggerLevel) => (loggerContext) =>
+    logLevelActivated(loggerLevel) && contextActivated(loggerContext)
 
 /**
  * Returns whether the loggerLevel will log under the current loggingLevel.
  * @type { (loggerLevel: LogLevelType) => Boolean }
  * @private
  */
-const logLevelActivated = loggerLevel => contains(getLoggingLevel(), loggerLevel);
+const logLevelActivated = (loggerLevel) =>
+    contains(getLoggingLevel(), loggerLevel)
 
 /**
  * Returns true if the {@link getLoggingContext} is a prefix of the logger context.
  * @type   { (loggerContext: LogContextType) => Boolean }
  * @private
  */
-const contextActivated = loggerContext => loggerContext.startsWith(getLoggingContext());
+const contextActivated = (loggerContext) =>
+    loggerContext.startsWith(getLoggingContext())
 
 /**
  * if the param "msg" is a function, it's result will be returned.
@@ -108,7 +132,7 @@ const contextActivated = loggerContext => loggerContext.startsWith(getLoggingCon
  * @returns { String } the evaluated message
  * @private
  */
-const evaluateMessage = msg => msg instanceof Function ? msg() : msg;
+const evaluateMessage = (msg) => (msg instanceof Function ? msg() : msg)
 
 /**
  * Creates a new logger at log level {@link LOG_TRACE}.
@@ -117,7 +141,7 @@ const evaluateMessage = msg => msg instanceof Function ? msg() : msg;
  * trace("a message to log to console");
  * // writes "a message to log to console" to the console
  */
-const traceLogger =  logger(LOG_TRACE);
+const traceLogger = logger(LOG_TRACE)
 
 /**
  * Creates a new logger at log level {@link LOG_DEBUG}.
@@ -126,7 +150,7 @@ const traceLogger =  logger(LOG_TRACE);
  * debug("a message to log to console");
  * // writes "a message to log to console" to the console
  */
-const debugLogger =  logger(LOG_DEBUG);
+const debugLogger = logger(LOG_DEBUG)
 
 /**
  * Creates a new logger at log level {@link LOG_INFO}.
@@ -135,7 +159,7 @@ const debugLogger =  logger(LOG_DEBUG);
  * debug("a message to log to console");
  * // writes "a message to log to console" to the console
  */
-const infoLogger = logger(LOG_INFO);
+const infoLogger = logger(LOG_INFO)
 
 /**
  * Creates a new logger at log level {@link LOG_WARN}.
@@ -144,7 +168,7 @@ const infoLogger = logger(LOG_INFO);
  * warn("a message to log to console");
  * // writes "a message to log to console" to the console
  */
-const warnLogger = logger(LOG_WARN);
+const warnLogger = logger(LOG_WARN)
 
 /**
  * Creates a new logger at log level {@link LOG_ERROR}.
@@ -153,7 +177,7 @@ const warnLogger = logger(LOG_WARN);
  * error("a message to log to console");
  * // writes "a message to log to console" to the console
  */
-const errorLogger = logger(LOG_ERROR);
+const errorLogger = logger(LOG_ERROR)
 
 /**
  * Creates a new logger at log level {@link LOG_FATAL}.
@@ -162,4 +186,4 @@ const errorLogger = logger(LOG_ERROR);
  * fatal("a message to log to console");
  * // writes "a message to log to console" to the console
  */
-const fatalLogger = logger(LOG_FATAL);
+const fatalLogger = logger(LOG_FATAL)

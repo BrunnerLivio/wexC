@@ -1,5 +1,5 @@
-import * as _  from "../sequence.js";
-import { dom } from "../../util/dom.js";
+import * as _ from '../sequence.js'
+import { dom } from '../../util/dom.js'
 
 export { sequenceProjector }
 
@@ -24,9 +24,9 @@ export { sequenceProjector }
  *        => Element
  *       }
  */
-const sequenceProjector = sequence => elementProjector => {
-  const [container] = dom(`<div></div>`);
-  const mapped = _.map(elementProjector)(sequence);
-  container.append(...mapped);
-  return container;
-};
+const sequenceProjector = (sequence) => (elementProjector) => {
+    const [container] = dom(`<div></div>`)
+    const mapped = _.map(elementProjector)(sequence)
+    container.append(...mapped)
+    return container
+}

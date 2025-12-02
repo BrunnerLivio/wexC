@@ -1,4 +1,4 @@
-import { mconcat } from "../mconcat/mconcat.js";
+import { mconcat } from '../mconcat/mconcat.js'
 
 export { append }
 /**
@@ -28,4 +28,4 @@ export { append }
  * @template _T_
  * @type {AppendOperationType<_T_>}
  */
-const append = it1 => it2 => mconcat([it1, it2]);
+const append = (it1) => (it2) => mconcat([it1, it2])

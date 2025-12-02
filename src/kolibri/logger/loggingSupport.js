@@ -6,40 +6,36 @@
  * import "../kolibri/logger/loggingSupport.js"
  */
 import {
-  LOG_TRACE,
-  LOG_DEBUG,
-  LOG_INFO,
-  LOG_WARN,
-  LOG_ERROR,
-  LOG_FATAL,
-  LOG_NOTHING,
-} from "./logLevel.js"
+    LOG_TRACE,
+    LOG_DEBUG,
+    LOG_INFO,
+    LOG_WARN,
+    LOG_ERROR,
+    LOG_FATAL,
+    LOG_NOTHING,
+} from './logLevel.js'
 
 import {
     setLoggingLevel,
     setLoggingContext,
-    addToAppenderList, setGlobalMessageFormatter,
-} from "./logging.js";
+    addToAppenderList,
+    setGlobalMessageFormatter,
+} from './logging.js'
 
-import {
-  ConsoleAppender as ConsoleAppender
-} from "./appender/consoleAppender.js";
+import { ConsoleAppender as ConsoleAppender } from './appender/consoleAppender.js'
 
-export {
-  defaultConsoleLogging,
-  lineSupportFormatter,
-}
+export { defaultConsoleLogging, lineSupportFormatter }
 
-window["LOG_TRACE"  ] = LOG_TRACE  ;
-window["LOG_DEBUG"  ] = LOG_DEBUG  ;
-window["LOG_INFO"   ] = LOG_INFO   ;
-window["LOG_WARN"   ] = LOG_WARN   ;
-window["LOG_ERROR"  ] = LOG_ERROR  ;
-window["LOG_FATAL"  ] = LOG_FATAL  ;
-window["LOG_NOTHING"] = LOG_NOTHING;
+window['LOG_TRACE'] = LOG_TRACE
+window['LOG_DEBUG'] = LOG_DEBUG
+window['LOG_INFO'] = LOG_INFO
+window['LOG_WARN'] = LOG_WARN
+window['LOG_ERROR'] = LOG_ERROR
+window['LOG_FATAL'] = LOG_FATAL
+window['LOG_NOTHING'] = LOG_NOTHING
 
-window["setLoggingLevel"  ] = setLoggingLevel  ;
-window["setLoggingContext"] = setLoggingContext;
+window['setLoggingLevel'] = setLoggingLevel
+window['setLoggingContext'] = setLoggingContext
 
 /**
  * A log formatter that includes the location of the logged line by
@@ -48,17 +44,17 @@ window["setLoggingContext"] = setLoggingContext;
  * @warn It is a best-effort approach and might not work in all circumstances
  * @type { LogMessageFormatterType }
  */
-const lineSupportFormatter = context => level => msg => {
-    let line;
+const lineSupportFormatter = (context) => (level) => (msg) => {
+    let line
     try {
         // noinspection ExceptionCaughtLocallyJS
-        throw Error("logger");
-    } catch(e) {
-        const stackFrames = e.stack.split("\n");
-        line = stackFrames[5]; // as long as the logger impl. does not chane, the call site is always 5 levels deep in the stack
+        throw Error('logger')
+    } catch (e) {
+        const stackFrames = e.stack.split('\n')
+        line = stackFrames[5] // as long as the logger impl. does not chane, the call site is always 5 levels deep in the stack
     }
-    return `${msg} ${line} ${context} ${level}`;
-};
+    return `${msg} ${line} ${context} ${level}`
+}
 /**
  * Set the logging to the default formatter and console appender.
  * @param { LogContextType } context
@@ -71,9 +67,9 @@ const lineSupportFormatter = context => level => msg => {
  */
 const defaultConsoleLogging = (context, level, includeLines = false) => {
     if (includeLines) {
-        setGlobalMessageFormatter(lineSupportFormatter);
+        setGlobalMessageFormatter(lineSupportFormatter)
     }
-    addToAppenderList(ConsoleAppender());
-    setLoggingContext(context);
-    setLoggingLevel(level);
-};
+    addToAppenderList(ConsoleAppender())
+    setLoggingContext(context)
+    setLoggingLevel(level)
+}

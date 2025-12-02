@@ -1,26 +1,32 @@
-import {dom}                                    from "../../../kolibri/util/dom.js";
-import {URI_HASH_UNSTYLED, href, URI_HASH_HOME} from "../../../customize/uriHashes.js";
-import {Page}                                   from "../../../kolibri/navigation/page/page.js";
-import {KOLIBRI_LOGO_SVG}                       from "../../../customize/kolibriStyle.js";
+import { dom } from '../../../kolibri/util/dom.js'
+import {
+    URI_HASH_UNSTYLED,
+    href,
+    URI_HASH_HOME,
+} from '../../../customize/uriHashes.js'
+import { Page } from '../../../kolibri/navigation/page/page.js'
+import { KOLIBRI_LOGO_SVG } from '../../../customize/kolibriStyle.js'
 
 export { HomePage }
 
-const PAGE_CLASS = URI_HASH_HOME.substring(1);
+const PAGE_CLASS = URI_HASH_HOME.substring(1)
 
 /**
  * The Home Page should always be available.
  * @return { PageType }
  * @constructor
  */
-const HomePage = () => Page(/** @type { PageDataType } */{
-    titleText:         "New Navigation",
-    activationMs:       1000,
-    passivationMs:      1000,
-    pageClass:          PAGE_CLASS,
-    styleElement  :    /** @type { HTMLStyleElement } */ styleElement,
-    contentElement:    /** @type { HTMLElement }      */ contentElement,
- });
-
+const HomePage = () =>
+    Page(
+        /** @type { PageDataType } */ {
+            titleText: 'New Navigation',
+            activationMs: 1000,
+            passivationMs: 1000,
+            pageClass: PAGE_CLASS,
+            styleElement: /** @type { HTMLStyleElement } */ styleElement,
+            contentElement: /** @type { HTMLElement }      */ contentElement,
+        }
+    )
 
 const [contentElement] = dom(`
     <div class="${PAGE_CLASS}">            
@@ -77,7 +83,7 @@ const [contentElement] = dom(`
                user can rely on all internal links being available. 
             </p>            
             <!-- Remove the type cast below to see the type error in the IDE! -->
-            <p> Example of a <a ${href(/** @type { UriHashType } */"#no-such-uri")}>broken link</a> that appears in the 
+            <p> Example of a <a ${href(/** @type { UriHashType } */ '#no-such-uri')}>broken link</a> that appears in the 
                 code as a <em>type error</em>! Try to click it to see the fallback error handling.
             </p>
             <p>
@@ -104,11 +110,11 @@ const [contentElement] = dom(`
         
       </main>
     </div>
-`);
+`)
 
 // Note that we can refer to external css files for the styling. (see discussion there)
 const [styleElement] = dom(`
     <style data-style-id="${PAGE_CLASS}">
         @import "./home.css";
     </style>      
-`);
+`)

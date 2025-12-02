@@ -1,4 +1,4 @@
-import { map } from "../map/map.js";
+import { map } from '../map/map.js'
 
 export { tap }
 
@@ -28,4 +28,8 @@ export { tap }
  * @template _T_
  * @type {TapOperationType<_T_>}
  */
-const tap = callback => map(x => { callback(x); return x; } );
+const tap = (callback) =>
+    map((x) => {
+        callback(x)
+        return x
+    })

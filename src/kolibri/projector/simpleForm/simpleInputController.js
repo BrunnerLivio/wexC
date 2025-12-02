@@ -1,5 +1,13 @@
-import {SimpleInputModel}                                   from "./simpleInputModel.js";
-import {EDITABLE, LABEL, NAME, TOOLTIP, TYPE, VALID, VALUE} from "../../presentationModel.js";
+import { SimpleInputModel } from './simpleInputModel.js'
+import {
+    EDITABLE,
+    LABEL,
+    NAME,
+    TOOLTIP,
+    TYPE,
+    VALID,
+    VALUE,
+} from '../../presentationModel.js'
 
 export { SimpleInputController, SimpleAttributeInputController }
 
@@ -40,24 +48,25 @@ export { SimpleInputController, SimpleAttributeInputController }
          type:   "text",
      });
  */
-const SimpleInputController = args => SimpleAttributeInputController(SimpleInputModel(args));
+const SimpleInputController = (args) =>
+    SimpleAttributeInputController(SimpleInputModel(args))
 
-const SimpleAttributeInputController = attribute => ( {
-    getValue:          attribute.getObs(VALUE)  .getValue,
-    setValue:          attribute.setConvertedValue,
-    setValid:          attribute.getObs(VALID)  .setValue,
-    getLabel:          attribute.getObs(LABEL)  .getValue,
-    setLabel:          attribute.getObs(LABEL)  .setValue,
-    getName:           attribute.getObs(NAME)   .getValue,
-    setName:           attribute.getObs(NAME)   .setValue,
-    getTooltip:        attribute.getObs(TOOLTIP).getValue,
-    setTooltip:        attribute.getObs(TOOLTIP).setValue,
-    getType:           attribute.getObs(TYPE)   .getValue,
-    onValueChanged:    attribute.getObs(VALUE)  .onChange,
-    onValidChanged:    attribute.getObs(VALID)  .onChange,
-    onLabelChanged:    attribute.getObs(LABEL)  .onChange,
-    onNameChanged:     attribute.getObs(NAME)   .onChange,
-    onTooltipChanged:  attribute.getObs(TOOLTIP).onChange,
+const SimpleAttributeInputController = (attribute) => ({
+    getValue: attribute.getObs(VALUE).getValue,
+    setValue: attribute.setConvertedValue,
+    setValid: attribute.getObs(VALID).setValue,
+    getLabel: attribute.getObs(LABEL).getValue,
+    setLabel: attribute.getObs(LABEL).setValue,
+    getName: attribute.getObs(NAME).getValue,
+    setName: attribute.getObs(NAME).setValue,
+    getTooltip: attribute.getObs(TOOLTIP).getValue,
+    setTooltip: attribute.getObs(TOOLTIP).setValue,
+    getType: attribute.getObs(TYPE).getValue,
+    onValueChanged: attribute.getObs(VALUE).onChange,
+    onValidChanged: attribute.getObs(VALID).onChange,
+    onLabelChanged: attribute.getObs(LABEL).onChange,
+    onNameChanged: attribute.getObs(NAME).onChange,
+    onTooltipChanged: attribute.getObs(TOOLTIP).onChange,
     onEditableChanged: attribute.getObs(EDITABLE).onChange,
-    setConverter:      attribute.setConverter,
-} );
+    setConverter: attribute.setConverter,
+})

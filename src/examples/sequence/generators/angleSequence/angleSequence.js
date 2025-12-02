@@ -1,5 +1,5 @@
-import { take }  from "../../../../kolibri/sequence/operators/take/take.js";
-import { Range } from "../../../../kolibri/sequence/constructors/range/range.js"
+import { take } from '../../../../kolibri/sequence/operators/take/take.js'
+import { Range } from '../../../../kolibri/sequence/constructors/range/range.js'
 
 export { AngleSequence }
 
@@ -17,6 +17,6 @@ export { AngleSequence }
  * console.log(...angles);
  * // Logs => '0, 90, 180, 270'
  */
-const AngleSequence = count =>
-  // since the Range includes the upper boundary, take assures, that the desired number of angles are returned.
-  take(count)(Range(0, 360, 360 / count));
+const AngleSequence = (count) =>
+    // since the Range includes the upper boundary, take assures, that the desired number of angles are returned.
+    take(count)(Range(0, 360, 360 / count))

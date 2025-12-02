@@ -1,9 +1,16 @@
-import { dom }                            from "../../kolibri/util/dom.js";
-import { VALUE }                          from "../../kolibri/presentationModel.js";
-import { InputProjector }                 from "../../kolibri/projector/simpleForm/simpleInputProjector.js";
-import { SimpleAttributeInputController } from "../../kolibri/projector/simpleForm/simpleInputController.js";
+import { dom } from '../../kolibri/util/dom.js'
+import { VALUE } from '../../kolibri/presentationModel.js'
+import { InputProjector } from '../../kolibri/projector/simpleForm/simpleInputProjector.js'
+import { SimpleAttributeInputController } from '../../kolibri/projector/simpleForm/simpleInputController.js'
 
-export { projectListItem, selectListItemForModel, removeListItemForModel, projectForm,  masterClassName, pageCss }
+export {
+    projectListItem,
+    selectListItemForModel,
+    removeListItemForModel,
+    projectForm,
+    masterClassName,
+    pageCss,
+}
 
 /**
  * A name that serves multiple purposes as it allows setting up specific css styling by using a consistent
@@ -12,10 +19,10 @@ export { projectListItem, selectListItemForModel, removeListItemForModel, projec
  * Future developers might want this information to be passed in from the outside to allow more flexibility.
  * @type { String }
  */
-const masterClassName = 'instant-update-master';
+const masterClassName = 'instant-update-master'
 
 /** @private */
-const detailClassName = 'instant-update-detail';
+const detailClassName = 'instant-update-detail'
 
 /**
  * Returns a unique id for the html element that is to represent the attribute such that we can create the
@@ -29,7 +36,10 @@ const detailClassName = 'instant-update-detail';
  * @return { String }
  */
 const elementId = (attributeName, model) =>
-    (masterClassName + "-" + model[attributeName].getQualifier()).replaceAll("\.","-");
+    (masterClassName + '-' + model[attributeName].getQualifier()).replaceAll(
+        '\.',
+        '-'
+    )
 
 /**
  * Returns a unique id for the html delete button that is to represent the model such that we can create the
@@ -43,9 +53,13 @@ const elementId = (attributeName, model) =>
  * @return { String }
  */
 const deleteButtonId = (attributeNames, model) => {
-    const representativeAttributeName = attributeNames[0];
-    return (masterClassName + "-delete-" + model[representativeAttributeName].getQualifier()).replaceAll("\.","-");
-};
+    const representativeAttributeName = attributeNames[0]
+    return (
+        masterClassName +
+        '-delete-' +
+        model[representativeAttributeName].getQualifier()
+    ).replaceAll('\.', '-')
+}
 
 /**
  * When a selection changes, the change must become visible in the master view.
@@ -55,16 +69,21 @@ const deleteButtonId = (attributeNames, model) => {
  * @param { HTMLElement } root
  * @return { (newModel:_T_, oldModel:_T_) => void}
  */
-const selectListItemForModel = (attributeNames, root) => (newModel, oldModel) => {
-    const oldDeleteButton = root.querySelector("#" + deleteButtonId(attributeNames, oldModel));
-    if (oldDeleteButton) {
-        oldDeleteButton.classList.remove("selected");
+const selectListItemForModel =
+    (attributeNames, root) => (newModel, oldModel) => {
+        const oldDeleteButton = root.querySelector(
+            '#' + deleteButtonId(attributeNames, oldModel)
+        )
+        if (oldDeleteButton) {
+            oldDeleteButton.classList.remove('selected')
+        }
+        const newDeleteButton = root.querySelector(
+            '#' + deleteButtonId(attributeNames, newModel)
+        )
+        if (newDeleteButton) {
+            newDeleteButton.classList.add('selected')
+        }
     }
-    const newDeleteButton = root.querySelector("#" + deleteButtonId(attributeNames, newModel));
-    if (newDeleteButton) {
-        newDeleteButton.classList.add("selected");
-    }
-};
 
 /**
  * When a model is removed from the master view, the respective view elements must be removed as well.
@@ -73,12 +92,14 @@ const selectListItemForModel = (attributeNames, root) => (newModel, oldModel) =>
  * @param { HTMLElement } root
  * @return { (model:_T_) => void }
  */
-const removeListItemForModel = (attributeNames, root) => model => {
-    const rowDiv = root.querySelector("div.row:has(#" + deleteButtonId(attributeNames, model) +")");
+const removeListItemForModel = (attributeNames, root) => (model) => {
+    const rowDiv = root.querySelector(
+        'div.row:has(#' + deleteButtonId(attributeNames, model) + ')'
+    )
     if (rowDiv) {
-        rowDiv.parentElement.removeChild(rowDiv);               // remove whole row from master view
+        rowDiv.parentElement.removeChild(rowDiv) // remove whole row from master view
     }
-};
+}
 
 /**
  * Creating the views and bindings for an item in the list view, binding for instant value updates.
@@ -89,36 +110,44 @@ const removeListItemForModel = (attributeNames, root) => model => {
  * @param { String[] }                        attributeNames
  * @return { HTMLElement[] }
  */
-const projectListItem = (listController, selectionController, model, attributeNames) => {
-
+const projectListItem = (
+    listController,
+    selectionController,
+    model,
+    attributeNames
+) => {
     /** @type { HTMLDivElement } */
-    const rowDiv = dom(`<div class="row"></div>`)[0];
+    const rowDiv = dom(`<div class="row"></div>`)[0]
 
-    const [deleteButton] = dom(`<button class="delete">&times;</button>`);
-    deleteButton.onclick = _ => listController.removeModel(model);
-    deleteButton.id      = deleteButtonId(attributeNames, model);
+    const [deleteButton] = dom(`<button class="delete">&times;</button>`)
+    deleteButton.onclick = (_) => listController.removeModel(model)
+    deleteButton.id = deleteButtonId(attributeNames, model)
 
-    rowDiv.append(deleteButton);
+    rowDiv.append(deleteButton)
 
-    attributeNames.forEach( attributeName => {
-        const [cellDiv] = dom(`<div class="cell"></div>`);
-        const inputController = SimpleAttributeInputController(model[attributeName]);
-        const [labelElement, spanElement] = InputProjector.projectInstantInput(inputController, "ListItem");
-        const inputElement   = spanElement.querySelector("input");
-        inputElement.onfocus = _ => selectionController.setSelectedModel(model);
+    attributeNames.forEach((attributeName) => {
+        const [cellDiv] = dom(`<div class="cell"></div>`)
+        const inputController = SimpleAttributeInputController(
+            model[attributeName]
+        )
+        const [labelElement, spanElement] = InputProjector.projectInstantInput(
+            inputController,
+            'ListItem'
+        )
+        const inputElement = spanElement.querySelector('input')
+        inputElement.onfocus = (_) =>
+            selectionController.setSelectedModel(model)
         // id's have been dynamically generated, but we have to make them unique
         // (and keep the input.id and label.for consistency intact)
-        const id = elementId(attributeName, model);
-        inputElement.setAttribute("id",  id);
-        labelElement.setAttribute("for", id);
-        cellDiv.append(labelElement, spanElement);
-        rowDiv.append(cellDiv);
-    });
+        const id = elementId(attributeName, model)
+        inputElement.setAttribute('id', id)
+        labelElement.setAttribute('for', id)
+        cellDiv.append(labelElement, spanElement)
+        rowDiv.append(cellDiv)
+    })
 
-    return [ rowDiv ];
-};
-
-
+    return [rowDiv]
+}
 
 /**
  * Creating the views and bindings for an item in the list view, binding for instant value updates.
@@ -130,8 +159,9 @@ const projectListItem = (listController, selectionController, model, attributeNa
  * @return { HTMLFormElement[] }
  */
 const projectForm = (detailController, detailCard, model, attributeNames) => {
-
-    const personInputControllers = attributeNames.map( name => SimpleAttributeInputController(model[name]));
+    const personInputControllers = attributeNames.map((name) =>
+        SimpleAttributeInputController(model[name])
+    )
 
     // create view
     const elements = dom(`
@@ -139,23 +169,29 @@ const projectForm = (detailController, detailCard, model, attributeNames) => {
 			<div class="${detailClassName}">
 			</div>
 		</form>
-    `);
-    /** @type { HTMLFormElement } */ const form = elements[0];
-    const div = form.children[0];
+    `)
+    /** @type { HTMLFormElement } */ const form = elements[0]
+    const div = form.children[0]
 
-    personInputControllers.forEach( inputController =>
-        div.append(...InputProjector.projectInstantInput(inputController, detailClassName)));
+    personInputControllers.forEach((inputController) =>
+        div.append(
+            ...InputProjector.projectInstantInput(
+                inputController,
+                detailClassName
+            )
+        )
+    )
 
-    model.detailed.getObs(VALUE).onChange( newValue => {
+    model.detailed.getObs(VALUE).onChange((newValue) => {
         if (newValue) {
-            detailCard.classList.remove("no-detail");
+            detailCard.classList.remove('no-detail')
         } else {
-            detailCard.classList.add("no-detail");
+            detailCard.classList.add('no-detail')
         }
-    });
+    })
 
-    return [ form ];
-};
+    return [form]
+}
 
 /**
  * CSS snippet to append to the head style when using the instant update projector.
@@ -226,4 +262,4 @@ const pageCss = `
         width:  0;
         height: 0;
     }
-`;
+`

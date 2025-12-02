@@ -1,17 +1,17 @@
-import { LoggerFactory }            from "../logger/loggerFactory.js";
-import { LOG_CONTEXT_KOLIBRI_BASE } from "../logger/logConstants.js";
-import { removeItem }               from "../util/arrayFunctions.js";
+import { LoggerFactory } from '../logger/loggerFactory.js'
+import { LOG_CONTEXT_KOLIBRI_BASE } from '../logger/logConstants.js'
+import { removeItem } from '../util/arrayFunctions.js'
 
 export { Observable }
 
-let warn = undefined;
+let warn = undefined
 /** @private */
 function checkWarning(list) {
     if (list.length > 100) {
         if (!warn) {
-            warn = LoggerFactory(LOG_CONTEXT_KOLIBRI_BASE + ".observable").warn;
+            warn = LoggerFactory(LOG_CONTEXT_KOLIBRI_BASE + '.observable').warn
         }
-        warn(`Beware of memory leak. ${list.length} listeners.`);
+        warn(`Beware of memory leak. ${list.length} listeners.`)
     }
 }
 
@@ -34,7 +34,7 @@ function checkWarning(list) {
  * listeners that do not change after setup.
  * @typedef IObservable<_T_>
  * @template _T_
- * @impure   Observables change their inner state (value) and maintain a list of observers that changes over time.    
+ * @impure   Observables change their inner state (value) and maintain a list of observers that changes over time.
  * @property { ()  => _T_ }   getValue - a function that returns the current value
  * @property { (_T_) => void} setValue - a function that sets a new value, calling all registered {@link ValueChangeCallback}s
  * @property { (cb: ValueChangeCallback<_T_>) => void } onChange -
@@ -54,26 +54,27 @@ function checkWarning(list) {
  * obs.setValue("some other value"); // will be logged
  */
 const Observable = (value) => {
-    const listeners      = [];
-    const removeListener = listener => removeItem(listeners)(listener);
-    const noop           = () => undefined;
+    const listeners = []
+    const removeListener = (listener) => removeItem(listeners)(listener)
+    const noop = () => undefined
     return {
-        onChange: callback => {
-            checkWarning(listeners);
-            listeners.push(callback);
-            callback(value, value, noop);
+        onChange: (callback) => {
+            checkWarning(listeners)
+            listeners.push(callback)
+            callback(value, value, noop)
         },
         getValue: () => value,
-        setValue: newValue => {
-            if (value === newValue) return;
-            const oldValue    = value;
-            value             = newValue;
-            const safeIterate = [...listeners]; // shallow copy as we might change the listeners array while iterating
-            safeIterate.forEach( listener => {
-                if (value === newValue) { // pre-ordered listeners might have changed this and thus the callback no longer applies
-                    listener(value, oldValue, () => removeListener(listener));
+        setValue: (newValue) => {
+            if (value === newValue) return
+            const oldValue = value
+            value = newValue
+            const safeIterate = [...listeners] // shallow copy as we might change the listeners array while iterating
+            safeIterate.forEach((listener) => {
+                if (value === newValue) {
+                    // pre-ordered listeners might have changed this and thus the callback no longer applies
+                    listener(value, oldValue, () => removeListener(listener))
                 }
-            });
-        }
-    };
+            })
+        },
+    }
 }

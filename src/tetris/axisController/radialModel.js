@@ -2,7 +2,7 @@
  * @module tetris/control/RadialModel
  */
 
-export { RadialModel };
+export { RadialModel }
 
 /**
  * @typedef RadialModelType
@@ -16,4 +16,4 @@ export { RadialModel };
  * @param { RadialModelType } paramObj - Parameter Object Pattern
  * @return {RadialModelType}
  */
-const RadialModel = (paramObj) => paramObj;
+const RadialModel = (paramObj) => paramObj

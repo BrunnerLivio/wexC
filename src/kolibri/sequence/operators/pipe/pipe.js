@@ -1,4 +1,4 @@
-import { ensureSequence } from "../../util/helpers.js";
+import { ensureSequence } from '../../util/helpers.js'
 
 export { pipe }
 
@@ -29,13 +29,14 @@ export { pipe }
  * @template _T_
  * @type  { PipeOperationType<_T_> }
  */
-const pipe = (...transformers) => iterable => {
+const pipe =
+    (...transformers) =>
+    (iterable) => {
+        iterable = ensureSequence(iterable)
 
-  iterable = ensureSequence(iterable);
+        for (const transformer of transformers) {
+            iterable = transformer(iterable)
+        }
 
-  for (const transformer of transformers) {
-    iterable = transformer(iterable);
-  }
-
-  return  iterable;
-};
+        return iterable
+    }

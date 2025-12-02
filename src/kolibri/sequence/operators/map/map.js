@@ -1,5 +1,5 @@
-import {createMonadicSequence} from "../../sequencePrototype.js";
-import {iteratorOf}            from "../../util/helpers.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
+import { iteratorOf } from '../../util/helpers.js'
 
 export { map }
 
@@ -31,21 +31,20 @@ export { map }
  * @template _U_
  * @type { MapOperationType<_T_, _U_> }
  */
-const map = mapper => iterable => {
+const map = (mapper) => (iterable) => {
+    const mapIterator = () => {
+        const inner = iteratorOf(iterable)
+        let mappedValue
 
-  const mapIterator = () => {
-    const inner = iteratorOf(iterable);
-    let mappedValue;
+        const next = () => {
+            const { done, value } = inner.next()
+            if (!done) mappedValue = mapper(value)
 
-    const next = () => {
-      const { done, value } = inner.next();
-      if (!done) mappedValue = mapper(value);
+            return { /**@type boolean */ done, value: mappedValue }
+        }
 
-      return { /**@type boolean */ done, value: mappedValue }
-    };
+        return { next }
+    }
 
-    return { next };
-  };
-
-  return createMonadicSequence(mapIterator);
-};
+    return createMonadicSequence(mapIterator)
+}

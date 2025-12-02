@@ -1,5 +1,5 @@
-import { take }   from "../../operators/take/take.js";
-import { repeat } from "../repeat/repeat.js";
+import { take } from '../../operators/take/take.js'
+import { repeat } from '../repeat/repeat.js'
 
 export { replicate }
 
@@ -21,4 +21,4 @@ export { replicate }
  * console.log(...trues);
  * // => Logs 'true, true, true'
  */
-const replicate = n => value => take(n)(repeat(value));
+const replicate = (n) => (value) => take(n)(repeat(value))

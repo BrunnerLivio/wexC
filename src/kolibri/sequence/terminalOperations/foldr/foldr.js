@@ -1,4 +1,4 @@
-import { reverse$ } from "../../operators/reverse/reverse.js";
+import { reverse$ } from '../../operators/reverse/reverse.js'
 
 export { foldr$ }
 
@@ -40,11 +40,11 @@ export { foldr$ }
  * @template _T_
  * @type { FoldrOperationType<_T_> }
  */
-const foldr$ = (accumulationFn, start) => iterable => {
-  const inner = reverse$(iterable);
-  let accumulator = start;
-  for (const current of inner) {
-    accumulator = accumulationFn(accumulator, current);
-  }
-  return accumulator;
-};
+const foldr$ = (accumulationFn, start) => (iterable) => {
+    const inner = reverse$(iterable)
+    let accumulator = start
+    for (const current of inner) {
+        accumulator = accumulationFn(accumulator, current)
+    }
+    return accumulator
+}

@@ -1,4 +1,4 @@
-export { AxisController };
+export { AxisController }
 
 /**
  * @typedef {"roll" | "pitch" | "yaw"} AxisType
@@ -39,7 +39,7 @@ export { AxisController };
  * }} AxisState
  */
 
-const ROTATION_THRESHOLD = 45; // degrees needed to trigger one rotation
+const ROTATION_THRESHOLD = 45 // degrees needed to trigger one rotation
 
 /**
  * @param { import("../../kolibri/observable/observableMap").ObservableMapType } om
@@ -58,165 +58,167 @@ const AxisController = (om, dependencies) => {
         rotateRoomZ,
         playerController,
         switchModeController,
-    } = dependencies;  /** @type {Array<(payload: AxisSetupPayload) => void>} */
-  const setupCallbacks = [];
-  /** @type {Array<(state: AxisState) => void>} */
-  const axisStateObservers = [];
+    } = dependencies
+    /** @type {Array<(payload: AxisSetupPayload) => void>} */
+    const setupCallbacks = []
+    /** @type {Array<(state: AxisState) => void>} */
+    const axisStateObservers = []
 
-  /** @type {HTMLElement | null} */
-  let containerElement = null;
+    /** @type {HTMLElement | null} */
+    let containerElement = null
 
-  // Track rotation offset for each axis (in degrees)
-  const axisAngles = {
-    roll: 0,
-    pitch: 0,
-    yaw: 0,
-  };
-  
-  // Track last angle for calculating delta in room mode
-  const lastRoomAngles = {
-    roll: 0,
-    pitch: 0,
-    yaw: 0,
-  };
-
-  // Track how many rotations have been applied for each axis
-  const appliedRotations = {
-    roll: 0,
-    pitch: 0,
-    yaw: 0,
-  };
-
-  const axisHandlers = {
-    roll: { left: toppleRollLeft, right: toppleRollRight },
-    pitch: { left: topplePitchForward, right: topplePitchBack },
-    yaw: { left: rotateYawLeft, right: rotateYawRight },
-  };
-
-  const ensureInCharge = () => {
-    if (!playerController) return true;
-    if (playerController.areWeInCharge()) {
-      return true;
+    // Track rotation offset for each axis (in degrees)
+    const axisAngles = {
+        roll: 0,
+        pitch: 0,
+        yaw: 0,
     }
-    playerController.takeCharge();
-    return playerController.areWeInCharge();
-  };
 
-  /**
-   * @param {AxisState} state
-   */
-  const notifyAxisStateObservers = (state) => {
-    axisStateObservers.forEach((observer) => observer(state));
-  };
+    // Track last angle for calculating delta in room mode
+    const lastRoomAngles = {
+        roll: 0,
+        pitch: 0,
+        yaw: 0,
+    }
 
-  /**
-   * Set the rotation angle for an axis and trigger rotations when threshold is crossed
-   * @param {AxisType} axis
-   * @param {number} angle - rotation angle in degrees
-   */
-  const setAxisAngle = (axis, angle) => {
-    if (!ensureInCharge()) return;
+    // Track how many rotations have been applied for each axis
+    const appliedRotations = {
+        roll: 0,
+        pitch: 0,
+        yaw: 0,
+    }
 
-    axisAngles[axis] = angle;
-    notifyAxisStateObservers({ axis, angle });
+    const axisHandlers = {
+        roll: { left: toppleRollLeft, right: toppleRollRight },
+        pitch: { left: topplePitchForward, right: topplePitchBack },
+        yaw: { left: rotateYawLeft, right: rotateYawRight },
+    }
 
-    const currentMode = switchModeController?.getCurrentMode();
-    
-    if (currentMode === 'room') {
-      const delta = angle - lastRoomAngles[axis];
-      lastRoomAngles[axis] = angle;
-      
-      if (axis === 'roll') {
-        rotateRoomZ(delta); // Roll rotates around Z axis (barrel roll)
-      } else if (axis === 'pitch') {
-        rotateRoomX(delta); // Pitch rotates around X axis (nose up/down)
-      } else if (axis === 'yaw') {
-        rotateRoomY(delta); // Yaw rotates around Y axis (turn left/right)
-      }
-    } else {
-      const absAngle = Math.abs(angle);
-      const direction = angle >= 0 ? 1 : -1;
-      const targetRotations = Math.floor(absAngle / ROTATION_THRESHOLD) * direction;
-      const currentRotations = appliedRotations[axis];
-
-      if (targetRotations !== currentRotations) {
-        const diff = targetRotations - currentRotations;
-        const handlers = axisHandlers[axis];
-
-        const handler = diff > 0 ? handlers.right : handlers.left;
-        const count = Math.abs(diff);
-
-        for (let i = 0; i < count; i++) {
-          handler();
+    const ensureInCharge = () => {
+        if (!playerController) return true
+        if (playerController.areWeInCharge()) {
+            return true
         }
-
-        appliedRotations[axis] = targetRotations;
-      }
+        playerController.takeCharge()
+        return playerController.areWeInCharge()
     }
-  };
 
-  /**
-   * Reset an axis to zero
-   * @param {AxisType} axis
-   */
-  const resetAxis = (axis) => {
-    axisAngles[axis] = 0;
-    appliedRotations[axis] = 0;
-    lastRoomAngles[axis] = 0;
-    notifyAxisStateObservers({ axis, angle: 0 });
-  };
-
-  /**
-   * @param {(payload: AxisSetupPayload) => void} callback
-   */
-  const onSetupFinished = (callback) => {
-    if (containerElement) {
-      callback({ container: containerElement });
-      return;
+    /**
+     * @param {AxisState} state
+     */
+    const notifyAxisStateObservers = (state) => {
+        axisStateObservers.forEach((observer) => observer(state))
     }
-    setupCallbacks.push(callback);
-  };
 
-  /**
-   * @param {(state: AxisState) => void} observer
-   */
-  const onAxisStateChanged = (observer) => {
-    axisStateObservers.push(observer);
-  };
+    /**
+     * Set the rotation angle for an axis and trigger rotations when threshold is crossed
+     * @param {AxisType} axis
+     * @param {number} angle - rotation angle in degrees
+     */
+    const setAxisAngle = (axis, angle) => {
+        if (!ensureInCharge()) return
 
-  /**
-   * @param {HTMLElement} container
-   */
-  const notifySetupFinished = (container) => {
-    if (!(container instanceof HTMLElement)) return;
-    containerElement = container;
-    const payload = { container };
-    while (setupCallbacks.length > 0) {
-      const callback = setupCallbacks.shift();
-      callback && callback(payload);
+        axisAngles[axis] = angle
+        notifyAxisStateObservers({ axis, angle })
+
+        const currentMode = switchModeController?.getCurrentMode()
+
+        if (currentMode === 'room') {
+            const delta = angle - lastRoomAngles[axis]
+            lastRoomAngles[axis] = angle
+
+            if (axis === 'roll') {
+                rotateRoomZ(delta) // Roll rotates around Z axis (barrel roll)
+            } else if (axis === 'pitch') {
+                rotateRoomX(delta) // Pitch rotates around X axis (nose up/down)
+            } else if (axis === 'yaw') {
+                rotateRoomY(delta) // Yaw rotates around Y axis (turn left/right)
+            }
+        } else {
+            const absAngle = Math.abs(angle)
+            const direction = angle >= 0 ? 1 : -1
+            const targetRotations =
+                Math.floor(absAngle / ROTATION_THRESHOLD) * direction
+            const currentRotations = appliedRotations[axis]
+
+            if (targetRotations !== currentRotations) {
+                const diff = targetRotations - currentRotations
+                const handlers = axisHandlers[axis]
+
+                const handler = diff > 0 ? handlers.right : handlers.left
+                const count = Math.abs(diff)
+
+                for (let i = 0; i < count; i++) {
+                    handler()
+                }
+
+                appliedRotations[axis] = targetRotations
+            }
+        }
     }
-  };
 
-  const setupPlayerStateSync = (container) => {
-    if (!playerController) return;
-    const update = () => {
-      container.dataset.inCharge = playerController.areWeInCharge()
-        ? "self"
-        : "other";
-    };
-    playerController.onActivePlayerIdChanged(update);
-    update();
-  };
+    /**
+     * Reset an axis to zero
+     * @param {AxisType} axis
+     */
+    const resetAxis = (axis) => {
+        axisAngles[axis] = 0
+        appliedRotations[axis] = 0
+        lastRoomAngles[axis] = 0
+        notifyAxisStateObservers({ axis, angle: 0 })
+    }
 
-  onSetupFinished(({ container }) => {
-    setupPlayerStateSync(container);
-  });
+    /**
+     * @param {(payload: AxisSetupPayload) => void} callback
+     */
+    const onSetupFinished = (callback) => {
+        if (containerElement) {
+            callback({ container: containerElement })
+            return
+        }
+        setupCallbacks.push(callback)
+    }
 
-  return {
-    onSetupFinished,
-    notifySetupFinished,
-    onAxisStateChanged,
-    setAxisAngle,
-    resetAxis,
-  };
-};
+    /**
+     * @param {(state: AxisState) => void} observer
+     */
+    const onAxisStateChanged = (observer) => {
+        axisStateObservers.push(observer)
+    }
+
+    /**
+     * @param {HTMLElement} container
+     */
+    const notifySetupFinished = (container) => {
+        if (!(container instanceof HTMLElement)) return
+        containerElement = container
+        const payload = { container }
+        while (setupCallbacks.length > 0) {
+            const callback = setupCallbacks.shift()
+            callback && callback(payload)
+        }
+    }
+
+    const setupPlayerStateSync = (container) => {
+        if (!playerController) return
+        const update = () => {
+            container.dataset.inCharge = playerController.areWeInCharge()
+                ? 'self'
+                : 'other'
+        }
+        playerController.onActivePlayerIdChanged(update)
+        update()
+    }
+
+    onSetupFinished(({ container }) => {
+        setupPlayerStateSync(container)
+    })
+
+    return {
+        onSetupFinished,
+        notifySetupFinished,
+        onAxisStateChanged,
+        setAxisAngle,
+        resetAxis,
+    }
+}

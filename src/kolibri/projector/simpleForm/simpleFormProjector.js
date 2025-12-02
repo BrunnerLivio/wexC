@@ -13,9 +13,9 @@
  * to the application while all business logic and their test cases remain untouched.
  */
 
-import { dom }            from "../../util/dom.js";
-import { shadowCss }      from "../../../customize/kolibriStyle.js";
-import { InputProjector } from "./simpleInputProjector.js";
+import { dom } from '../../util/dom.js'
+import { shadowCss } from '../../../customize/kolibriStyle.js'
+import { InputProjector } from './simpleInputProjector.js'
 
 export { projectForm, FORM_CSS }
 
@@ -24,7 +24,7 @@ export { projectForm, FORM_CSS }
  * @private
  * @type {string}
  */
-const FORM_CLASS_NAME = "kolibri-simpleForm";
+const FORM_CLASS_NAME = 'kolibri-simpleForm'
 
 /**
  * Projection function that creates a form view for input purposes with as many inputs as the formController
@@ -38,23 +38,29 @@ const FORM_CLASS_NAME = "kolibri-simpleForm";
  * @example
  * const [form] = projectForm(controller);
  */
-const projectForm = formController => {
+const projectForm = (formController) => {
     // create view
     const elements = dom(`
 		<form>
 			<fieldset class="${FORM_CLASS_NAME}">
 			</fieldset>
 		</form>
-    `);
+    `)
     /** @type { HTMLFormElement } */
-    const form = elements[0];
-    const fieldset = form.children[0];
+    const form = elements[0]
+    const fieldset = form.children[0]
 
-    formController.forEach( inputController =>
-       fieldset.append(...InputProjector.projectChangeInput(inputController, FORM_CLASS_NAME)));
+    formController.forEach((inputController) =>
+        fieldset.append(
+            ...InputProjector.projectChangeInput(
+                inputController,
+                FORM_CLASS_NAME
+            )
+        )
+    )
 
-    return [form];
-};
+    return [form]
+}
 
 /**
  * CSS snippet to append to the head style when using the form projector.
@@ -72,4 +78,4 @@ const FORM_CSS = `
         border-style:    none;
         box-shadow:      ${shadowCss}                          
     }
-`;
+`

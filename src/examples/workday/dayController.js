@@ -3,9 +3,8 @@
  * API and business rules for a workday, manages morning and afternoon working hours with constraints.
  */
 
-
-import { SimpleInputController } from "../../kolibri/projector/simpleForm/simpleInputController.js";
-import { Attribute, VALUE }      from "../../kolibri/presentationModel.js";
+import { SimpleInputController } from '../../kolibri/projector/simpleForm/simpleInputController.js'
+import { Attribute, VALUE } from '../../kolibri/presentationModel.js'
 
 export { DayController }
 
@@ -26,9 +25,9 @@ export { DayController }
  * @constructor
  */
 const DayModel = () => {
-    const total = Attribute(0); // total minutes in this day
-    return /** @type {DayModelType} */ { total };
-};
+    const total = Attribute(0) // total minutes in this day
+    return /** @type {DayModelType} */ { total }
+}
 
 /**
  * @typedef DayControllerType
@@ -52,46 +51,70 @@ const DayModel = () => {
  */
 const DayController = () => {
     // value is minutes since midnight as Number
-    /** @type {SimpleInputControllerType<Number>} */ const amStartCtrl = SimpleInputController({value: 8 * 60 ,label: "AM Start", name: "am_start", type: "time" });
-    /** @type {SimpleInputControllerType<Number>} */ const amEndCtrl   = SimpleInputController({value:12 * 60 ,label: "AM End"  , name: "am_end"  , type: "time" });
-    /** @type {SimpleInputControllerType<Number>} */ const pmStartCtrl = SimpleInputController({value:13 * 60 ,label: "PM Start", name: "pm_start", type: "time" });
-    /** @type {SimpleInputControllerType<Number>} */ const pmEndCtrl   = SimpleInputController({value:17 * 60 ,label: "PM End"  , name: "pm_end"  , type: "time" });
+    /** @type {SimpleInputControllerType<Number>} */ const amStartCtrl =
+        SimpleInputController({
+            value: 8 * 60,
+            label: 'AM Start',
+            name: 'am_start',
+            type: 'time',
+        })
+    /** @type {SimpleInputControllerType<Number>} */ const amEndCtrl =
+        SimpleInputController({
+            value: 12 * 60,
+            label: 'AM End',
+            name: 'am_end',
+            type: 'time',
+        })
+    /** @type {SimpleInputControllerType<Number>} */ const pmStartCtrl =
+        SimpleInputController({
+            value: 13 * 60,
+            label: 'PM Start',
+            name: 'pm_start',
+            type: 'time',
+        })
+    /** @type {SimpleInputControllerType<Number>} */ const pmEndCtrl =
+        SimpleInputController({
+            value: 17 * 60,
+            label: 'PM End',
+            name: 'pm_end',
+            type: 'time',
+        })
 
-    const timeControllers = [amStartCtrl, amEndCtrl, pmStartCtrl, pmEndCtrl];
+    const timeControllers = [amStartCtrl, amEndCtrl, pmStartCtrl, pmEndCtrl]
 
-    timeControllers.forEach(ctrl => ctrl.setConverter(minMaxValuesConverter));
+    timeControllers.forEach((ctrl) => ctrl.setConverter(minMaxValuesConverter))
 
-    const { total }    = DayModel();
+    const { total } = DayModel()
 
-    const am_sequence = sequenceRule(amStartCtrl,amEndCtrl);
-    amStartCtrl.onValueChanged(am_sequence);
-    amEndCtrl  .onValueChanged(am_sequence);
-    const pm_sequence = sequenceRule(pmStartCtrl,pmEndCtrl);
-    pmStartCtrl.onValueChanged(pm_sequence);
-    pmEndCtrl  .onValueChanged(pm_sequence);
+    const am_sequence = sequenceRule(amStartCtrl, amEndCtrl)
+    amStartCtrl.onValueChanged(am_sequence)
+    amEndCtrl.onValueChanged(am_sequence)
+    const pm_sequence = sequenceRule(pmStartCtrl, pmEndCtrl)
+    pmStartCtrl.onValueChanged(pm_sequence)
+    pmEndCtrl.onValueChanged(pm_sequence)
 
-    const lunchBreak = lunchBreakRule(amEndCtrl, pmStartCtrl);
-    amEndCtrl  .onValueChanged( lunchBreak );
-    pmStartCtrl.onValueChanged( lunchBreak );
+    const lunchBreak = lunchBreakRule(amEndCtrl, pmStartCtrl)
+    amEndCtrl.onValueChanged(lunchBreak)
+    pmStartCtrl.onValueChanged(lunchBreak)
 
     // whenever any time value changes, we have to update the total,
     // and we have to check for possible changes in validity
-    timeControllers.forEach( ctrl =>
-         ctrl.onValueChanged( _ => {
-             total.getObs(VALUE).setValue(totalValue(timeControllers)); // update total
-             checkValidityRules(timeControllers);
-         })
-     );
+    timeControllers.forEach((ctrl) =>
+        ctrl.onValueChanged((_) => {
+            total.getObs(VALUE).setValue(totalValue(timeControllers)) // update total
+            checkValidityRules(timeControllers)
+        })
+    )
 
     return /** @type DayControllerType*/ {
-        amStartCtrl ,
-        amEndCtrl   ,
-        pmStartCtrl ,
-        pmEndCtrl   ,
+        amStartCtrl,
+        amEndCtrl,
+        pmStartCtrl,
+        pmEndCtrl,
         onTotalChanged: total.getObs(VALUE).onChange,
-        getTotal      : total.getObs(VALUE).getValue,
+        getTotal: total.getObs(VALUE).getValue,
     }
-};
+}
 
 /**
  * Convert numbers to valid minutes after midnight
@@ -100,7 +123,8 @@ const DayController = () => {
  * @param  { Number } minutes
  * @return { Number } - value between 0 and 24 * 60
  */
-const minMaxValuesConverter = minutes => Math.max( 0, (Math.min(minutes, 24 * 60)));
+const minMaxValuesConverter = (minutes) =>
+    Math.max(0, Math.min(minutes, 24 * 60))
 
 /**
  * The lunch break must be at least 40 minutes. Otherwise, we set the end of the lunch break back, which might
@@ -111,14 +135,16 @@ const minMaxValuesConverter = minutes => Math.max( 0, (Math.min(minutes, 24 * 60
  * @param  {SimpleInputControllerType<Number>} pmStartCtrl
  * @return { () => void } - the lunch break rule handler as a side-effecting function
  */
-const lunchBreakRule = (amEndCtrl, pmStartCtrl) => () => { // 40 min lunch break
-    const amEndTime   = amEndCtrl  .getValue();
-    const pmStartTime = pmStartCtrl.getValue();
+const lunchBreakRule = (amEndCtrl, pmStartCtrl) => () => {
+    // 40 min lunch break
+    const amEndTime = amEndCtrl.getValue()
+    const pmStartTime = pmStartCtrl.getValue()
 
-    if (pmStartTime - amEndTime < 40) {       // lunchtime too short
-        pmStartCtrl.setValue(amEndTime + 40); // make it last longer
+    if (pmStartTime - amEndTime < 40) {
+        // lunchtime too short
+        pmStartCtrl.setValue(amEndTime + 40) // make it last longer
     }
-};
+}
 
 /**
  * For any start and end value, the start must be no later than the end value.
@@ -129,14 +155,16 @@ const lunchBreakRule = (amEndCtrl, pmStartCtrl) => () => { // 40 min lunch break
  * @param  {SimpleInputControllerType<Number>} endInputCtrl
  * @return { () => void } - the sequence rule handler as a side-effecting function
  */
-const sequenceRule = (startInputCtrl, endInputCtrl) => () => { // start must be <= end
-    const start_val = startInputCtrl.getValue();
-    const end_val   = endInputCtrl  .getValue();
+const sequenceRule = (startInputCtrl, endInputCtrl) => () => {
+    // start must be <= end
+    const start_val = startInputCtrl.getValue()
+    const end_val = endInputCtrl.getValue()
 
-    if (start_val > end_val) {            // start after end not allowed
-        endInputCtrl.setValue(start_val); // move the end time back
+    if (start_val > end_val) {
+        // start after end not allowed
+        endInputCtrl.setValue(start_val) // move the end time back
     }
-};
+}
 
 /**
  * Convenience function to check all validation constraints in order of precedence.
@@ -149,25 +177,25 @@ const sequenceRule = (startInputCtrl, endInputCtrl) => () => { // start must be 
  * @param   {SimpleInputControllerType<Number>[]} timeControllers
  * @return  void
  */
-const checkValidityRules = timeControllers => {
+const checkValidityRules = (timeControllers) => {
     // first we check whether we exceed 12 h in which case _all_ inputs become invalid, and we are done.
-    if ( totalValue(timeControllers) > 12 * 60 ) {
-        timeControllers.forEach( ctrl => ctrl.setValid(false));
-        return;
+    if (totalValue(timeControllers) > 12 * 60) {
+        timeControllers.forEach((ctrl) => ctrl.setValid(false))
+        return
     }
     // only if we are < 12 h, we check the individual valid constraints
-    timeControllers.forEach( ctrl =>
-        ctrl.setValid(ctrl.getValue() >=  4 * 60
-                   && ctrl.getValue() <= 22 * 60)
-    );
-};
+    timeControllers.forEach((ctrl) =>
+        ctrl.setValid(ctrl.getValue() >= 4 * 60 && ctrl.getValue() <= 22 * 60)
+    )
+}
 
 /**
  * Calculate the total number of minutes worked this day, given the inputs.
  * @param {SimpleInputControllerType<Number>[]} timeControllers
  * @return { Number }
  */
-const totalValue = timeControllers => {
-    const [am_start_val, am_end_val, pm_start_val, pm_end_val] = timeControllers.map( ctrl => ctrl.getValue());
-    return am_end_val - am_start_val + pm_end_val - pm_start_val;
-};
+const totalValue = (timeControllers) => {
+    const [am_start_val, am_end_val, pm_start_val, pm_end_val] =
+        timeControllers.map((ctrl) => ctrl.getValue())
+    return am_end_val - am_start_val + pm_end_val - pm_start_val
+}

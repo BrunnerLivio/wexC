@@ -1,27 +1,27 @@
 // noinspection GrazieInspection
 
-import { Sequence, nil, PureSequence, Walk } from "../sequence.js";
-import { SequencePrototype }                 from "../sequencePrototype.js";
-import { arrayEq }                           from "../../util/arrayFunctions.js";
-import { Just, Nothing }                     from "../../lambda/maybe.js";
-import { isSequence }                        from "./helpers.js";
-import { LoggerFactory }                     from "../../logger/loggerFactory.js";
-import { LOG_CONTEXT_KOLIBRI_TEST }          from "../../logger/logConstants.js";
-import { id }                                from "../../stdlib.js";
+import { Sequence, nil, PureSequence, Walk } from '../sequence.js'
+import { SequencePrototype } from '../sequencePrototype.js'
+import { arrayEq } from '../../util/arrayFunctions.js'
+import { Just, Nothing } from '../../lambda/maybe.js'
+import { isSequence } from './helpers.js'
+import { LoggerFactory } from '../../logger/loggerFactory.js'
+import { LOG_CONTEXT_KOLIBRI_TEST } from '../../logger/logConstants.js'
+import { id } from '../../stdlib.js'
 
 export {
-  createTestConfig,
-  newSequence,
-  UPPER_SEQUENCE_BOUNDARY,
-  testSimple,
-  testPurity,
-  testIterateMultipleTimes,
-  testCBNotCalledAfterDone,
-  testPrototype,
-  testInvariants,
+    createTestConfig,
+    newSequence,
+    UPPER_SEQUENCE_BOUNDARY,
+    testSimple,
+    testPurity,
+    testIterateMultipleTimes,
+    testCBNotCalledAfterDone,
+    testPrototype,
+    testInvariants,
 }
 
-const { error } = LoggerFactory(LOG_CONTEXT_KOLIBRI_TEST);
+const { error } = LoggerFactory(LOG_CONTEXT_KOLIBRI_TEST)
 
 /**
  * This type is used to create testing table entry.
@@ -93,8 +93,8 @@ const { error } = LoggerFactory(LOG_CONTEXT_KOLIBRI_TEST);
  * @param { Number } limit
  * @returns { SequenceType<Number> }
  */
-const newSequence = limit => Walk(limit);
-const UPPER_SEQUENCE_BOUNDARY = 4;
+const newSequence = (limit) => Walk(limit)
+const UPPER_SEQUENCE_BOUNDARY = 4
 
 /**
  * @type {
@@ -103,12 +103,12 @@ const UPPER_SEQUENCE_BOUNDARY = 4;
  *          => void
  *       }
  */
-const testSimple = config => assert => {
-  const { iterable, operation, evalFn, expected, param } = config;
-  const baseIterable = iterable();
-  const operated     = operation(param)(baseIterable);
-  evaluate(expected, operated, assert, evalFn);
-};
+const testSimple = (config) => (assert) => {
+    const { iterable, operation, evalFn, expected, param } = config
+    const baseIterable = iterable()
+    const operated = operation(param)(baseIterable)
+    evaluate(expected, operated, assert, evalFn)
+}
 
 /**
  * Checks, if the result of an {@link Iterable} is the same twice.
@@ -119,12 +119,12 @@ const testSimple = config => assert => {
  *          => void
  *       }
  */
-const testIterateMultipleTimes = config => assert => {
-  const { iterable, operation, evalFn, param } = config;
-  const baseIterable = iterable();
-  const operated = operation(param)(baseIterable);
-  evaluate(operated, operated, assert, evalFn);
-};
+const testIterateMultipleTimes = (config) => (assert) => {
+    const { iterable, operation, evalFn, param } = config
+    const baseIterable = iterable()
+    const operated = operation(param)(baseIterable)
+    evaluate(operated, operated, assert, evalFn)
+}
 
 /**
  * Checks if a given operation does not modify the underlying {@link SequenceType}.
@@ -135,15 +135,15 @@ const testIterateMultipleTimes = config => assert => {
  *          => void
  *       }
  */
-const testPurity = config => assert => {
-  const { operation, param, iterable, evalFn } = config;
-  const underlyingIterable = iterable();
-  // if the iterable modifies the underlying iterable, the following test would fail, because both use the same
-  // underlying iterable
-  const first  = operation(param)(underlyingIterable);
-  const second = operation(param)(underlyingIterable);
-  evaluate(first, second, assert, evalFn);
-};
+const testPurity = (config) => (assert) => {
+    const { operation, param, iterable, evalFn } = config
+    const underlyingIterable = iterable()
+    // if the iterable modifies the underlying iterable, the following test would fail, because both use the same
+    // underlying iterable
+    const first = operation(param)(underlyingIterable)
+    const second = operation(param)(underlyingIterable)
+    evaluate(first, second, assert, evalFn)
+}
 
 /**
  * Since there is no guarantee that the value of the iterable is existing when done is true,
@@ -155,22 +155,28 @@ const testPurity = config => assert => {
  *          => void
  *       }
  */
-const testCBNotCalledAfterDone = config => assert => {
-  const { operation, param } = config;
-  if (typeof param !== "function") return;
+const testCBNotCalledAfterDone = (config) => (assert) => {
+    const { operation, param } = config
+    if (typeof param !== 'function') return
 
-  let called = false;
-  const it   = Sequence(0, _ => false, _ => 0);
+    let called = false
+    const it = Sequence(
+        0,
+        (_) => false,
+        (_) => 0
+    )
 
-  const operated = operation(el => {
-    // since this iterable is empty, called should never be set to true
-    called = true;
-    return param(el);
-  })(it);
+    const operated = operation((el) => {
+        // since this iterable is empty, called should never be set to true
+        called = true
+        return param(el)
+    })(it)
 
-  for (const _ of operated) { /* exhausting */ }
-  assert.is(called, false);
-};
+    for (const _ of operated) {
+        /* exhausting */
+    }
+    assert.is(called, false)
+}
 
 /**
  * Tests, if {@link SequencePrototype} is set on the {@link SequenceType} under test.
@@ -181,9 +187,8 @@ const testCBNotCalledAfterDone = config => assert => {
  *         => void
  *       }
  */
-const testPrototype = config => assert =>
-  assert.is(isSequence(config.iterable()), true);
-
+const testPrototype = (config) => (assert) =>
+    assert.is(isSequence(config.iterable()), true)
 
 /**
  * Tests, whether the given invariants hold when passed different lists.
@@ -193,12 +198,12 @@ const testPrototype = config => assert =>
  *        => void
  *      }
  */
-const testInvariants = config => assert => {
-  const invariants = config.invariants;
-  for (const inv of invariants) {
-    invariantPenetration(inv)(assert);
-  }
-};
+const testInvariants = (config) => (assert) => {
+    const invariants = config.invariants
+    for (const inv of invariants) {
+        invariantPenetration(inv)(assert)
+    }
+}
 
 /**
  * Applies a series of lists to a given invariant.
@@ -209,24 +214,33 @@ const testInvariants = config => assert => {
  *         => void
  *       }
  */
-const invariantPenetration = invariant => assert => {
-  const testingLists = [
-    { candidate: nil,                                                   purpose: "edge case nil"},
-    { candidate: newSequence(1),                                        purpose: "edge case, done calculated"},
-    { candidate: newSequence(3),                                        purpose: "typical number"},
-    { candidate: PureSequence("testString"),                            purpose: "edge case, done set explicitly"},
-    { candidate: ['a', 'b', 'c', 1, 2, 3, Nothing, Just("testString")], purpose: "mixing types"},
-    { candidate: [PureSequence(1), newSequence(4), '#', "abc", 1],      purpose: "iterable of iterables"},
-  ];
+const invariantPenetration = (invariant) => (assert) => {
+    const testingLists = [
+        { candidate: nil, purpose: 'edge case nil' },
+        { candidate: newSequence(1), purpose: 'edge case, done calculated' },
+        { candidate: newSequence(3), purpose: 'typical number' },
+        {
+            candidate: PureSequence('testString'),
+            purpose: 'edge case, done set explicitly',
+        },
+        {
+            candidate: ['a', 'b', 'c', 1, 2, 3, Nothing, Just('testString')],
+            purpose: 'mixing types',
+        },
+        {
+            candidate: [PureSequence(1), newSequence(4), '#', 'abc', 1],
+            purpose: 'iterable of iterables',
+        },
+    ]
 
-  for (const list of testingLists) {
-    const result = invariant(list.candidate);
-    if (!result) {
-      console.error("error while evaluating invariant: "+list.purpose); // debugging entry point
+    for (const list of testingLists) {
+        const result = invariant(list.candidate)
+        if (!result) {
+            console.error('error while evaluating invariant: ' + list.purpose) // debugging entry point
+        }
+        assert.isTrue(result)
     }
-    assert.isTrue(result);
-  }
-};
+}
 
 /**
  * EvalFn will be set to {@link arrayEq} if it has not been defined
@@ -236,12 +250,13 @@ const invariantPenetration = invariant => assert => {
  * @param { SequenceTestConfigType<_T_> } config
  * @returns SequenceTestConfigType<_U_>
  */
-const createTestConfig = config => ({
-  ...config,
-  invariants:    config.invariants    === undefined ? []       : config.invariants,
-  operation:     config.operation     === undefined ? () => id : config.operation,
-  excludedTests: config.excludedTests === undefined ? []       : config.excludedTests,
-});
+const createTestConfig = (config) => ({
+    ...config,
+    invariants: config.invariants === undefined ? [] : config.invariants,
+    operation: config.operation === undefined ? () => id : config.operation,
+    excludedTests:
+        config.excludedTests === undefined ? [] : config.excludedTests,
+})
 
 /**
  * Checks if the given iterables are equals.
@@ -253,13 +268,13 @@ const createTestConfig = config => ({
  * @param { EvalCallback<_T_> }   [evalFn] - An evaluation function if the iterables shouldn't be compared using standard iterable test.
  */
 const evaluate = (expected, actual, assert, evalFn) => {
-  if (evalFn) {
-    const result = evalFn(expected)(actual);
-    if (!result) {
-      error(`test error expecting: '${expected}' but got '${actual}'`); // debugging entry point
+    if (evalFn) {
+        const result = evalFn(expected)(actual)
+        if (!result) {
+            error(`test error expecting: '${expected}' but got '${actual}'`) // debugging entry point
+        }
+        assert.isTrue(result)
+    } else {
+        assert.iterableEq(actual, expected)
     }
-    assert.isTrue(result);
-  } else {
-    assert.iterableEq(actual, expected);
-  }
-};
+}

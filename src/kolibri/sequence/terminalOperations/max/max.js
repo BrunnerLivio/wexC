@@ -1,5 +1,5 @@
-import { ILLEGAL_ARGUMENT_EMPTY_ITERABLE } from "../../util/errorMessages.js";
-import { safeMax$ }                        from "./safeMax.js";
+import { ILLEGAL_ARGUMENT_EMPTY_ITERABLE } from '../../util/errorMessages.js'
+import { safeMax$ } from './safeMax.js'
 
 export { max$ }
 
@@ -43,12 +43,12 @@ export { max$ }
  * @type { MaxOperationType<_T_> }
  */
 const max$ = (iterable, comparator = (a, b) => a < b) => {
-  let returnVal;
-  const maybeResult = safeMax$(iterable, comparator);
+    let returnVal
+    const maybeResult = safeMax$(iterable, comparator)
 
-  maybeResult
-    (_ => { throw Error(ILLEGAL_ARGUMENT_EMPTY_ITERABLE) })
-    (x => returnVal = x);
+    maybeResult((_) => {
+        throw Error(ILLEGAL_ARGUMENT_EMPTY_ITERABLE)
+    })((x) => (returnVal = x))
 
-  return returnVal;
-};
+    return returnVal
+}

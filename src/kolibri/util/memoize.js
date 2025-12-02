@@ -3,14 +3,13 @@
  * Helper functions for caching previous results.
  */
 
-import { LoggerFactory } from "../logger/loggerFactory.js";
+import { LoggerFactory } from '../logger/loggerFactory.js'
 
 export { memoize }
 
-const { debug } = LoggerFactory("ch.fhnw.kolibri.util.memoize");
+const { debug } = LoggerFactory('ch.fhnw.kolibri.util.memoize')
 
-/** @private */ const MAX_CACHE_SIZE = 1000;
-
+/** @private */ const MAX_CACHE_SIZE = 1000
 
 /**
  * A function that takes a function **f(x)** and returns a new function
@@ -26,20 +25,20 @@ const { debug } = LoggerFactory("ch.fhnw.kolibri.util.memoize");
    fib = memoize(fib);
    fib(2)  // is 2
  */
-const memoize = f => {
-    const cache = new Map();
-    let   cacheHitCount = 0;
-    return x => {
+const memoize = (f) => {
+    const cache = new Map()
+    let cacheHitCount = 0
+    return (x) => {
         if (cache.size >= MAX_CACHE_SIZE) {
-            cache.clear();
+            cache.clear()
         }
-        let y = cache.get(x);
+        let y = cache.get(x)
         if (undefined === y) {
-            y = f(x);
-            cache.set(x,y);
+            y = f(x)
+            cache.set(x, y)
         } else {
-            debug("memoized cache hits: " + (++cacheHitCount) );
+            debug('memoized cache hits: ' + ++cacheHitCount)
         }
-        return y;
+        return y
     }
-};
+}

@@ -1,19 +1,24 @@
-import { dom }                    from "../../../kolibri/util/dom.js";
-import { URI_HASH_MASTER_DETAIL } from "../../../customize/uriHashes.js";
-import { Page }                   from "../../../kolibri/navigation/page/page.js";
+import { dom } from '../../../kolibri/util/dom.js'
+import { URI_HASH_MASTER_DETAIL } from '../../../customize/uriHashes.js'
+import { Page } from '../../../kolibri/navigation/page/page.js'
 
-import {ListController, SelectionController}  from "../../person/personController.js";
-import {Person, selectionMold}                from "../../person/person.js";
-import {projectDetailView, projectMasterView} from "../../person/masterDetailProjector.js";
-import {pageCss as instantUpdateProjectorCSS} from "../../person/instantUpdateProjector.js";
-
+import {
+    ListController,
+    SelectionController,
+} from '../../person/personController.js'
+import { Person, selectionMold } from '../../person/person.js'
+import {
+    projectDetailView,
+    projectMasterView,
+} from '../../person/masterDetailProjector.js'
+import { pageCss as instantUpdateProjectorCSS } from '../../person/instantUpdateProjector.js'
 
 export { MasterDetailPage }
 
-const PAGE_CLASS     = URI_HASH_MASTER_DETAIL.substring(1); // share between page, content, and style
-const ACTIVATION_MS  = 1000;
-const PASSIVATION_MS = 1000;
-const TITLE          = "Master - Detail";
+const PAGE_CLASS = URI_HASH_MASTER_DETAIL.substring(1) // share between page, content, and style
+const ACTIVATION_MS = 1000
+const PASSIVATION_MS = 1000
+const TITLE = 'Master - Detail'
 
 /**
  * Constructor for a page that shows a typical master-detail view with direct manipulation and
@@ -21,30 +26,35 @@ const TITLE          = "Master - Detail";
  * @return { PageType }
  * @constructor
  */
-const MasterDetailPage = () => Page({
-     titleText:         TITLE,
-     activationMs:      ACTIVATION_MS,
-     passivationMs:     PASSIVATION_MS,
-     pageClass:         PAGE_CLASS,
-     onBootstrap,
-     styleElement  :    /** @type { HTMLStyleElement } */ styleElement,
-     contentElement:    /** @type { HTMLElement }      */ contentElement,
- });
+const MasterDetailPage = () =>
+    Page({
+        titleText: TITLE,
+        activationMs: ACTIVATION_MS,
+        passivationMs: PASSIVATION_MS,
+        pageClass: PAGE_CLASS,
+        onBootstrap,
+        styleElement: /** @type { HTMLStyleElement } */ styleElement,
+        contentElement: /** @type { HTMLElement }      */ contentElement,
+    })
 
 const onBootstrap = () => {
-     const listController      = ListController(Person);
-     const selectionController = SelectionController(selectionMold);
+    const listController = ListController(Person)
+    const selectionController = SelectionController(selectionMold)
 
-     // create the sub-views, incl. binding
-     const master = projectMasterView(listController, selectionController, );
-     contentElement.querySelector(`#masterContainer`).append(...master);
+    // create the sub-views, incl. binding
+    const master = projectMasterView(listController, selectionController)
+    contentElement.querySelector(`#masterContainer`).append(...master)
 
-     const detailForm = projectDetailView(selectionController, document.getElementById('detailCard'));
-     contentElement.querySelector(`#detailContainer`).append(...detailForm);
+    const detailForm = projectDetailView(
+        selectionController,
+        document.getElementById('detailCard')
+    )
+    contentElement.querySelector(`#detailContainer`).append(...detailForm)
 
-     // binding of the page view
-     contentElement.querySelector(`#plus`).onclick = _ => listController.addModel();
-};
+    // binding of the page view
+    contentElement.querySelector(`#plus`).onclick = (_) =>
+        listController.addModel()
+}
 
 const [contentElement] = dom(`
     <div class="${PAGE_CLASS} prosa">
@@ -126,13 +136,13 @@ const [contentElement] = dom(`
                
         </section>
     </div>
-`);
+`)
 
 const [styleElement] = dom(`
     <style data-style-id="${PAGE_CLASS}">
       @layer pageLayer {  
         .${PAGE_CLASS} {        
-            ${ instantUpdateProjectorCSS }
+            ${instantUpdateProjectorCSS}
             
             /* we assume that kolibri base is already imported */
             
@@ -214,4 +224,4 @@ const [styleElement] = dom(`
         }   
      }           
     </style>
-`);
+`)

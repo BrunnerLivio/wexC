@@ -1,6 +1,4 @@
-
-
-export { shapesByName, shapeNames };
+export { shapesByName, shapeNames }
 
 /**
  * @typedef {
@@ -35,84 +33,93 @@ export { shapesByName, shapeNames };
 
 /** @type { ShapeType } */
 const charO = [
-    {x: 0, y: 0, z: 0},
-    {x: 0, y: 1, z: 0},
-    {x: 1, y: 0, z: 0},
-    {x: 1, y: 1, z: 0},
-];
+    { x: 0, y: 0, z: 0 },
+    { x: 0, y: 1, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 1, y: 1, z: 0 },
+]
 
 /** @type { ShapeType } */
 const charI = [
-    {x: 0, y: 1, z: 0},
-    {x: 1, y: 1, z: 0},
-    {x: 2, y: 1, z: 0},
-    {x: 3, y: 1, z: 0},
-];
+    { x: 0, y: 1, z: 0 },
+    { x: 1, y: 1, z: 0 },
+    { x: 2, y: 1, z: 0 },
+    { x: 3, y: 1, z: 0 },
+]
 
 /** @type { ShapeType } */
 const charT = [
-    {x: 0, y: 0, z: 0},
-    {x: 1, y: 0, z: 0},
-    {x: 2, y: 0, z: 0},
-    {x: 1, y: 1, z: 0},
-];
+    { x: 0, y: 0, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 2, y: 0, z: 0 },
+    { x: 1, y: 1, z: 0 },
+]
 
 /** @type { ShapeType } */
 const charS = [
-    {x: 2, y: 0, z: 0},
-    {x: 1, y: 0, z: 0},
-    {x: 1, y: 1, z: 0},
-    {x: 0, y: 1, z: 0},
-];
+    { x: 2, y: 0, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 1, y: 1, z: 0 },
+    { x: 0, y: 1, z: 0 },
+]
 
 /** @type { ShapeType } */
 const charZ = [
-    {x: 0, y: 0, z: 0},
-    {x: 1, y: 0, z: 0},
-    {x: 1, y: 1, z: 0},
-    {x: 2, y: 1, z: 0},
-];
+    { x: 0, y: 0, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 1, y: 1, z: 0 },
+    { x: 2, y: 1, z: 0 },
+]
 
 /** @type { ShapeType } */
 const charL = [
-    {x: 0, y: 1, z: 0},
-    {x: 0, y: 0, z: 0},
-    {x: 1, y: 0, z: 0},
-    {x: 2, y: 0, z: 0},
-];
+    { x: 0, y: 1, z: 0 },
+    { x: 0, y: 0, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 2, y: 0, z: 0 },
+]
 
 /** @type { ShapeType } */
 const charF = [
-    {x: 1, y: 0, z: 0},
-    {x: 0, y: 0, z: 0},
-    {x: 0, y: 1, z: 0},
-    {x: 0, y: 2, z: 0},
-];
+    { x: 1, y: 0, z: 0 },
+    { x: 0, y: 0, z: 0 },
+    { x: 0, y: 1, z: 0 },
+    { x: 0, y: 2, z: 0 },
+]
 /** @type { ShapeType } */
 const branch = [
-    {x: 0, y: 0, z: 0},
-    {x: 1, y: 0, z: 0},
-    {x: 0, y: 1, z: 0},
-    {x: 0, y: 0, z: 1},
-];
+    { x: 0, y: 0, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 0, y: 1, z: 0 },
+    { x: 0, y: 0, z: 1 },
+]
 /** @type { ShapeType } */
 const screwRight = [
-    {x: 0, y: 0, z: 0},
-    {x: 1, y: 0, z: 0},
-    {x: 1, y: 1, z: 0},
-    {x: 1, y: 1, z: 1},
-];
+    { x: 0, y: 0, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 1, y: 1, z: 0 },
+    { x: 1, y: 1, z: 1 },
+]
 /** @type { ShapeType } */
 const screwLeft = [
-    {x: 0, y: 1, z: 0},
-    {x: 1, y: 1, z: 0},
-    {x: 1, y: 0, z: 0},
-    {x: 1, y: 0, z: 1},
-];
+    { x: 0, y: 1, z: 0 },
+    { x: 1, y: 1, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 1, y: 0, z: 1 },
+]
 
 const shapesByName = {
-    charI, charT, charO, charS, charZ, charL, charF, branch, screwRight, screwLeft
-};
+    charI,
+    charT,
+    charO,
+    charS,
+    charZ,
+    charL,
+    charF,
+    branch,
+    screwRight,
+    screwLeft,
+}
 
 /** @type { Array<String> } */
-const shapeNames = Object.keys(shapesByName);
+const shapeNames = Object.keys(shapesByName)

@@ -1,5 +1,5 @@
-import {createMonadicSequence} from "../../sequencePrototype.js";
-import {iteratorOf}            from "../../util/helpers.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
+import { iteratorOf } from '../../util/helpers.js'
 
 export { mconcat }
 
@@ -28,35 +28,34 @@ export { mconcat }
  * @template _T_
  * @type { MconcatOperationType<_T_> }
  */
-const mconcat = iterable => {
+const mconcat = (iterable) => {
+    const mconcatIterator = () => {
+        /**
+         * @template _T_
+         * @type { Iterator<_T_> }
+         */
+        let current = undefined
+        const outer = iteratorOf(iterable)
 
-  const mconcatIterator = () => {
-    /**
-     * @template _T_
-     * @type { Iterator<_T_> }
-     */
-    let current = undefined;
-    const outer = iteratorOf(iterable);
+        const next = () => {
+            while (true) {
+                if (current === undefined) {
+                    // if there is no current, get the next sub iterable of the outer iterable
+                    const nextOfOuter = outer.next()
+                    if (nextOfOuter.done) return nextOfOuter
+                    current = iteratorOf(nextOfOuter.value)
+                }
 
-    const next = () => {
-      while (true) {
-        if (current === undefined) {
-          // if there is no current, get the next sub iterable of the outer iterable
-          const nextOfOuter = outer.next();
-          if (nextOfOuter.done) return nextOfOuter;
-          current = iteratorOf(nextOfOuter.value);
+                // grab next value from sub iterable until it is done
+                const nextOfCurrent = current.next()
+                if (!nextOfCurrent.done) return nextOfCurrent
+
+                current = undefined
+            }
         }
 
-        // grab next value from sub iterable until it is done
-        const nextOfCurrent = current.next();
-        if (!nextOfCurrent.done) return nextOfCurrent;
+        return { next }
+    }
 
-        current = undefined;
-      }
-    };
-
-    return { next }
-  };
-
-  return createMonadicSequence(mconcatIterator);
-};
+    return createMonadicSequence(mconcatIterator)
+}

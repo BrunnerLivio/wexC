@@ -5,10 +5,9 @@
  * from prototype modifications if they prefer to do so.
  */
 
-import { arrayEq, removeItem, removeAt, times, sum } from "./arrayFunctions.js"
-export {
-    // there is nothing to export since we only augment the prototypes
-}
+import { arrayEq, removeItem, removeAt, times, sum } from './arrayFunctions.js'
+export // there is nothing to export since we only augment the prototypes
+ {}
 
 /**
  * See {@link arrayEq}.
@@ -18,7 +17,9 @@ export {
  * @example
  * [1].eq([1]); // true
  */
-Array.prototype.eq = function(array) { return arrayEq(this)(array);};
+Array.prototype.eq = function (array) {
+    return arrayEq(this)(array)
+}
 
 /**
  * See {@link removeAt}.
@@ -29,7 +30,9 @@ Array.prototype.eq = function(array) { return arrayEq(this)(array);};
  * @example
  * [1,2,3].removeAt(0);
  */
-Array.prototype.removeAt = function(index){ return removeAt(this)(index); };
+Array.prototype.removeAt = function (index) {
+    return removeAt(this)(index)
+}
 
 /**
  * See {@link removeItem}.
@@ -40,7 +43,9 @@ Array.prototype.removeAt = function(index){ return removeAt(this)(index); };
  * @example
  * ["a","b","c"].removeItem("b");
  */
-Array.prototype.removeItem = function(item){ return removeItem(this)(item); };
+Array.prototype.removeItem = function (item) {
+    return removeItem(this)(item)
+}
 
 /**
  * See {@link times}.
@@ -50,7 +55,9 @@ Array.prototype.removeItem = function(item){ return removeItem(this)(item); };
  * @example
  * "10".times(it => console.log(it));
  */
-String.prototype.times = function(callback = undefined){ return times(this)(callback); };
+String.prototype.times = function (callback = undefined) {
+    return times(this)(callback)
+}
 
 /**
  * See {@link times}.
@@ -60,7 +67,9 @@ String.prototype.times = function(callback = undefined){ return times(this)(call
  * @example
  * (5).times(x => x * x); // [0, 1, 4, 9, 16]
  */
-Number.prototype.times = function(callback= undefined){ return times(this)(callback); };
+Number.prototype.times = function (callback = undefined) {
+    return times(this)(callback)
+}
 
 /**
  * See {@link sum}.
@@ -70,4 +79,6 @@ Number.prototype.times = function(callback= undefined){ return times(this)(callb
  * [1,2,3].sum();     // 6
  * ["1"].sum(Number); // 1
  */
-Array.prototype.sum = function(callback = undefined){ return sum(this)(callback); };
+Array.prototype.sum = function (callback = undefined) {
+    return sum(this)(callback)
+}
