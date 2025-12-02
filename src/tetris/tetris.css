@@ -17,7 +17,7 @@
     --color-green-300: #ECFFC2FF;
     --color-green-200: #F5FFE0FF;
     --color-red-500: #FB0F5AFF;
-    --color-red-400: #FF9EBCFF;
+    --color-red-400: #ff6e9c;
     --color-red-300: #FFC2D6FF;
     --color-red-200: #FFE0EAFF;
     --color-blue-500: #5DA9FFFF;
@@ -540,10 +540,6 @@ footer {
     width: 200px;
 }
 
-.axis-control[data-in-charge='other'] .axis-frame {
-    opacity: 0.7;
-}
-
 .axis-frame {
     width: 100%;
     padding: 0;
@@ -551,7 +547,6 @@ footer {
     box-shadow: none;
     display: grid;
     place-items: center;
-    transition: opacity 0.2s ease-out;
     pointer-events: auto;
     position: relative;
 }
@@ -577,44 +572,51 @@ footer {
 
 .ring-track {
     fill: none;
-    opacity: 0.2;
-    stroke-width: 2;
+    stroke-width: 3;
     transition: all 0.3s ease;
-    filter: drop-shadow(0 0 15px currentColor);
 }
 
-.axis-ring:hover .ring-track {
-    opacity: 0.4;
-    filter: drop-shadow(0 0 25px currentColor);
+/* Drop shadows for each ring color */
+.axis-ring[data-axis='roll'] .ring-track-tetronimo {
+    filter: drop-shadow(0 0 4px #5DA9FF);
+}
+
+.axis-ring[data-axis='roll'] .ring-track-room {
+    filter: drop-shadow(0 0 4px #8447FF);
+}
+
+.axis-ring[data-axis='pitch'] .ring-track-tetronimo {
+    filter: drop-shadow(0 0 4px #02FFFF);
+}
+
+.axis-ring[data-axis='pitch'] .ring-track-room {
+    filter: drop-shadow(0 0 4px #FF35D0);
+}
+
+.axis-ring[data-axis='yaw'] .ring-track-tetronimo {
+    filter: drop-shadow(0 0 4px #AFFF02);
+}
+
+.axis-ring[data-axis='yaw'] .ring-track-room {
+    filter: drop-shadow(0 0 4px #FB0F5A);
+}
+
+/* Show tetronimo gradients by default, hide room gradients */
+.ring-track-room {
+    display: none;
+}
+
+/* In room mode, show room gradients and hide tetronimo gradients */
+.mode-room .ring-track-tetronimo {
+    display: none;
+}
+
+.mode-room .ring-track-room {
+    display: block;
 }
 
 .axis-ring.dragging .ring-track {
-    opacity: 0.6;
-    stroke-width: 3;
-    filter: drop-shadow(0 0 35px currentColor);
-}
-
-.ring-handle {
-    fill: rgba(255, 255, 255, 0.8);
-    stroke: rgba(255, 255, 255, 0.9);
-    stroke-width: 2;
-    cursor: grab;
-    transition: all 0.3s ease;
-    touch-action: none;
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
-}
-
-.axis-ring:hover .ring-handle {
-    fill: white;
-    r: 10;
-    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1));
-}
-
-.axis-ring.dragging .ring-handle {
-    cursor: grabbing;
-    fill: white;
-    r: 12;
-    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 1));
+    stroke-width: 4;
 }
 
 .ring-label {
@@ -629,38 +631,6 @@ footer {
 
 .axis-ring.dragging .ring-label {
     fill: white;
-}
-
-/* Color rings differently based on axis */
-.axis-ring[data-axis='roll'] .ring-track,
-.axis-ring[data-axis='roll'] .ring-handle {
-    stroke: var(--color-blue-500);
-}
-
-.axis-ring[data-axis='pitch'] .ring-track,
-.axis-ring[data-axis='pitch'] .ring-handle {
-    stroke: var(--color-cyan-500);
-}
-
-.axis-ring[data-axis='yaw'] .ring-track,
-.axis-ring[data-axis='yaw'] .ring-handle {
-  stroke: var(--color-green-500);
-}
-
-/* and on mode */
-.mode-room .axis-ring[data-axis='roll'] .ring-track,
-.mode-room .axis-ring[data-axis='roll'] .ring-handle {
-    stroke: var(--color-purple-500);
-}
-
-.mode-room .axis-ring[data-axis='pitch'] .ring-track,
-.mode-room .axis-ring[data-axis='pitch'] .ring-handle {
-    stroke: var(--color-red-500);
-}
-
-.mode-room .axis-ring[data-axis='yaw'] .ring-track,
-.mode-room .axis-ring[data-axis='yaw'] .ring-handle {
-    stroke: var(--color-pink-500);
 }
 
 /* Responsive adjustments */

@@ -274,24 +274,62 @@ const projectAxisControl = (gameController) => {
     <aside class="axis-control" data-in-charge="other">
       <div class="axis-frame">
         <svg class="axis-rings" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="rollGradient" gradientTransform="rotate(-30 0.5 0.5)">
+              <stop offset="0%" style="stop-color: #5DA9FF; stop-opacity: 1" />
+              <stop offset="22%" style="stop-color: #8CC2FF; stop-opacity: 1" />
+              <stop offset="50%" style="stop-color: #B6D8FF; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #DCECFF; stop-opacity: 1" />
+            </linearGradient>
+            <linearGradient id="rollGradientRoom" gradientTransform="rotate(-30 0.5 0.5)">
+              <stop offset="0%" style="stop-color: #8447FF; stop-opacity: 1" />
+              <stop offset="22%" style="stop-color: #BE9EFF; stop-opacity: 1" />
+              <stop offset="50%" style="stop-color: #D6C2FF; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #EAE0FF; stop-opacity: 1" />
+            </linearGradient>
+            <linearGradient id="pitchGradient" gradientTransform="rotate(-30 0.5 0.5)">
+              <stop offset="0%" style="stop-color: #02FFFF; stop-opacity: 1" />
+              <stop offset="22%" style="stop-color: #9EFFFF; stop-opacity: 1" />
+              <stop offset="50%" style="stop-color: #C2FFFF; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #E0FFFF; stop-opacity: 1" />
+            </linearGradient>
+            <linearGradient id="pitchGradientRoom" gradientTransform="rotate(-30 0.5 0.5)">
+              <stop offset="0%" style="stop-color: #FF35D0; stop-opacity: 1" />
+              <stop offset="22%" style="stop-color: #FF6BDD; stop-opacity: 1" />
+              <stop offset="50%" style="stop-color: #FFA4EA; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #FFD4F5; stop-opacity: 1" />
+            </linearGradient>
+            <linearGradient id="yawGradient" gradientTransform="rotate(-30 0.5 0.5)">
+              <stop offset="0%" style="stop-color: #AFFF02; stop-opacity: 1" />
+              <stop offset="22%" style="stop-color: #E0FF9E; stop-opacity: 1" />
+              <stop offset="50%" style="stop-color: #ECFFC2; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #F5FFE0; stop-opacity: 1" />
+            </linearGradient>
+            <linearGradient id="yawGradientRoom" gradientTransform="rotate(-30 0.5 0.5)">
+              <stop offset="0%" style="stop-color: #FB0F5A; stop-opacity: 1" />
+              <stop offset="22%" style="stop-color: #FF6D9B; stop-opacity: 1" />
+              <stop offset="50%" style="stop-color: #FF9EBC; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #FFE0EA; stop-opacity: 1" />
+            </linearGradient>
+          </defs>
           <!-- Roll ring (outer) -->
           <g class="axis-ring" data-axis="roll">
-            <circle class="ring-track" cx="100" cy="100" r="85" />
-            <circle class="ring-handle" cx="15" cy="100" r="8" />
+            <circle class="ring-track ring-track-tetronimo" cx="100" cy="100" r="85" stroke="url(#rollGradient)" />
+            <circle class="ring-track ring-track-room" cx="100" cy="100" r="85" stroke="url(#rollGradientRoom)" />
             <text class="ring-label" x="100" y="8" text-anchor="middle">Roll</text>
           </g>
           
           <!-- Pitch ring (middle) -->
           <g class="axis-ring" data-axis="pitch">
-            <circle class="ring-track" cx="100" cy="100" r="65" />
-            <circle class="ring-handle" cx="35" cy="100" r="8" />
+            <circle class="ring-track ring-track-tetronimo" cx="100" cy="100" r="65" stroke="url(#pitchGradient)" />
+            <circle class="ring-track ring-track-room" cx="100" cy="100" r="65" stroke="url(#pitchGradientRoom)" />
             <text class="ring-label" x="100" y="28" text-anchor="middle">Pitch</text>
           </g>
           
           <!-- Yaw ring (inner) -->
           <g class="axis-ring" data-axis="yaw">
-            <circle class="ring-track" cx="100" cy="100" r="45" />
-            <circle class="ring-handle" cx="55" cy="100" r="8" />
+            <circle class="ring-track ring-track-tetronimo" cx="100" cy="100" r="45" stroke="url(#yawGradient)" />
+            <circle class="ring-track ring-track-room" cx="100" cy="100" r="45" stroke="url(#yawGradientRoom)" />
             <text class="ring-label" x="100" y="48" text-anchor="middle">Yaw</text>
           </g>
         </svg>
@@ -381,11 +419,10 @@ const projectAxisControl = (gameController) => {
 
     rings.forEach((ring) => {
         const axis = ring.getAttribute('data-axis')
-        const handle = ring.querySelector('.ring-handle')
 
-        if (!axis || !handle) return
+        if (!axis) return
 
-        handle.addEventListener(
+        ring.addEventListener(
             'pointerdown',
             /** @param {PointerEvent} event */ (event) => {
                 event.preventDefault()
