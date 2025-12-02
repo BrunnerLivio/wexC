@@ -172,7 +172,7 @@ footer {
     background: grey;
     opacity: 0.8;
     border-radius: 3%;
-    border: 1px solid #c9ff;
+    border: 1px solid #9c5bb2ae;
 }
 
 /* the transform origin for rotate is center by default, so rotations must first */
