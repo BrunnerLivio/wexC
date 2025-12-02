@@ -64,7 +64,11 @@
     user-select:            none;
 }
 
+/**
+ * 💣 Nuke IOS default interactions
+ */
 * {
-    -webkit-user-select:    none !important; /* sadly still needed in 2024 */
+    -webkit-user-select:    none !important;
     user-select:            none !important;
+    touch-action:           none !important;
 }
