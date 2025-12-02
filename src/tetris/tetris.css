@@ -4,6 +4,34 @@
     --unit:      1cqmin;
     --box-width: calc( 6 * var(--unit));
 
+    --joystick-size: 9em;
+    --joystick-border-thickness: 0.75em;
+    --joystick-border-radius: 26px;
+    --joystick-color-up: #d9ff5f;
+    --joystick-color-right: #a082ff;
+    --joystick-color-down: #4ae1ff;
+    --joystick-color-left: #ff6f82;
+    --joystick-center-outer: #f5f6ff;
+    --joystick-center-inner: #dfe9ff;
+    --joystick-frame-color: #9d74ff;
+    --joystick-title-color: #744ef5;
+    --joystick-border-active-opacity: 1;
+    --joystick-blink-duration: 0.32s;
+
+    --joystick-stroke: #fff;
+    --joystick-glow: rgba(130, 157, 255, 0.22);
+
+    --switch-width: 140px; /* corresponds to viewbox of right icon */
+    --switch-height: 75px;
+    --track-pad: 10px;
+    --dot-size: 45px;  /* corresponds to viewbox properties of both left and right icon */
+    --travel-gap: 6px; /* small extra offset so dot sits nicely inside stroke */
+    --transition: 320ms cubic-bezier(.2,.9,.3,1);
+    
+    --axis-control-color: #ff74d4;
+    --axis-button-bg: #1a0d2e;
+    --axis-button-active: #ff74d4;
+    --axis-frame-color: #ff74d4;
 }
 
 html {
@@ -212,25 +240,6 @@ footer {
     transform:        rotateY(-90deg);
 }
 
-:root {
-  --joystick-size: 9em;
-  --joystick-border-thickness: 0.75em;
-  --joystick-border-radius: 26px;
-  --joystick-color-up: #d9ff5f;
-  --joystick-color-right: #a082ff;
-  --joystick-color-down: #4ae1ff;
-  --joystick-color-left: #ff6f82;
-  --joystick-center-outer: #f5f6ff;
-  --joystick-center-inner: #dfe9ff;
-  --joystick-frame-color: #9d74ff;
-  --joystick-title-color: #744ef5;
-  --joystick-border-active-opacity: 1;
-  --joystick-blink-duration: 0.32s;
-
-  --joystick-stroke: #fff;
-  --joystick-glow: rgba(130, 157, 255, 0.22);
-}
-
 .joystick-position-control {
   position: fixed;
   inset: 6.5em auto auto 1.6em;
@@ -388,15 +397,6 @@ footer {
   z-index: -1;
 }
 
-:root{
-  --switch-width: 140px; /* corresponds to viewbox of right icon */
-  --switch-height: 75px;
-  --track-pad: 10px;
-  --dot-size: 45px;  /* corresponds to viewbox properties of both left and right icon */
-  --travel-gap: 6px; /* small extra offset so dot sits nicely inside stroke */
-  --transition: 320ms cubic-bezier(.2,.9,.3,1);
-}
-
 .switch {
     display: inline-block;
     width: var(--switch-width);
@@ -464,4 +464,108 @@ footer {
 .switch input:focus + .track + .dot {
     outline: 3px solid rgba(206, 206, 206, 0.4);
     outline-offset: 2px;
+}
+
+.axis-control {
+  position: fixed;
+  inset: 6.5em 1.6em auto auto;
+  z-index: 12;
+  display: grid;
+  gap: 0.6em;
+  color: var(--axis-control-color);
+  pointer-events: none;
+}
+
+.axis-control[data-in-charge="other"] .axis-frame {
+  opacity: 0.7;
+}
+
+.axis-frame {
+  padding: 0.9em;
+  border-radius: 1.5em;
+  background: linear-gradient(135deg, #1a0d2e 0%, #2a1d4e 100%);
+  box-shadow: 0 8px 32px rgba(255, 116, 212, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: grid;
+  place-items: center;
+  transition: opacity 0.2s ease-out;
+  pointer-events: auto;
+}
+
+.axis-rings {
+  width: 200px;
+  height: 200px;
+  overflow: visible;
+}
+
+.axis-ring {
+  cursor: grab;
+  transition: opacity 0.2s ease;
+}
+
+.axis-ring.dragging {
+  cursor: grabbing;
+}
+
+.ring-track {
+  fill: none;
+  stroke: rgba(255, 116, 212, 0.3);
+  stroke-width: 2;
+  transition: stroke 0.2s ease;
+}
+
+.axis-ring:hover .ring-track {
+  stroke: rgba(255, 116, 212, 0.6);
+}
+
+.axis-ring.dragging .ring-track {
+  stroke: var(--axis-control-color);
+  stroke-width: 3;
+}
+
+.ring-handle {
+  fill: var(--axis-control-color);
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1;
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.axis-ring:hover .ring-handle {
+  fill: #ff8ee0;
+  r: 9;
+  filter: drop-shadow(0 0 8px rgba(255, 116, 212, 0.8));
+}
+
+.axis-ring.dragging .ring-handle {
+  cursor: grabbing;
+  fill: white;
+  r: 10;
+  filter: drop-shadow(0 0 12px rgba(255, 116, 212, 1));
+}
+
+.ring-label {
+  fill: var(--axis-control-color);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.axis-ring.dragging .ring-label {
+  fill: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .axis-control {
+    inset: auto 1em 1em auto;
+  }
+  
+  .axis-rings {
+    width: 160px;
+    height: 160px;
+  }
 }

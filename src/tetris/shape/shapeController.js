@@ -5,6 +5,9 @@
  */
 
 export { normalize, toppleRoll, topplePitch, rotateYaw,
+         toppleRollLeft, toppleRollRight,
+         topplePitchForward, topplePitchBack,
+         rotateYawLeft, rotateYawRight,
          moveLeft , moveRight, moveBack, moveForw, moveDown
 };
 
@@ -24,11 +27,20 @@ const normalize = shape => {
 /** @private implementation is just swapping the coordinates **/
 const swapXZ  = shape => shape.map( box => ({x:  -box.z, y: box.y, z:  box.x}));
 
+/** @private opposite direction of swapXZ **/
+const swapXZReverse = shape => shape.map( box => ({x: box.z, y: box.y, z: -box.x}));
+
 /** @private implementation is just swapping the coordinates **/
 const swapYZ  = shape => shape.map( box => ({x:   box.x, y: box.z, z: -box.y}));
 
+/** @private opposite direction of swapYZ **/
+const swapYZReverse = shape => shape.map( box => ({x: box.x, y: -box.z, z: box.y}));
+
 /** @private implementation is just swapping the coordinates **/
 const swapXY  = shape => shape.map( box => ({x:  box.y, y: -box.x, z: box.z}));
+
+/** @private opposite direction of swapXY **/
+const swapXYReverse = shape => shape.map( box => ({x: -box.y, y: box.x, z: box.z}));
 
 /**
  * @typedef { (ShapeType) => ShapeType } NewShapeType
@@ -55,6 +67,50 @@ const topplePitch = swapYZ;
  * @type { NewShapeType }
  */
 const rotateYaw = swapXY;
+
+// Bidirectional rotation functions
+
+/**
+ * Roll left (same as base toppleRoll)
+ * @pure returns a new shape
+ * @type { NewShapeType }
+ */
+const toppleRollLeft = toppleRoll;
+
+/**
+ * Roll right (opposite of toppleRoll)
+ * @pure returns a new shape
+ * @type { NewShapeType }
+ */
+const toppleRollRight = swapXZReverse;
+
+/**
+ * Pitch forward (same as base topplePitch)
+ * @pure returns a new shape
+ * @type { NewShapeType }
+ */
+const topplePitchForward = topplePitch;
+
+/**
+ * Pitch back (opposite of topplePitch)
+ * @pure returns a new shape
+ * @type { NewShapeType }
+ */
+const topplePitchBack = swapYZReverse;
+
+/**
+ * Yaw left (same as base rotateYaw)
+ * @pure returns a new shape
+ * @type { NewShapeType }
+ */
+const rotateYawLeft = rotateYaw;
+
+/**
+ * Yaw right (opposite of rotateYaw)
+ * @pure returns a new shape
+ * @type { NewShapeType }
+ */
+const rotateYawRight = swapXYReverse;
 
 /**
  * @typedef { (Position3dType) => Position3dType } NewPositionType

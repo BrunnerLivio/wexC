@@ -27,6 +27,12 @@ import {
     rotateYaw,
     topplePitch,
     toppleRoll,
+  toppleRollLeft,
+  toppleRollRight,
+  topplePitchForward,
+  topplePitchBack,
+  rotateYawLeft,
+  rotateYawRight,
 } from "../shape/shapeController.js";
 import { SwitchModeController } from "../switchModeController/switchModeController.js";
 import { TetrominoController } from "../tetromino/tetrominoController.js";
@@ -46,6 +52,7 @@ const log = LoggerFactory("ch.fhnw.tetris.game.gameController");
  * @property restart
  * @property joystickPositionController
  * @property switchModeController
+ * @property axisController
  */
 
 /**
@@ -311,7 +318,15 @@ const GameController = (om) => {
   const playerController = PlayerController(om, omPublishStrategy, onSetupFinished);
 
   const joystickPositionController = JoystickPositionController();
-  const axisController = AxisController(om);
+  const axisController = AxisController(om, {
+    toppleRollLeft: () => turnShape(toppleRollLeft),
+    toppleRollRight: () => turnShape(toppleRollRight),
+    topplePitchForward: () => turnShape(topplePitchForward),
+    topplePitchBack: () => turnShape(topplePitchBack),
+    rotateYawLeft: () => turnShape(rotateYawLeft),
+    rotateYawRight: () => turnShape(rotateYawRight),
+    playerController,
+  });
   const switchModeController = SwitchModeController(om);
 
   playerController.onWeHaveBecomeActive((_) => {
@@ -374,5 +389,6 @@ const GameController = (om) => {
     restart,
     joystickPositionController,
     switchModeController,
+    axisController,
   };
 };

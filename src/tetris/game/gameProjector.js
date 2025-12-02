@@ -212,10 +212,142 @@ const projectMain = (gameController) => {
 };
 
 const projectAxisControl = (gameController) => {
-    const view = dom(`
-    <div class="axis-control">
-    </div>`);
-    return view;
+  const view = dom(`
+    <aside class="axis-control" data-in-charge="other">
+      <div class="axis-frame">
+        <svg class="axis-rings" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Roll ring (outer) -->
+          <g class="axis-ring" data-axis="roll">
+            <circle class="ring-track" cx="100" cy="100" r="85" />
+            <circle class="ring-handle" cx="100" cy="15" r="8" />
+            <text class="ring-label" x="100" y="8" text-anchor="middle">Roll</text>
+          </g>
+          
+          <!-- Pitch ring (middle) -->
+          <g class="axis-ring" data-axis="pitch">
+            <circle class="ring-track" cx="100" cy="100" r="65" />
+            <circle class="ring-handle" cx="100" cy="35" r="8" />
+            <text class="ring-label" x="100" y="28" text-anchor="middle">Pitch</text>
+          </g>
+          
+          <!-- Yaw ring (inner) -->
+          <g class="axis-ring" data-axis="yaw">
+            <circle class="ring-track" cx="100" cy="100" r="45" />
+            <circle class="ring-handle" cx="100" cy="55" r="8" />
+            <text class="ring-label" x="100" y="48" text-anchor="middle">Yaw</text>
+          </g>
+        </svg>
+      </div>
+    </aside>`);
+
+  const elements = Array.from(view);
+  const [container] = /** @type {HTMLElement[]} */ (elements);
+  const svg = /** @type {SVGElement} */ (container.querySelector('.axis-rings'));
+  const rings = container.querySelectorAll('.axis-ring');
+
+  /**
+   * Calculate angle from pointer position relative to SVG center
+   * @param {PointerEvent} event
+   * @param {SVGElement} svg
+   * @returns {number} angle in degrees (0-360)
+   */
+  const calculateAngle = (event, svg) => {
+    const rect = svg.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const dx = event.clientX - centerX;
+    const dy = event.clientY - centerY;
+    let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    // Convert from standard math angle to our coordinate system (0° at top)
+    angle = angle + 90;
+    return normalizeAngle(angle);
+  };
+
+  /**
+   * Normalize angle to 0-360 range
+   * @param {number} angle
+   * @returns {number}
+   */
+  const normalizeAngle = (angle) => {
+    angle = angle % 360;
+    if (angle < 0) angle += 360;
+    return angle;
+  };
+
+  /**
+   * Update the visual rotation of a ring
+   * @param {Element} ring
+   * @param {number} angle
+   */
+  const updateRingRotation = (ring, angle) => {
+    ring.setAttribute('transform', `rotate(${angle} 100 100)`);
+  };
+
+  // Track dragging state
+  let dragState = null;
+
+  // Bind ring drag handlers
+  rings.forEach((ring) => {
+    const axis = ring.getAttribute('data-axis');
+    const handle = ring.querySelector('.ring-handle');
+    
+    if (!axis || !handle) return;
+
+    handle.addEventListener('pointerdown', /** @param {PointerEvent} event */ (event) => {
+      event.preventDefault();
+      handle.setPointerCapture(event.pointerId);
+      
+      ring.classList.add('dragging');
+      dragState = {
+        axis,
+        startAngle: calculateAngle(event, svg),
+        currentAngle: 0,
+      };
+    });
+
+    handle.addEventListener('pointermove', /** @param {PointerEvent} event */ (event) => {
+      if (!dragState || dragState.axis !== axis) return;
+      
+      event.preventDefault();
+      const currentPointerAngle = calculateAngle(event, svg);
+      
+      // Calculate relative rotation from start
+      let deltaAngle = currentPointerAngle - dragState.startAngle;
+      
+      // Handle 360° wrap-around
+      if (deltaAngle > 180) deltaAngle -= 360;
+      if (deltaAngle < -180) deltaAngle += 360;
+      
+      dragState.currentAngle = deltaAngle;
+      
+      // Update visual rotation
+      updateRingRotation(ring, deltaAngle);
+      
+      // Notify controller (which will trigger rotations at threshold)
+      gameController.axisController?.setAxisAngle(axis, Math.abs(deltaAngle));
+    });
+
+    const endDrag = () => {
+      if (!dragState || dragState.axis !== axis) return;
+      
+      ring.classList.remove('dragging');
+      
+      // Reset visual rotation
+      updateRingRotation(ring, 0);
+      
+      // Reset controller state
+      gameController.axisController?.resetAxis(axis);
+      
+      dragState = null;
+    };
+
+    handle.addEventListener('pointerup', endDrag);
+    handle.addEventListener('pointercancel', endDrag);
+  });
+
+  gameController.axisController?.notifySetupFinished(container);
+
+  return view;
 };
 
 const projectSwitchModeControl = (gameController) => {
