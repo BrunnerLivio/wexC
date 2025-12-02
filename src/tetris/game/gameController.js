@@ -10,27 +10,27 @@
  * newly available tetrominos.
  */
 
-import {
-  moveBack,
-  moveDown,
-  moveForw,
-  moveLeft,
-  moveRight,
-  normalize,
-  rotateYaw,
-  topplePitch,
-  toppleRoll,
-} from "../shape/shapeController.js";
-import { Walk } from "../../kolibri/sequence/constructors/range/range.js";
 import { LoggerFactory } from "../../kolibri/logger/loggerFactory.js";
-import { PlayerController } from "../player/playerController.js";
-import { GameStateController } from "../gameState/gameStateController.js";
-import { TetrominoController } from "../tetromino/tetrominoController.js";
-import { JoystickPositionController } from "../joystickPositionController/joystickPositionController.js";
-import { BoxController } from "../box/boxController.js";
-import { NO_TETROMINO } from "../tetromino/tetrominoModel.js";
+import { Walk } from "../../kolibri/sequence/constructors/range/range.js";
 import { AxisController } from "../axisController/axisController.js";
+import { BoxController } from "../box/boxController.js";
+import { GameStateController } from "../gameState/gameStateController.js";
+import { JoystickPositionController } from "../joystickPositionController/joystickPositionController.js";
+import { PlayerController } from "../player/playerController.js";
+import {
+    moveBack,
+    moveDown,
+    moveForw,
+    moveLeft,
+    moveRight,
+    normalize,
+    rotateYaw,
+    topplePitch,
+    toppleRoll,
+} from "../shape/shapeController.js";
 import { SwitchModeController } from "../switchModeController/switchModeController.js";
+import { TetrominoController } from "../tetromino/tetrominoController.js";
+import { NO_TETROMINO } from "../tetromino/tetrominoModel.js";
 
 export { GameController };
 
@@ -44,7 +44,7 @@ const log = LoggerFactory("ch.fhnw.tetris.game.gameController");
  * @property gameStateController
  * @property startGame
  * @property restart
- * @property moveRight
+ * @property joystickPositionController
  * @property switchModeController
  */
 
@@ -64,9 +64,8 @@ const GameController = (om) => {
     if (!playerController.areWeInCharge()) {
       return;
     }
-    const isFull = (level) =>
-      boxController.findAllBoxesWhere((box) => box.zPos === level).length >=
-      7 * 7;
+    const isFull = (level) => boxController.findAllBoxesWhere((box) => box.zPos === level).length >= 7 * 7;
+    // @ts-ignore Walk is callable in runtime although typings expect construction
     const level = [...Walk(12)].findIndex(isFull);
     if (level < 0) {
       return;
@@ -123,10 +122,7 @@ const GameController = (om) => {
       zPos: currentTetromino.zPos,
     };
 
-    const nextBoxPositions = tetrominoController.expectedBoxPositions(
-      newShape,
-      position
-    );
+    const nextBoxPositions = tetrominoController.expectedBoxPositions(newShape, position);
 
     if (isDisallowedTetroPosition(nextBoxPositions)) {
       return;
@@ -156,10 +152,11 @@ const GameController = (om) => {
       z: currentTetromino.zPos,
     });
 
-    const nextBoxPositions = tetrominoController.expectedBoxPositions(
-      currentTetromino.shape,
-      { xPos: x, yPos: y, zPos: z }
-    );
+    const nextBoxPositions = tetrominoController.expectedBoxPositions(currentTetromino.shape, {
+      xPos: x,
+      yPos: y,
+      zPos: z,
+    });
 
     if (isDisallowedTetroPosition(nextBoxPositions)) {
       return;
@@ -222,18 +219,12 @@ const GameController = (om) => {
       return true;
     }
     // get all the other "non-moving" boxes, which is all boxes except the ones of the moving tetro
-    const otherBoxes = boxController.findAllBoxesWhere(
-      (box) => box.tetroId !== tetromino.id
-    );
+    const otherBoxes = boxController.findAllBoxesWhere((box) => box.tetroId !== tetromino.id);
 
     // a collision is when any two boxes would occupy the same position
     const collides = otherBoxes.some((otherBox) => {
       return newBoxPositions.some((newBox) => {
-        return (
-          otherBox.xPos === newBox.xPos &&
-          otherBox.yPos === newBox.yPos &&
-          otherBox.zPos === newBox.zPos
-        );
+        return otherBox.xPos === newBox.xPos && otherBox.yPos === newBox.yPos && otherBox.zPos === newBox.zPos;
       });
     });
     return collides;
@@ -304,6 +295,7 @@ const GameController = (om) => {
     gameStateController.resetGameState();
     tetrominoController.makeNewCurrentTetromino();
     gameStateController.setFallingDown(true);
+    joystickPositionController.resetCenterOffset();
     registerNextFallTask(); // proceed
     onFinishedCallback();
   };
@@ -315,17 +307,10 @@ const GameController = (om) => {
 
   const gameStateController = GameStateController(om, omPublishStrategy);
   const boxController = BoxController(om, omPublishStrategy);
-  const tetrominoController = TetrominoController(
-    om,
-    omPublishStrategy,
-    boxController
-  );
-  const playerController = PlayerController(
-    om,
-    omPublishStrategy,
-    onSetupFinished
-  );
-  const joystickPositionController = JoystickPositionController(om);
+  const tetrominoController = TetrominoController(om, omPublishStrategy, boxController);
+  const playerController = PlayerController(om, omPublishStrategy, onSetupFinished);
+
+  const joystickPositionController = JoystickPositionController();
   const axisController = AxisController(om);
   const switchModeController = SwitchModeController(om);
 
@@ -338,6 +323,23 @@ const GameController = (om) => {
     if (!playerController.areWeInCharge()) return;
     if (gameState.fallingDown) {
       registerNextFallTask(); // will itself check whether we are already falling
+    }
+  });
+
+  joystickPositionController.onDirectionChanged((direction) => {
+    switch (direction) {
+      case "up":
+        movePosition(moveBack);
+        break;
+      case "down":
+        movePosition(moveForw);
+        break;
+      case "left":
+        movePosition(moveLeft);
+        break;
+      case "right":
+        movePosition(moveRight);
+        break;
     }
   });
 
@@ -370,7 +372,7 @@ const GameController = (om) => {
     boxController,
     tetrominoController,
     restart,
-    moveRight: () => movePosition(moveRight),
+    joystickPositionController,
     switchModeController,
   };
 };

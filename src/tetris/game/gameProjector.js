@@ -1,10 +1,10 @@
+import { MISSING_FOREIGN_KEY } from '../../extension/relationalModelType.js';
+import { LoggerFactory } from '../../kolibri/logger/loggerFactory.js';
 import '../../kolibri/util/array.js';
 import { dom, select } from '../../kolibri/util/dom.js';
-import { registerForMouseAndTouch } from '../scene3D/scene.js';
-import { LoggerFactory } from '../../kolibri/logger/loggerFactory.js';
-import { MISSING_FOREIGN_KEY } from '../../extension/relationalModelType.js';
-import { projectPlayerList } from '../player/playerProjector.js';
 import { projectGameState } from '../gameState/gameStateProjector.js';
+import { projectPlayerList } from '../player/playerProjector.js';
+import { registerForMouseAndTouch } from '../scene3D/scene.js';
 
 export { projectGame };
 
@@ -13,7 +13,7 @@ const log = LoggerFactory('ch.fhnw.tetris.gameProjector');
 /**
  * Create the control panel view and bind to the controller actions
  * @param { import("./gameController.js").GameControllerType } gameController
- * @return { HTMLCollection }
+ * @return { HTMLElement[] }
  */
 const projectControlPanel = (gameController) => {
     const view = dom(`
@@ -77,7 +77,7 @@ const projectControlPanel = (gameController) => {
  * Create the main view and bind to the main key bindings
  * @impure sets the main view
  * @param { import("./gameController.js").GameControllerType } gameController
- * @return { HTMLCollection }
+ * @return { HTMLElement[] }
  */
 const projectMain = (gameController) => {
     const boxFaceDivs = (6).times((_) => "<div class='face'></div>").join('');
@@ -261,10 +261,85 @@ const projectSwitchModeControl = (gameController) => {
 };
 
 const projectJoystickPositionControl = (gameController) => {
-    const view = dom(`
-    <div class="joystick-position-control">
-    </div>`);
-    return view;
+  const view = dom(`
+    <aside class="joystick-position-control">
+      <div class="joystick-frame">
+        <div class="joystick-pad" role="group" aria-label="Move tetromino">
+          <svg class="joystick-border joystick-border-up" data-direction="up" xmlns="http://www.w3.org/2000/svg" width="139" height="22" viewBox="0 0 139 22" fill="none">
+            <path d="M133.302 4.5L121.251 16.5508H17.2578L5.20703 4.5H133.302Z" shape-rendering="crispEdges"/>
+            <defs>
+              <radialGradient id="gradient-up">
+                <stop stop-color="#F5FFE0"/>
+                <stop offset="0.216346" stop-color="#ECFFC2"/>
+                <stop offset="0.495192" stop-color="#E0FF9E"/>
+                <stop offset="1" stop-color="#AFFF02"/>
+              </radialGradient>
+            </defs>
+          </svg>
+          <svg class="joystick-border joystick-border-right" data-direction="right" xmlns="http://www.w3.org/2000/svg" width="22" height="139" viewBox="0 0 22 139" fill="none">
+            <path d="M16.5508 133.302L4.5 121.251L4.5 17.2578L16.5508 5.20703L16.5508 133.302Z" shape-rendering="crispEdges"/>
+            <defs>
+              <radialGradient id="gradient-right">
+                <stop stop-color="#EAE0FF"/>
+                <stop offset="0.216346" stop-color="#D6C2FF"/>
+                <stop offset="0.495192" stop-color="#BE9EFF"/>
+                <stop offset="1" stop-color="#8447FF"/>
+              </radialGradient>
+            </defs>
+          </svg>
+          <svg class="joystick-border joystick-border-down" data-direction="down" xmlns="http://www.w3.org/2000/svg" width="139" height="22" viewBox="0 0 139 22" fill="none">
+            <path d="M5.20654 16.5508L17.2573 4.5L121.25 4.5L133.301 16.5508L5.20654 16.5508Z"/>
+            <defs>
+              <radialGradient id="gradient-down">
+                <stop stop-color="#E0FFFF"/>
+                <stop offset="0.216346" stop-color="#C2FFFF"/>
+                <stop offset="0.495192" stop-color="#9EFFFF"/>
+                <stop offset="1" stop-color="#02FFFF"/>
+              </radialGradient>
+            </defs>
+          </svg>
+          <svg class="joystick-border joystick-border-left" data-direction="left" xmlns="http://www.w3.org/2000/svg" width="22" height="139" viewBox="0 0 22 139" fill="none">
+            <path d="M4.5 5.20654L16.5508 17.2573L16.5508 121.25L4.5 133.301L4.5 5.20654Z" />
+            <defs>
+              <radialGradient id="gradient-left">
+                <stop stop-color="#FFE0EA"/>
+                <stop offset="0.216346" stop-color="#FFC2D6"/>
+                <stop offset="0.495192" stop-color="#FF9EBC"/>
+                <stop offset="1" stop-color="#FB0F5A"/>
+              </radialGradient>
+            </defs>
+          </svg>
+          <div class="joystick-center">
+            <div class="joystick-center-ring"></div>
+            <div class="joystick-center-ring"></div>
+          </div>
+          <div class="joystick-center-base"></div>
+        </div>
+      </div>
+    </aside>`);
+
+  const mainElement = view[0];
+  const [padElement] = select(mainElement, ".joystick-pad");
+
+  gameController.joystickPositionController.registerPointerHandlers(padElement);
+  gameController.joystickPositionController.resetCenterOffset(padElement, 0, 0);
+
+  gameController.joystickPositionController.onCenterOffsetChanged(
+    ({ x, y }) => {
+      padElement.style.setProperty("--joystick-center-offset-x", `${x}px`);
+      padElement.style.setProperty("--joystick-center-offset-y", `${y}px`);
+    }
+  );
+
+  gameController.joystickPositionController.onDirectionChanged((direction) => {
+    if (direction) {
+      padElement.dataset.direction = direction;
+    } else {
+      delete padElement.dataset.direction;
+    }
+  });
+
+  return view;
 };
 
 /**
