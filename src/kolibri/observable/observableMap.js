@@ -1,14 +1,14 @@
-import {LoggerFactory} from "../logger/loggerFactory.js";
-import {Just, Nothing} from "../lambda/maybe.js";
+import { LoggerFactory } from '../logger/loggerFactory.js'
+import { Just, Nothing } from '../lambda/maybe.js'
 
 export {
     ObservableMap,
     originSymbol, // exported for testing purposes only
 }
 
-const log = LoggerFactory("ch.fhnw.kolibri.observable.observableMap");
+const log = LoggerFactory('ch.fhnw.kolibri.observable.observableMap')
 
-const originSymbol = Symbol("origin"); // singleton non-JSON-stringified property key
+const originSymbol = Symbol('origin') // singleton non-JSON-stringified property key
 
 /**
  * @typedef { String } ForeignKeyType
@@ -17,7 +17,6 @@ const originSymbol = Symbol("origin"); // singleton non-JSON-stringified propert
 /** @typedef { (key:ForeignKeyType) => void}                    newKeyCallback  */
 /** @typedef { <_T_> (key:ForeignKeyType, value:_T_) => void}   keyRemovedCallback  */
 /** @typedef { <_T_> (key:ForeignKeyType, value:_T_) => void}   onChangeCallback - value is never nullish */
-
 
 /**
  * A map (key-value store) that allows observing the adding and removal of keys along
@@ -43,78 +42,85 @@ const originSymbol = Symbol("origin"); // singleton non-JSON-stringified propert
  * @constructor
  */
 const ObservableMap = (name) => {
+    const backingMap = {}
+    const addListeners = []
+    const removeListeners = []
+    const changeListeners = []
 
-    const backingMap      = {};
-    const addListeners    = [];
-    const removeListeners = [];
-    const changeListeners = [];
-
-    const onKeyAdded   = listener => addListeners   .push(listener);
-    const onKeyRemoved = listener => removeListeners.push(listener);
-    const onChange     = listener => {
-        changeListeners.push(listener);
-        for(const [key, value] of Object.entries(backingMap)){ // immediate callback
-            const oldValue = backingMap[key];
-            listener(key, value, oldValue); // todo removeMe? (not as critical since OMs are long-running)
+    const onKeyAdded = (listener) => addListeners.push(listener)
+    const onKeyRemoved = (listener) => removeListeners.push(listener)
+    const onChange = (listener) => {
+        changeListeners.push(listener)
+        for (const [key, value] of Object.entries(backingMap)) {
+            // immediate callback
+            const oldValue = backingMap[key]
+            listener(key, value, oldValue) // todo removeMe? (not as critical since OMs are long-running)
         }
-    };
+    }
 
-    const hasKey = key => backingMap.hasOwnProperty(key);
+    const hasKey = (key) => backingMap.hasOwnProperty(key)
 
     const setKeyValue = (key, value) => {
-        if (! (value instanceof Object)) {  // e.g. value is a plain String
-            log.warn(`value '${value}' is not an object and will be wrapped. Consider Object(value).`);
-            value = Object(value);
+        if (!(value instanceof Object)) {
+            // e.g. value is a plain String
+            log.warn(
+                `value '${value}' is not an object and will be wrapped. Consider Object(value).`
+            )
+            value = Object(value)
         }
-        if ( value[originSymbol] === name) { // if this value change originated from ourselves, ignore
-            log.debug(`value change originated from ourselves name ${name} key ${key} value ${value}`);
-            return;                          // avoid infinite "echos"
+        if (value[originSymbol] === name) {
+            // if this value change originated from ourselves, ignore
+            log.debug(
+                `value change originated from ourselves name ${name} key ${key} value ${value}`
+            )
+            return // avoid infinite "echos"
         }
-        if ( value[originSymbol] === undefined) {   // this value change has no origin, yet
+        if (value[originSymbol] === undefined) {
+            // this value change has no origin, yet
             Object.defineProperty(value, originSymbol, {
-                value:        name,                 // ... therefore, we are the origin
-                enumerable:   false,                // origin should not live through shallow copies
-            });
+                value: name, // ... therefore, we are the origin
+                enumerable: false, // origin should not live through shallow copies
+            })
         }
-        const keyIsNew   = !hasKey(key);
-        const valueIsNew = keyIsNew
-            ? true
-            : value !== backingMap[key]; // since we essentially work on distinct objects, we can rely on identity
+        const keyIsNew = !hasKey(key)
+        const valueIsNew = keyIsNew ? true : value !== backingMap[key] // since we essentially work on distinct objects, we can rely on identity
 
-        if ( keyIsNew || valueIsNew) {
-            backingMap[key] = value;
+        if (keyIsNew || valueIsNew) {
+            backingMap[key] = value
             if (keyIsNew) {
-                addListeners.forEach(callback => callback(key));
+                addListeners.forEach((callback) => callback(key))
             }
             if (valueIsNew) {
-                changeListeners.forEach(callback => callback(key, value));
+                changeListeners.forEach((callback) => callback(key, value))
             }
         }
-    };
+    }
 
-    const removeKey = key => {
+    const removeKey = (key) => {
         if (!hasKey(key)) {
-            return;
+            return
         }
-        const removedValue = backingMap[key];
-        delete backingMap[key];
-        removeListeners.forEach(callback => callback(key, removedValue));
-    };
+        const removedValue = backingMap[key]
+        delete backingMap[key]
+        removeListeners.forEach((callback) => callback(key, removedValue))
+    }
 
-    const getValue = key =>
-        hasKey(key)
-        ? Just(backingMap[key])
-        : Nothing;
+    const getValue = (key) => (hasKey(key) ? Just(backingMap[key]) : Nothing)
 
     const setValue = (key, value) => {
-        if (undefined === value || null === value ) {
-            removeKey(key);
+        if (undefined === value || null === value) {
+            removeKey(key)
         } else {
-            setKeyValue(key, value);
+            setKeyValue(key, value)
         }
-    };
+    }
 
     return {
-        getValue, setValue, removeKey, onKeyAdded, onKeyRemoved, onChange
+        getValue,
+        setValue,
+        removeKey,
+        onKeyAdded,
+        onKeyRemoved,
+        onChange,
     }
-};
+}

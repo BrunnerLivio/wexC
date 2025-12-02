@@ -37,4 +37,4 @@ const HTML_TEMPLATE = `
         111 in tabular text <br>000 in tabular text plus 
         <span class="font_numeric_fraction">1/3</span>rd fractions</dd>
 </dl>
-`;
+`

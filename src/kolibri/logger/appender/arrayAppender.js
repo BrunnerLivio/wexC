@@ -4,26 +4,27 @@
  * Since many log messages might be generated, we need a strategy to evict old log messages.
  */
 
-import { id, T, LazyIf, churchBool } from "../../lambda/church.js";
-import { Nothing }                   from "../../stdlib.js";
+import { id, T, LazyIf, churchBool } from '../../lambda/church.js'
+import { Nothing } from '../../stdlib.js'
 
-export { ArrayAppender };
+export { ArrayAppender }
 
-const MAX_ARRAY_ELEMENTS   = Number.MAX_SAFE_INTEGER - 1;
-const MIN_ARRAY_LENGTH     = 2;
+const MAX_ARRAY_ELEMENTS = Number.MAX_SAFE_INTEGER - 1
+const MIN_ARRAY_LENGTH = 2
 const OVERFLOW_LOG_MESSAGE =
-          "LOG ERROR: Despite running the chosen eviction strategy, the array was full! The first third of the log messages have been deleted!";
+    'LOG ERROR: Despite running the chosen eviction strategy, the array was full! The first third of the log messages have been deleted!'
 
 /**
  * @type { CacheEvictionStrategyType }
  * @pure
  */
-const DEFAULT_CACHE_EVICTION_STRATEGY = cache => {
-    const oneThirdIndex    = Math.round(cache.length / 3);
+const DEFAULT_CACHE_EVICTION_STRATEGY = (cache) => {
+    const oneThirdIndex = Math.round(cache.length / 3)
     // if oneThird is smaller than the minimum of the array length, slice the whole array.
-    const deleteUntilIndex = oneThirdIndex > MIN_ARRAY_LENGTH ? oneThirdIndex : MIN_ARRAY_LENGTH;
-    return cache.slice(deleteUntilIndex);
-};
+    const deleteUntilIndex =
+        oneThirdIndex > MIN_ARRAY_LENGTH ? oneThirdIndex : MIN_ARRAY_LENGTH
+    return cache.slice(deleteUntilIndex)
+}
 
 /**
  * Logs all log messages to an array.
@@ -36,19 +37,22 @@ const DEFAULT_CACHE_EVICTION_STRATEGY = cache => {
  *      If this parameter is not set, then all log messages until now will be discarded.
  * @returns { AppenderType<Array<String>> }
  */
-const ArrayAppender = (limit = MAX_ARRAY_ELEMENTS, cacheEvictionStrategy = DEFAULT_CACHE_EVICTION_STRATEGY) => {
-    const calculatedLimit = MIN_ARRAY_LENGTH < limit ? limit : MIN_ARRAY_LENGTH;
+const ArrayAppender = (
+    limit = MAX_ARRAY_ELEMENTS,
+    cacheEvictionStrategy = DEFAULT_CACHE_EVICTION_STRATEGY
+) => {
+    const calculatedLimit = MIN_ARRAY_LENGTH < limit ? limit : MIN_ARRAY_LENGTH
 
-    let formatter      = Nothing; // per default, we do not use a specific formatter.
-    const getFormatter = () => formatter;
-    const setFormatter = newFormatter => formatter = newFormatter;
+    let formatter = Nothing // per default, we do not use a specific formatter.
+    const getFormatter = () => formatter
+    const setFormatter = (newFormatter) => (formatter = newFormatter)
 
     /**
      * Collects all log messages by storing them in the array.
      * @private
      * @type { Array<String> }
      */
-    let appenderArray = [];
+    let appenderArray = []
 
     /**
      * Clears the current appender array.
@@ -56,15 +60,15 @@ const ArrayAppender = (limit = MAX_ARRAY_ELEMENTS, cacheEvictionStrategy = DEFAU
      * @returns { Array<String> } - the last value before clearing
      */
     const reset = () => {
-        const oldAppenderArray = appenderArray;
-        appenderArray              = [];
-        return oldAppenderArray;
-    };
+        const oldAppenderArray = appenderArray
+        appenderArray = []
+        return oldAppenderArray
+    }
 
     /**
      * @returns { Array<String> } - The current value of the appender string
      */
-    const getValue = () => appenderArray;
+    const getValue = () => appenderArray
 
     /**
      * Appends the next log message to the array.
@@ -77,12 +81,14 @@ const ArrayAppender = (limit = MAX_ARRAY_ELEMENTS, cacheEvictionStrategy = DEFAU
      *          ChurchBooleanType
      *        }
      */
-    const appenderCallback = limit => onOverflow => msg =>
-        LazyIf(full(limit))
+    const appenderCallback = (limit) => (onOverflow) => (msg) =>
+        LazyIf(full(limit))(
             // if the array is full, call the overflow function and add the new value afterward.
-            (() => append(msg)(limit)(onOverflow))
+            () => append(msg)(limit)(onOverflow)
+        )(
             // in any other case just append the new message.
-            (() => append(msg)(limit)(id));
+            () => append(msg)(limit)(id)
+        )
 
     /**
      * Returns {@link T} if the appender array length hits the limit.
@@ -90,7 +96,7 @@ const ArrayAppender = (limit = MAX_ARRAY_ELEMENTS, cacheEvictionStrategy = DEFAU
      * @returns ChurchBooleanType
      * @private
      */
-    const full = limit => churchBool(limit <= appenderArray.length);
+    const full = (limit) => churchBool(limit <= appenderArray.length)
 
     /**
      * Appends the given message to the array.
@@ -103,19 +109,21 @@ const ArrayAppender = (limit = MAX_ARRAY_ELEMENTS, cacheEvictionStrategy = DEFAU
      *          ChurchBooleanType
      *        }
      */
-    const append = msg => limit => evictionStrategy => {
+    const append = (msg) => (limit) => (evictionStrategy) => {
         // evict the array using the given evictionStrategy
-        appenderArray =  /** @type {Array<String>} */ evictionStrategy(appenderArray);
-        LazyIf(full(limit))
-            (() => {
-                // if array is full, despite using the set eviction strategy, use the default eviction strategy to make space.
-                appenderArray = /** @type {Array<String>} */DEFAULT_CACHE_EVICTION_STRATEGY(appenderArray);
-                appenderArray.push(OVERFLOW_LOG_MESSAGE);
-                appenderArray.push(msg);
-            })
-            (() => appenderArray.push(msg));
-        return /** @type {ChurchBooleanType} */ T;
-    };
+        appenderArray =
+            /** @type {Array<String>} */ evictionStrategy(appenderArray)
+        LazyIf(full(limit))(() => {
+            // if array is full, despite using the set eviction strategy, use the default eviction strategy to make space.
+            appenderArray =
+                /** @type {Array<String>} */ DEFAULT_CACHE_EVICTION_STRATEGY(
+                    appenderArray
+                )
+            appenderArray.push(OVERFLOW_LOG_MESSAGE)
+            appenderArray.push(msg)
+        })(() => appenderArray.push(msg))
+        return /** @type {ChurchBooleanType} */ T
+    }
 
     return {
         /**
@@ -147,10 +155,10 @@ const ArrayAppender = (limit = MAX_ARRAY_ELEMENTS, cacheEvictionStrategy = DEFAU
          * the function to append fatal logs in this application
          * @type { AppendCallback }
          */
-        fatal:        appenderCallback(calculatedLimit)(cacheEvictionStrategy),
+        fatal: appenderCallback(calculatedLimit)(cacheEvictionStrategy),
         getValue,
         reset,
         setFormatter,
-        getFormatter
-    };
-};
+        getFormatter,
+    }
+}

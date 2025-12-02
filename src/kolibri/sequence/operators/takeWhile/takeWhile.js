@@ -1,5 +1,5 @@
-import {createMonadicSequence} from "../../sequencePrototype.js";
-import {iteratorOf}            from "../../util/helpers.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
+import { iteratorOf } from '../../util/helpers.js'
 
 export { takeWhile }
 
@@ -29,22 +29,21 @@ export { takeWhile }
  * @template _T_
  * @type { TakeWhileOperationType<_T_> }
  */
-const takeWhile = predicate => iterable => {
+const takeWhile = (predicate) => (iterable) => {
+    const takeWhileIterator = () => {
+        const inner = iteratorOf(iterable)
 
-  const takeWhileIterator = () => {
-    const inner = iteratorOf(iterable);
+        const next = () => {
+            const el = inner.next()
+            // the iterator finishes, when the predicate does not return true anymore,
+            // or the previous iterator has no more elements left
+            const done = el.done || !predicate(el.value)
 
-    const next = () => {
-      const el = inner.next();
-      // the iterator finishes, when the predicate does not return true anymore,
-      // or the previous iterator has no more elements left
-      const done = el.done || !predicate(el.value);
+            return { value: el.value, done }
+        }
 
-      return  { value: el.value, done };
-    };
+        return { next }
+    }
 
-    return { next };
-  };
-
-  return createMonadicSequence(takeWhileIterator)
-};
+    return createMonadicSequence(takeWhileIterator)
+}

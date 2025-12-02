@@ -1,5 +1,5 @@
-import { map }     from "../map/map.js";
-import { mconcat } from "../mconcat/mconcat.js";
+import { map } from '../map/map.js'
+import { mconcat } from '../mconcat/mconcat.js'
 
 export { bind }
 
@@ -25,7 +25,4 @@ export { bind }
  * console.log(...result);
  * // => Logs '1, 2, 2, 3, 3, 3'
  */
-const bind = bindFn => it =>
-  mconcat(
-    map(bindFn)(it)
-  );
+const bind = (bindFn) => (it) => mconcat(map(bindFn)(it))

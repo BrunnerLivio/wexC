@@ -1,4 +1,3 @@
-
 /**
  * Projection function that creates a view for input purposes, binds the information that is available through
  * the inputController, and returns the generated views.

@@ -2,18 +2,15 @@
  * @module tetris/box/boxController
  */
 
-import {LoggerFactory}                        from "../../kolibri/logger/loggerFactory.js";
-import {Observable, ObservableList}           from "../../kolibri/observable.js";
-import {NO_BOX}                               from "./boxModel.js";
+import { LoggerFactory } from '../../kolibri/logger/loggerFactory.js'
+import { Observable, ObservableList } from '../../kolibri/observable.js'
+import { NO_BOX } from './boxModel.js'
 
-export {
-    BoxController,
-    BOX_PREFIX,
-};
+export { BoxController, BOX_PREFIX }
 
-const log = LoggerFactory("ch.fhnw.tetris.box.boxController");
+const log = LoggerFactory('ch.fhnw.tetris.box.boxController')
 
-const BOX_PREFIX = "BOX-";
+const BOX_PREFIX = 'BOX-'
 
 /**
  * @typedef BoxControllerType
@@ -34,98 +31,97 @@ const BOX_PREFIX = "BOX-";
  * @returns { BoxControllerType }
  */
 const BoxController = (om, omPublishStrategy) => {
-
-// --- Observable Map centralized access --- --- ---
+    // --- Observable Map centralized access --- --- ---
 
     /** @param {BoxModelType} box */
-    const publish = box => omPublishStrategy ( _=> om.setValue(box.id, box) ) ;
+    const publish = (box) => omPublishStrategy((_) => om.setValue(box.id, box))
     /** @param {BoxModelType} box */
-    const publishRemove = box => omPublishStrategy( _ => om.removeKey(box.id));
-
+    const publishRemove = (box) =>
+        omPublishStrategy((_) => om.removeKey(box.id))
 
     const isEmpty = () => {
-       return boxesBackingList.length < 1;
-    };
+        return boxesBackingList.length < 1
+    }
 
     /**
      * @private util
      * @return {BoxModelType}
      */
     const findBox = (tetroId, boxIndex) => {
-        const boxId = BOX_PREFIX + tetroId + "-" + boxIndex;
-        return boxesBackingList.find(({id}) => id === boxId);
-    };
+        const boxId = BOX_PREFIX + tetroId + '-' + boxIndex
+        return boxesBackingList.find(({ id }) => id === boxId)
+    }
 
-    const findAllBoxesWhere = predicate => {
-        return boxesBackingList.filter(predicate);
-    };
+    const findAllBoxesWhere = (predicate) => {
+        return boxesBackingList.filter(predicate)
+    }
 
-    const removeBoxesWhere = predicate => {
-      const toRemove = findAllBoxesWhere(predicate);
-      toRemove.forEach( box => {
-          publishRemove(box);
-      });
-    };
+    const removeBoxesWhere = (predicate) => {
+        const toRemove = findAllBoxesWhere(predicate)
+        toRemove.forEach((box) => {
+            publishRemove(box)
+        })
+    }
 
-    const updateBox = newBox => {
+    const updateBox = (newBox) => {
         // boxChangedObs.setValue(newBox);
-        publish(newBox);
-    };
+        publish(newBox)
+    }
 
     /** @type { Array<BoxModelType> }
      * Contains all the boxes that live in our 3D space after they have been unlinked from their tetromino
      * such that they can fall and disappear independently.
      * We maintain them separately because they are needed for detection and handling of collisions.
      */
-    const boxesBackingList = [];
+    const boxesBackingList = []
 
     /**
      * Decorator. Making the list of space boxes observable.
      * @type {IObservableList<BoxModelType>}
      */
-    const boxesListObs= ObservableList( boxesBackingList );
+    const boxesListObs = ObservableList(boxesBackingList)
 
     /** publish all box changes
      * @type {IObservable<BoxModelType>}
      */
-    const boxChangedObs = Observable(NO_BOX);
+    const boxChangedObs = Observable(NO_BOX)
 
-    const handleBoxUpdate = box => {
-        const knownBoxIndex = boxesBackingList.findIndex(it => it.id === box.id);
+    const handleBoxUpdate = (box) => {
+        const knownBoxIndex = boxesBackingList.findIndex(
+            (it) => it.id === box.id
+        )
         if (knownBoxIndex >= 0) {
-            boxesBackingList[knownBoxIndex] = box;
-            boxChangedObs.setValue(box);
-            return;
+            boxesBackingList[knownBoxIndex] = box
+            boxChangedObs.setValue(box)
+            return
         }
-        log.debug(`new box: ${JSON.stringify(box)}`);
-        boxesListObs.add(box);
-    };
+        log.debug(`new box: ${JSON.stringify(box)}`)
+        boxesListObs.add(box)
+    }
 
     const startListening = () => {
-
-        om.onKeyRemoved( key => {
-            if (key.startsWith(BOX_PREFIX)){
-                const box = boxesBackingList.find( it => it.id === key);
-                boxesListObs.del(box);
+        om.onKeyRemoved((key) => {
+            if (key.startsWith(BOX_PREFIX)) {
+                const box = boxesBackingList.find((it) => it.id === key)
+                boxesListObs.del(box)
             }
-        });
-        om.onChange( (key,value) => {
-            if (key.startsWith(BOX_PREFIX)){
-                handleBoxUpdate(value);
+        })
+        om.onChange((key, value) => {
+            if (key.startsWith(BOX_PREFIX)) {
+                handleBoxUpdate(value)
             }
-        });
-    };
-
+        })
+    }
 
     return {
         startListening,
-        onBoxAdded                  : boxesListObs.onAdd,
-        onBoxRemoved                : boxesListObs.onDel,
-        onBoxChanged                : boxChangedObs.onChange,
+        onBoxAdded: boxesListObs.onAdd,
+        onBoxRemoved: boxesListObs.onDel,
+        onBoxChanged: boxChangedObs.onChange,
         findAllBoxesWhere,
         removeBoxesWhere,
         updateBox,
         findBox,
-        isEmpty
+        isEmpty,
     }
-};
+}

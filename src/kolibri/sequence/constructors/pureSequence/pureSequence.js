@@ -1,4 +1,4 @@
-import { Seq } from "../seq/seq.js";
+import { Seq } from '../seq/seq.js'
 
 export { PureSequence }
 
@@ -18,4 +18,4 @@ export { PureSequence }
  * console.log(...seq);
  * // => Logs '1'
  */
-const PureSequence = value => Seq(value);
+const PureSequence = (value) => Seq(value)

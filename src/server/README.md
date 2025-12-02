@@ -16,4 +16,3 @@ Please also note, that there is no package.json and no node_modules folder!
 When deploying server-side code make sure that the
 server runs under a **user** that has the **appropriately limited rights**,
 especially for accessing the file system.
-

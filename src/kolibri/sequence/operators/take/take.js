@@ -1,5 +1,5 @@
-import {createMonadicSequence} from "../../sequencePrototype.js";
-import {iteratorOf}            from "../../util/helpers.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
+import { iteratorOf } from '../../util/helpers.js'
 
 export { take }
 
@@ -29,22 +29,21 @@ export { take }
  * @template _T_
  * @type { TakeOperationType<_T_> }
  */
-const take = count => iterable => {
+const take = (count) => (iterable) => {
+    const takeIterator = () => {
+        const inner = iteratorOf(iterable)
+        let start = 0
 
-  const takeIterator = () => {
-    const inner = iteratorOf(iterable);
-    let start = 0;
+        const next = () => {
+            // the iterator finishes, when the predicate does not return true anymore, // todo dk: copy/paste error?
+            // or the previous iterator has no more elements left
+            const takeDone = start++ >= count
+            if (takeDone) return { done: true, value: undefined }
+            return inner.next()
+        }
 
-    const next = () => {
-      // the iterator finishes, when the predicate does not return true anymore, // todo dk: copy/paste error?
-      // or the previous iterator has no more elements left
-      const takeDone = start++ >= count;
-      if (takeDone) return { done: true, value: undefined };
-      return inner.next();
-    };
+        return { next }
+    }
 
-    return { next };
-  };
-
-  return createMonadicSequence(takeIterator);
-};
+    return createMonadicSequence(takeIterator)
+}

@@ -2,9 +2,9 @@
  * @module tetris/box/boxModel
  */
 
-import {MISSING_FOREIGN_KEY} from "../../extension/relationalModelType.js";
+import { MISSING_FOREIGN_KEY } from '../../extension/relationalModelType.js'
 
-export { Box, NO_BOX}
+export { Box, NO_BOX }
 
 /**
  * Boxes start their life in the "current" (or upcoming) tetromino where their final x,y,z position
@@ -29,10 +29,16 @@ export { Box, NO_BOX}
  * @param { BoxModelType } paramObj - Parameter Object Pattern
  * @return {BoxModelType}
  */
-const Box = paramObj => paramObj; // for the type safety
+const Box = (paramObj) => paramObj // for the type safety
 
 /**
  * Null-Object Pattern
  * @type { BoxModelType }
  */
-const NO_BOX = Box({id:MISSING_FOREIGN_KEY, tetroId: MISSING_FOREIGN_KEY, xPos:0, yPos:0, zPos:0});
+const NO_BOX = Box({
+    id: MISSING_FOREIGN_KEY,
+    tetroId: MISSING_FOREIGN_KEY,
+    xPos: 0,
+    yPos: 0,
+    zPos: 0,
+})

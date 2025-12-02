@@ -102,7 +102,6 @@
  *            - example: `Seq(1, 2).zipWith((x, y) => ""+x+y)("ab") ['=='] (Seq("1a", "2b"))`
  */
 
-
 /**
  * Collection of all terminal operations that are defined on a {@link SequenceType}.
  * @template  _T_

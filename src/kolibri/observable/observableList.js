@@ -1,17 +1,19 @@
-import { LoggerFactory }            from "../logger/loggerFactory.js";
-import { LOG_CONTEXT_KOLIBRI_BASE } from "../logger/logConstants.js";
-import "../util/array.js";
+import { LoggerFactory } from '../logger/loggerFactory.js'
+import { LOG_CONTEXT_KOLIBRI_BASE } from '../logger/logConstants.js'
+import '../util/array.js'
 
-export { ObservableList}
+export { ObservableList }
 
-let warn = undefined;
+let warn = undefined
 /** @private */
 function checkWarning(list) {
     if (list.length > 100) {
         if (!warn) {
-            warn = LoggerFactory(LOG_CONTEXT_KOLIBRI_BASE + ".observableList").warn;
+            warn = LoggerFactory(
+                LOG_CONTEXT_KOLIBRI_BASE + '.observableList'
+            ).warn
         }
-        warn(`Beware of memory leak. ${list.length} listeners.`);
+        warn(`Beware of memory leak. ${list.length} listeners.`)
     }
 }
 
@@ -21,7 +23,7 @@ function checkWarning(list) {
  * Observers that are still registered are not garbage collected before the observable list itself is collected.
  * @typedef IObservableList
  * @template _T_
- * @impure   Observables change their inner decorated list and maintain two lists of observers that changes over time.  
+ * @impure   Observables change their inner decorated list and maintain two lists of observers that changes over time.
  * @property { (cb:ConsumerType<_T_>) => void }  onAdd - register an observer that is called whenever an item is added.
  * @property { (cb:ConsumerType<_T_>) => void }  onDel -
  * register an observer that is called whenever an item is deleted.
@@ -48,32 +50,37 @@ function checkWarning(list) {
  * list.add(1);
  */
 function ObservableList(list) {
-    const addListeners         = [];
-    const delListeners         = [];
-    const removeAddListener    = addListener => addListeners.removeItem(addListener);
-    const removeDeleteListener = delListener => delListeners.removeItem(delListener);
+    const addListeners = []
+    const delListeners = []
+    const removeAddListener = (addListener) =>
+        addListeners.removeItem(addListener)
+    const removeDeleteListener = (delListener) =>
+        delListeners.removeItem(delListener)
 
     return {
-        onAdd:   listener => {
-            checkWarning(addListeners);
-            addListeners.push(listener);
+        onAdd: (listener) => {
+            checkWarning(addListeners)
+            addListeners.push(listener)
         },
-        onDel:   listener => {
-            checkWarning(delListeners);
-            delListeners.push(listener);
+        onDel: (listener) => {
+            checkWarning(delListeners)
+            delListeners.push(listener)
         },
-        add:     item => {
-            list.push(item);
-            addListeners.forEach(listener => listener(item));
+        add: (item) => {
+            list.push(item)
+            addListeners.forEach((listener) => listener(item))
         },
-        del:     item => {
-            list.removeItem(item);
-            const safeIterate = [...delListeners]; // shallow copy as we might change the listeners array while iterating
-            safeIterate.forEach(listener => listener(item, () => removeDeleteListener(listener)));
+        del: (item) => {
+            list.removeItem(item)
+            const safeIterate = [...delListeners] // shallow copy as we might change the listeners array while iterating
+            safeIterate.forEach((listener) =>
+                listener(item, () => removeDeleteListener(listener))
+            )
         },
         removeAddListener,
         removeDeleteListener,
-        count:   ()   => list.length,
-        countIf: pred => list.reduce((sum, item) => pred(item) ? sum + 1 : sum, 0)
-    };
+        count: () => list.length,
+        countIf: (pred) =>
+            list.reduce((sum, item) => (pred(item) ? sum + 1 : sum), 0),
+    }
 }

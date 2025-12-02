@@ -1,4 +1,4 @@
-import { arrayEq } from "../../../util/arrayFunctions.js";
+import { arrayEq } from '../../../util/arrayFunctions.js'
 
 export { eq$ }
 
@@ -34,4 +34,4 @@ export { eq$ }
  * @returns { EqualOperationType<_T_> }
  */
 
-const eq$ = it1 => it2 => arrayEq([...it1])([...it2]);
+const eq$ = (it1) => (it2) => arrayEq([...it1])([...it2])

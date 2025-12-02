@@ -1,10 +1,10 @@
-import { select, dom } from "../../../util/dom.js";
-import { Seq }         from "../../../sequence/constructors/seq/seq.js";
-import { icon }        from "../../../style/icon.js";
+import { select, dom } from '../../../util/dom.js'
+import { Seq } from '../../../sequence/constructors/seq/seq.js'
+import { icon } from '../../../style/icon.js'
 
 export { SimpleNavigationProjector }
 
-const NAVIGATION_CLASS = "simpleNavigationProjector";
+const NAVIGATION_CLASS = 'simpleNavigationProjector'
 
 const iconSVGStr = `
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +15,7 @@ const iconSVGStr = `
         <stop offset="1" stop-color="#6000FF"/>
         </linearGradient>
     </svg>
-`;
+`
 
 /**
  * A projector of anchors to all pages that are registered in the {@link SiteControllerType}.
@@ -39,52 +39,71 @@ const iconSVGStr = `
  * siteProjector.sideNavigationElement.append(...SimpleNavigationProjector(siteController, {}, true));
  */
 
-const SimpleNavigationProjector = (siteController, hash2icon, canHide=false) => {
-
+const SimpleNavigationProjector = (
+    siteController,
+    hash2icon,
+    canHide = false
+) => {
     // note: there seems to be no special type like HTMLNavElement (?)
-    const [navigationEl] = /** @type { Array<HTMLElement> } */ dom(`<nav class="${NAVIGATION_CLASS}"></nav>`);
+    const [navigationEl] = /** @type { Array<HTMLElement> } */ dom(
+        `<nav class="${NAVIGATION_CLASS}"></nav>`
+    )
 
     // add specific style if not yet available
-    if (null === document.head.querySelector(`style[data-style-id="${NAVIGATION_CLASS}"]`)) {
-        document.head.innerHTML += projectorStyle;
+    if (
+        null ===
+        document.head.querySelector(
+            `style[data-style-id="${NAVIGATION_CLASS}"]`
+        )
+    ) {
+        document.head.innerHTML += projectorStyle
     }
 
     // view is just so many anchors
-    navigationEl.innerHTML = (canHide ? `<div class="toggler">${iconSVGStr}</div>` : '') +
-                             Object.entries(siteController.getAllPages())
-                                   .map(([hash, page]) => `<a href="${hash}">${page.titleText}</a>`)
-                                   .join(" ");
+    navigationEl.innerHTML =
+        (canHide ? `<div class="toggler">${iconSVGStr}</div>` : '') +
+        Object.entries(siteController.getAllPages())
+            .map(([hash, page]) => `<a href="${hash}">${page.titleText}</a>`)
+            .join(' ')
 
     // if icons available, add them to the anchors as nested elements
     if (hash2icon && Object.keys(hash2icon).length > 0) {
-        select(navigationEl, "a").forEach$(anchorElement => {
-            const hash    = anchorElement.getAttribute("href");
-            const iconSVG = icon(hash2icon[hash]);
-            anchorElement.prepend(...iconSVG);
+        select(navigationEl, 'a').forEach$((anchorElement) => {
+            const hash = anchorElement.getAttribute('href')
+            const iconSVG = icon(hash2icon[hash])
+            anchorElement.prepend(...iconSVG)
         })
     }
 
     // view binding is done by the browser implicitly when following the link
 
     // bind all anchors to their "visited" state (:visited does not allow much)
-    Object.entries(siteController.getAllPages())
-          .forEach(([hash, page]) => page.onVisited(visited => {
-              if (!visited) return;
-              navigationEl.querySelector(`a[href="${hash}"]`)?.classList?.add("visited");
-          }));
+    Object.entries(siteController.getAllPages()).forEach(([hash, page]) =>
+        page.onVisited((visited) => {
+            if (!visited) return
+            navigationEl
+                .querySelector(`a[href="${hash}"]`)
+                ?.classList?.add('visited')
+        })
+    )
     // update which anchor shows the current page
     siteController.onUriHashChanged((newHash, oldHash) => {
-        navigationEl.querySelector(`a[href="${oldHash}"]`)?.classList?.remove("current");
-        navigationEl.querySelector(`a[href="${newHash}"]`)?.classList?.add("current");
-    });
+        navigationEl
+            .querySelector(`a[href="${oldHash}"]`)
+            ?.classList?.remove('current')
+        navigationEl
+            .querySelector(`a[href="${newHash}"]`)
+            ?.classList?.add('current')
+    })
 
     if (canHide) {
-        navigationEl.classList.toggle("hide");
-        select(navigationEl, ".toggler").head().onclick = _evt => navigationEl.classList.toggle("hide");
+        navigationEl.classList.toggle('hide')
+        select(navigationEl, '.toggler').head().onclick = (_evt) =>
+            navigationEl.classList.toggle('hide')
     }
 
-    return Seq(navigationEl);
-};
+    return Seq(navigationEl)
+}
 
 const projectorStyle = `
     <style data-style-id="${NAVIGATION_CLASS}">    
@@ -150,4 +169,4 @@ const projectorStyle = `
         }
 
     </style>
-`;
+`

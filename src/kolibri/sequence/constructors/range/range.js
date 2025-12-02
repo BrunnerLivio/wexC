@@ -1,4 +1,4 @@
-import { Sequence } from "../sequence/Sequence.js";
+import { Sequence } from '../sequence/Sequence.js'
 
 export { Range, Walk, ALL }
 
@@ -11,7 +11,7 @@ export { Range, Walk, ALL }
  * const allFromZero = Walk(ALL);
  * const allEven     = Walk(0, ALL, 2);
  * */
-const ALL = Number.MAX_SAFE_INTEGER;
+const ALL = Number.MAX_SAFE_INTEGER
 
 /**
  * Creates a range of numbers between two inclusive boundaries,
@@ -43,19 +43,27 @@ const ALL = Number.MAX_SAFE_INTEGER;
  *  console.log(...range);
  *  // => Logs '0, 1, 2, 3'
  */
-const Range = (firstBoundary=ALL, secondBoundary = 0, step = 1) => {
-  const stepIsNegative = 0 > step;
-  const [left, right]  = normalize(firstBoundary, secondBoundary, stepIsNegative);
+const Range = (firstBoundary = ALL, secondBoundary = 0, step = 1) => {
+    const stepIsNegative = 0 > step
+    const [left, right] = normalize(
+        firstBoundary,
+        secondBoundary,
+        stepIsNegative
+    )
 
-  return Sequence(left, value => !hasReachedEnd(stepIsNegative, value, right), value => value + step);
-};
+    return Sequence(
+        left,
+        (value) => !hasReachedEnd(stepIsNegative, value, right),
+        (value) => value + step
+    )
+}
 
 /** Walk is an alias for {@link Range} that allows for easier discovery since the name "Range" is also
  * used within the dom API [https://developer.mozilla.org/en-US/docs/Web/API/Range], which
  * undermines the auto-import when typing "Range" for the first time in a file.
  * Just typing "Walk" and using the auto-import will lead to here.
  */
-const Walk = Range;
+const Walk = Range
 
 /**
  * Sorts the two parameter a and b by its magnitude.
@@ -64,9 +72,9 @@ const Walk = Range;
  * @returns { [Number, Number] }
  */
 const sort = (a, b) => {
-  if (a < b) return [a,b];
-  else return [b,a];
-};
+    if (a < b) return [a, b]
+    else return [b, a]
+}
 
 /**
  * Determines if the end of the range is reached.
@@ -76,7 +84,7 @@ const sort = (a, b) => {
  * @returns  { boolean }
  */
 const hasReachedEnd = (stepIsNegative, next, end) =>
-    stepIsNegative ? next < end : next > end;
+    stepIsNegative ? next < end : next > end
 
 /**
  * Make sure, that the left and right values
@@ -87,12 +95,12 @@ const hasReachedEnd = (stepIsNegative, next, end) =>
  * @returns  { [Number, Number] }
  */
 const normalize = (left, right, stepIsNegative) => {
-  const [min, max] = sort(left, right);
-  let next = min;
-  let end  = max;
-  if (stepIsNegative) {
-    next = max;
-    end = min;
-  }
-  return [next, end];
-};
+    const [min, max] = sort(left, right)
+    let next = min
+    let end = max
+    if (stepIsNegative) {
+        next = max
+        end = min
+    }
+    return [next, end]
+}

@@ -1,4 +1,4 @@
-import { Observable } from "../../observable.js";
+import { Observable } from '../../observable.js'
 
 export { Page }
 
@@ -42,32 +42,34 @@ export { Page }
  *      contentElement,
  *  })
  */
-const Page = ( {
-                   titleText,
-                   styleElement,
-                   contentElement,
-                   pageClass,
-                   onBootstrap   = () => undefined, // default is do nothing
-                   activationMs  = 500,
-                   passivationMs = 500
-              } ) => {
-    const visitedObs = Observable(false);
-    let   bootStrapped = false;
+const Page = ({
+    titleText,
+    styleElement,
+    contentElement,
+    pageClass,
+    onBootstrap = () => undefined, // default is do nothing
+    activationMs = 500,
+    passivationMs = 500,
+}) => {
+    const visitedObs = Observable(false)
+    let bootStrapped = false
     const mayBootstrap = () => {
-        if (bootStrapped) { return; }
-        onBootstrap();
-        bootStrapped = true;
-    };
-    return /** @type { PageType } */ {
-        titleText        ,
-        styleElement     ,
-        contentElement   ,
-        pageClass        ,
-        onBootstrap:     mayBootstrap, // make sure onBootstrap is called at most once
-        activationMs     ,
-        passivationMs    ,
-        getVisited:      visitedObs.getValue,
-        setVisited:      visitedObs.setValue,
-        onVisited :      visitedObs.onChange,
+        if (bootStrapped) {
+            return
+        }
+        onBootstrap()
+        bootStrapped = true
     }
-};
+    return /** @type { PageType } */ {
+        titleText,
+        styleElement,
+        contentElement,
+        pageClass,
+        onBootstrap: mayBootstrap, // make sure onBootstrap is called at most once
+        activationMs,
+        passivationMs,
+        getVisited: visitedObs.getValue,
+        setVisited: visitedObs.setValue,
+        onVisited: visitedObs.onChange,
+    }
+}

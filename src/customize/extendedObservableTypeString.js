@@ -26,4 +26,4 @@ export { SAMPLE }
  * Make sure that it does not clash with names in {@link ObservableTypeString }.
  */
 
-/** @type ExtendedObservableTypeString */ const SAMPLE           = "sample";
+/** @type ExtendedObservableTypeString */ const SAMPLE = 'sample'

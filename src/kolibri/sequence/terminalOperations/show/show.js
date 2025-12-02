@@ -1,6 +1,6 @@
-import { pipe }    from "../../operators/pipe/pipe.js";
-import { take }    from "../../operators/take/take.js";
-import { reduce$ } from "../reduce/reduce.js";
+import { pipe } from '../../operators/pipe/pipe.js'
+import { take } from '../../operators/take/take.js'
+import { reduce$ } from '../reduce/reduce.js'
 
 export { show }
 
@@ -29,9 +29,9 @@ export { show }
  * @return { String }
  */
 const show = (iterable, maxValues = 50) =>
-  "[" +
-  pipe(
-    take(maxValues),
-    reduce$((acc, cur) => acc === "" ? cur : `${acc},${String(cur)}`, ""),
-  )(iterable)
-  + "]";
+    '[' +
+    pipe(
+        take(maxValues),
+        reduce$((acc, cur) => (acc === '' ? cur : `${acc},${String(cur)}`), '')
+    )(iterable) +
+    ']'

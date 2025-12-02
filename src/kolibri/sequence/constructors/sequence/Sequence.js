@@ -1,4 +1,4 @@
-import { unfold } from "../unfold/unfold.js";
+import { unfold } from '../unfold/unfold.js'
 
 export { Sequence }
 
@@ -29,11 +29,8 @@ export { Sequence }
  */
 
 const Sequence = (start, whileFunction, incrementFunction) =>
-
-   unfold(
-       start,
-       current  => whileFunction(current)
-             ? { state: incrementFunction(current), value: current }
-             : undefined
-   );
-
+    unfold(start, (current) =>
+        whileFunction(current)
+            ? { state: incrementFunction(current), value: current }
+            : undefined
+    )

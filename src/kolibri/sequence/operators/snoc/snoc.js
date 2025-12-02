@@ -1,5 +1,5 @@
-import { mconcat } from "../mconcat/mconcat.js";
-import { Seq }     from "../../constructors/seq/seq.js";
+import { mconcat } from '../mconcat/mconcat.js'
+import { Seq } from '../../constructors/seq/seq.js'
 
 export { snoc }
 
@@ -28,5 +28,4 @@ export { snoc }
  * @template _T_
  * @type { SnocOperationType<_T_> }
  */
-const snoc = element => iterable => mconcat( Seq( iterable, Seq(element) ));
-
+const snoc = (element) => (iterable) => mconcat(Seq(iterable, Seq(element)))

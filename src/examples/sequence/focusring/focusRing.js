@@ -1,4 +1,10 @@
-import {cons, isEmpty, nil, Seq, toSeq} from "../../../kolibri/sequence/sequence.js";
+import {
+    cons,
+    isEmpty,
+    nil,
+    Seq,
+    toSeq,
+} from '../../../kolibri/sequence/sequence.js'
 
 export { FocusRing }
 
@@ -17,12 +23,14 @@ export { FocusRing }
  * @param   { !Iterable<_T_> } nonEmptyIterable - A finite {@link Iterable} which has **at least one element**.
  * @returns { FocusRingType<_T_> }
  */
-const FocusRing = nonEmptyIterable => {
-  if (isEmpty(nonEmptyIterable)) {
-    throw new Error("FocusRing: Can't construct a focus ring from an empty iterable!");
-  }
-  return FocusRingImpl(nil, toSeq(nonEmptyIterable));
-};
+const FocusRing = (nonEmptyIterable) => {
+    if (isEmpty(nonEmptyIterable)) {
+        throw new Error(
+            "FocusRing: Can't construct a focus ring from an empty iterable!"
+        )
+    }
+    return FocusRingImpl(nil, toSeq(nonEmptyIterable))
+}
 
 /**
  * Constructs a new immutable focus ring using the given {@link Iterable}.
@@ -34,30 +42,32 @@ const FocusRing = nonEmptyIterable => {
  * @returns { FocusRingType<_T_> }
  */
 const FocusRingImpl = (pre, post) => {
+    const focus = () => post.head()
 
-  const focus = () => post.head();
+    const right = () => {
+        const oldFocus = post.head()
+        const tailPost = post.drop(1)
 
-  const right = () => {
-    const oldFocus = post.head();
-    const tailPost = post.drop(1);
-
-    if (pre.isEmpty() && tailPost.isEmpty()) {                        // only one element in list (the focus): do nothing
-      return FocusRingImpl(pre, post);
+        if (pre.isEmpty() && tailPost.isEmpty()) {
+            // only one element in list (the focus): do nothing
+            return FocusRingImpl(pre, post)
+        }
+        if (tailPost.isEmpty()) {
+            // end of list reached: cycle to close the ring
+            return FocusRingImpl(Seq(oldFocus), pre.reverse$())
+        }
+        return FocusRingImpl(cons(oldFocus)(pre), tailPost) // normal case: move focus to the right
     }
-    if (tailPost.isEmpty()) {                                        // end of list reached: cycle to close the ring
-      return FocusRingImpl(Seq(oldFocus), pre.reverse$());
-    }
-    return FocusRingImpl(cons (oldFocus) (pre), tailPost);        // normal case: move focus to the right
-  };
 
-  const left = () => {
-    if (pre.isEmpty()) {                                              // the whole list is in the post sequence
-      const postReversed = post.reverse$();
-      const newFocus     = postReversed.head();
-      return FocusRingImpl(postReversed.drop(1), Seq(newFocus));
+    const left = () => {
+        if (pre.isEmpty()) {
+            // the whole list is in the post sequence
+            const postReversed = post.reverse$()
+            const newFocus = postReversed.head()
+            return FocusRingImpl(postReversed.drop(1), Seq(newFocus))
+        }
+        return FocusRingImpl(pre.drop(1), cons(pre.head())(post)) // normal case: pre head becomes focus
     }
-    return FocusRingImpl(pre.drop(1), cons (pre.head()) (post)); // normal case: pre head becomes focus
-  };
 
-  return { focus, left, right }
-};
+    return { focus, left, right }
+}

@@ -1,9 +1,9 @@
-@import "../../css/kolibri-base.css";
+@import '../../css/kolibri-base.css';
 
 body {
     background-color: white; /*only needed for chrome :-(*/
     max-width: 42em;
-    margin:    3em auto 3em auto;
+    margin: 3em auto 3em auto;
 }
 
 main {
@@ -49,10 +49,10 @@ em {
 }
 
 header div.kolibri-logo {
-    height:         150px;
-    position:       absolute;
-    top:            6em;
-    margin-left:    39em;
+    height: 150px;
+    position: absolute;
+    top: 6em;
+    margin-left: 39em;
 }
 
 .rules {

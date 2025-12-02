@@ -1,6 +1,6 @@
-import {createMonadicSequence}     from "../../sequencePrototype.js";
-import {catMaybes as arrCatMaybes} from "../../../lambda/maybe.js";
-import {iteratorOf}                from "../../util/helpers.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
+import { catMaybes as arrCatMaybes } from '../../../lambda/maybe.js'
+import { iteratorOf } from '../../util/helpers.js'
 
 export { catMaybes }
 
@@ -31,25 +31,24 @@ export { catMaybes }
  * @template _T_
  * @type { CatMaybesOperationType<_T_> }
  */
-const catMaybes = iterable => {
+const catMaybes = (iterable) => {
+    const catMaybesIterator = () => {
+        const inner = iteratorOf(iterable)
 
-  const catMaybesIterator = () =>  {
-    const inner = iteratorOf(iterable);
+        const next = () => {
+            while (true) {
+                const { value, done } = inner.next()
+                if (done) return { value: undefined, /** @type Boolean */ done }
 
-    const next = () => {
-      while (true) {
-        const { value, done } = inner.next();
-        if (done) return { value: undefined, /** @type Boolean */ done };
-
-        const result = arrCatMaybes([value]);
-        if (result.length !== 0) {
-          return { value: result[0], done: false };
+                const result = arrCatMaybes([value])
+                if (result.length !== 0) {
+                    return { value: result[0], done: false }
+                }
+            }
         }
-      }
-    };
 
-    return { next };
-  };
+        return { next }
+    }
 
-  return createMonadicSequence(catMaybesIterator);
-};
+    return createMonadicSequence(catMaybesIterator)
+}

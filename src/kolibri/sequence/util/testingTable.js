@@ -1,11 +1,11 @@
 import {
-  testCBNotCalledAfterDone,
-  testIterateMultipleTimes,
-  testPrototype,
-  testPurity,
-  testSimple,
-  testInvariants
-} from "./testUtil.js";
+    testCBNotCalledAfterDone,
+    testIterateMultipleTimes,
+    testPrototype,
+    testPurity,
+    testSimple,
+    testInvariants,
+} from './testUtil.js'
 
 export { addToTestingTable, TESTS }
 
@@ -34,21 +34,24 @@ export { addToTestingTable, TESTS }
  * }
  */
 const TESTS = {
-  TEST_SIMPLE:                   'TEST_SIMPLE',
-  TEST_PURITY:                   'TEST_PURITY',
-  TEST_PROTOTYPE:                'TEST_PROTOTYPE',
-  TEST_INVARIANTS:               'TEST_INVARIANTS',
-  TEST_ITERATE_MULTIPLE_TIMES:   'TEST_ITERATE_MULTIPLE_TIMES',
-};
+    TEST_SIMPLE: 'TEST_SIMPLE',
+    TEST_PURITY: 'TEST_PURITY',
+    TEST_PROTOTYPE: 'TEST_PROTOTYPE',
+    TEST_INVARIANTS: 'TEST_INVARIANTS',
+    TEST_ITERATE_MULTIPLE_TIMES: 'TEST_ITERATE_MULTIPLE_TIMES',
+}
 
 const testingTable = [
-  { name: TESTS.TEST_SIMPLE,                   test: testSimple},
-  { name: TESTS.TEST_PURITY,                   test: testPurity},
-  { name: TESTS.TEST_CB_NOT_CALLED_AFTER_DONE, test: testCBNotCalledAfterDone},
-  { name: TESTS.TEST_PROTOTYPE,                test: testPrototype},
-  { name: TESTS.TEST_INVARIANTS,               test: testInvariants},
-  { name: TESTS.TEST_ITERATE_MULTIPLE_TIMES,   test: testIterateMultipleTimes},
-];
+    { name: TESTS.TEST_SIMPLE, test: testSimple },
+    { name: TESTS.TEST_PURITY, test: testPurity },
+    {
+        name: TESTS.TEST_CB_NOT_CALLED_AFTER_DONE,
+        test: testCBNotCalledAfterDone,
+    },
+    { name: TESTS.TEST_PROTOTYPE, test: testPrototype },
+    { name: TESTS.TEST_INVARIANTS, test: testInvariants },
+    { name: TESTS.TEST_ITERATE_MULTIPLE_TIMES, test: testIterateMultipleTimes },
+]
 
 /**
  * @type {
@@ -57,10 +60,12 @@ const testingTable = [
  *    => void
  * }
  */
-const addToTestingTable = testSuite => config => {
-  const { excludedTests } = config;
+const addToTestingTable = (testSuite) => (config) => {
+    const { excludedTests } = config
 
-  testingTable
-    .filter (({ name })        => !excludedTests.includes(name))
-    .forEach(({ name, test })  => testSuite.add(`${name}: ${config.name}`, test(config)));
-};
+    testingTable
+        .filter(({ name }) => !excludedTests.includes(name))
+        .forEach(({ name, test }) =>
+            testSuite.add(`${name}: ${config.name}`, test(config))
+        )
+}

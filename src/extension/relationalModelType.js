@@ -1,6 +1,4 @@
-
 export { MISSING_FOREIGN_KEY, PREFIX_IMMORTAL }
-
 
 /**
  * A string that can be used as an ID for pointing to other records or for other records pointing to us.
@@ -13,8 +11,7 @@ export { MISSING_FOREIGN_KEY, PREFIX_IMMORTAL }
  * Signal that a foreign key is missing. Support for referential integrity.
  * @type { ForeignKeyType }
  */
-const MISSING_FOREIGN_KEY = "__MISSING_FOREIGN_KEY__";
-
+const MISSING_FOREIGN_KEY = '__MISSING_FOREIGN_KEY__'
 
 /**
  * This string is used as a prefix to a {@link ForeignKeyType key} to signal that
@@ -22,4 +19,4 @@ const MISSING_FOREIGN_KEY = "__MISSING_FOREIGN_KEY__";
  * live throughout the whole application.
  * @type { String }
  */
-const PREFIX_IMMORTAL = "IMMORTAL-";
+const PREFIX_IMMORTAL = 'IMMORTAL-'

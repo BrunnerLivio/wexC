@@ -1,71 +1,81 @@
-import { dom, select }         from "../../util/dom.js";
-import { href, URI_HASH_HOME } from "../../../customize/uriHashes.js";
-import {ICON_KOLIBRI}          from "../../../customize/icons.js";
-import {icon}                  from "../../style/icon.js";
+import { dom, select } from '../../util/dom.js'
+import { href, URI_HASH_HOME } from '../../../customize/uriHashes.js'
+import { ICON_KOLIBRI } from '../../../customize/icons.js'
+import { icon } from '../../style/icon.js'
 
 export { SiteProjector }
 
-const SITE_CLASS     = "site";
+const SITE_CLASS = 'site'
 
-const SiteProjector = siteController => {
+const SiteProjector = (siteController) => {
+    const [logoAnchorElement] = select(bodyElement, '#logo a')
+    const [sideNavigationElement] = select(bodyElement, '#side-nav')
+    const [topNavigationElement] = select(bodyElement, '#top-nav')
+    const [activeContentElement] = select(bodyElement, '#content')
+    const [passiveContentElement] = select(bodyElement, '#content-passivated')
 
-     const [logoAnchorElement]     = select(bodyElement,"#logo a");
-     const [sideNavigationElement] = select(bodyElement,"#side-nav");
-     const [topNavigationElement ] = select(bodyElement,"#top-nav");
-     const [activeContentElement ] = select(bodyElement,"#content");
-     const [passiveContentElement] = select(bodyElement,"#content-passivated");
+    document.head.append(...headElements)
+    document.body.append(bodyElement)
 
-     document.head.append(...headElements);
-     document.body.append(bodyElement);
+    logoAnchorElement.append(...icon(ICON_KOLIBRI))
 
-     logoAnchorElement.append(...icon(ICON_KOLIBRI));
+    siteController.onUnsupportedUriHash(
+        (
+            uriHash // think about monolog and i18n
+        ) => alert(`Sorry, the target "${uriHash}" is not available.`)
+    )
 
-     siteController.onUnsupportedUriHash( uriHash =>                     // think about monolog and i18n
-         alert(`Sorry, the target "${uriHash}" is not available.`)
-     );
+    siteController.onPageActivated((page) => {
+        // set the title
+        const titleElement = document.head.querySelector('title')
+        titleElement.textContent = page.titleText
 
-     siteController.onPageActivated( page => {
+        // make sure that the required page style is in the head
+        const styleElement = document.head.querySelector(
+            `style[data-style-id="${page.pageClass}"]`
+        )
+        if (null === styleElement) {
+            document.head.append(page.styleElement)
+        }
 
-          // set the title
-          const titleElement = document.head.querySelector("title");
-          titleElement.textContent = page.titleText;
+        // make sure the animation timings in model and css are the same
+        page.contentElement.style.setProperty(
+            '--activation-ms',
+            page.activationMs
+        )
+        page.contentElement.style.setProperty(
+            '--passivation-ms',
+            page.passivationMs
+        )
 
-          // make sure that the required page style is in the head
-          const styleElement = document.head.querySelector(`style[data-style-id="${page.pageClass}"]`);
-          if (null === styleElement) {
-              document.head.append(page.styleElement);
-          }
+        setTimeout((_time) => {
+            // allow activation anim its time
+            page.contentElement.classList.remove('activate') // we have to remove or we cannot start again
+        }, page.activationMs)
 
-          // make sure the animation timings in model and css are the same
-          page.contentElement.style.setProperty("--activation-ms" ,page.activationMs);
-          page.contentElement.style.setProperty("--passivation-ms",page.passivationMs);
+        activeContentElement.replaceChildren(page.contentElement) // finally mount the page
+        page.contentElement.classList.add('activate')
+    })
 
-          setTimeout( _time => {                                           // allow activation anim its time
-               page.contentElement.classList.remove("activate");           // we have to remove or we cannot start again
-          }, page.activationMs );
+    siteController.onPagePassivated((page) => {
+        passiveContentElement.replaceChildren(page.contentElement) // moves from content to passivated
 
-          activeContentElement.replaceChildren(page.contentElement);       // finally mount the page
-          page.contentElement.classList.add("activate");
-     });
+        // trigger the passivation anim
+        page.contentElement.classList.add('passivate')
+        setTimeout((_time) => {
+            // give the passivation anim some time
+            page.contentElement.classList.remove('passivate') // just to be sure
+            passiveContentElement.innerHTML = '' // remove all children
+            // we do not remove the page styleElement because of issues when
+            // passivation and re-activation styling overlaps
+        }, page.passivationMs)
+    })
 
-     siteController.onPagePassivated( page => {
-          passiveContentElement.replaceChildren(page.contentElement);      // moves from content to passivated
-
-          // trigger the passivation anim
-          page.contentElement.classList.add("passivate");
-          setTimeout( _time => {                                           // give the passivation anim some time
-               page.contentElement.classList.remove("passivate");          // just to be sure
-               passiveContentElement.innerHTML = "";                       // remove all children
-               // we do not remove the page styleElement because of issues when
-               // passivation and re-activation styling overlaps
-          }, page.passivationMs);
-     });
-
-     return {
-          sideNavigationElement    ,
-          topNavigationElement
-     }
-};
+    return {
+        sideNavigationElement,
+        topNavigationElement,
+    }
+}
 
 const headElements = dom(`
 
@@ -160,7 +170,7 @@ const headElements = dom(`
             }
 
         </style>
-`);
+`)
 
 const [bodyElement] = dom(`
     <div id="application-frame">
@@ -179,4 +189,4 @@ const [bodyElement] = dom(`
         </div>
 
     </div>
-`);
+`)

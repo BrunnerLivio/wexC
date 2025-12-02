@@ -2,7 +2,7 @@
  * @module kolibri.sequence.constructors.unfold
  * The idea was thankfully provided by Daniel Kröni.
  */
-import {createMonadicSequence} from "../../sequencePrototype.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
 
 export { unfold }
 /**
@@ -36,21 +36,20 @@ export { unfold }
  *     zeroToFour ['=='] Range(4);
  */
 const unfold = (initialState, fromStateToNextStateAndValue) => {
-
     const iterator = () => {
-        let runningState = initialState;
+        let runningState = initialState
 
         const next = () => {
-            const result = fromStateToNextStateAndValue(runningState);
+            const result = fromStateToNextStateAndValue(runningState)
             if (result === undefined) {
-                return { done: true, value: undefined };
+                return { done: true, value: undefined }
             } else {
-                runningState = result.state;
-                return { done: false, value: result.value };
+                runningState = result.state
+                return { done: false, value: result.value }
             }
-        };
-        return { next };
-    };
+        }
+        return { next }
+    }
 
-    return createMonadicSequence(iterator);
-};
+    return createMonadicSequence(iterator)
+}

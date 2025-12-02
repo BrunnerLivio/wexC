@@ -1,22 +1,20 @@
 <!doctype html>
-<html lang=en>
-<head>
-    <meta charset="UTF-8">
-    <title>Kolibri Tryout</title>
-    <style>
-        body {
-            font-family: system-ui;
-            font-variant-numeric: tabular-nums;
-            padding: 2em;
-        }
-    </style>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Kolibri Tryout</title>
+        <style>
+            body {
+                font-family: system-ui;
+                font-variant-numeric: tabular-nums;
+                padding: 2em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>The Heros approximating PI</h1>
 
-</head>
-<body>
-
-<h1>The Heros approximating PI</h1>
-
-<pre>
+        <pre>
     Mādhava of Sangamagrāma (~1400) - Gregory - Leibniz Series
 
      4       4       4       4       4
@@ -36,57 +34,53 @@
     
 </pre>
 
+        <script type="module">
+            import {
+                ALL,
+                Walk,
+                limit,
+                plusOp,
+                Seq,
+            } from '../../kolibri/sequence/sequence.js'
+            import { select } from '../../kolibri/util/dom.js'
 
-<script type="module">
+            const partialSum = (numSeq) => (n) =>
+                numSeq.take(n).reduce$(plusOp, 0)
 
-    import { ALL, Walk, limit, plusOp, Seq } from "../../kolibri/sequence/sequence.js";
-    import { select }                        from "../../kolibri/util/dom.js";
+            const partialSumSeq = (numSeq) =>
+                Walk(1, ALL).map(partialSum(numSeq))
 
+            const plusMinus = Seq(1, -1).cycle()
 
-    const partialSum = numSeq => n =>
-        numSeq
-            .take(n)
-            .reduce$(plusOp, 0);
+            const leib_seq = Walk(1, ALL, 2)
+                .map((n) => 1 / n)
+                .zipWith((x, sign) => sign * x)(plusMinus)
 
-    const partialSumSeq = numSeq =>
-        Walk(1, ALL)
-            .map(partialSum(numSeq));
+            const nila_seq = Walk(2, ALL, 2)
+                .map((n) => 1 / (n * (n + 1) * (n + 2)))
+                .zipWith((x, sign) => sign * x)(plusMinus)
 
-    const plusMinus = Seq(1, -1).cycle();
+            const partialLeibnizSums = partialSumSeq(leib_seq)
+            const leibniz = 4 * limit(1e-3, partialLeibnizSums)
 
-    const leib_seq =
-        Walk(1, ALL, 2)
-            .map( n => 1 / n )
-            .zipWith((x, sign) => sign * x)(plusMinus);
+            const partialNilaSums = partialSumSeq(nila_seq)
+            const nilakantha = 3 + 4 * limit(1e-8, partialNilaSums)
 
-    const nila_seq =
-        Walk(2, ALL, 2)
-            .map( n => 1 / (n * (n + 1) * (n + 2)))
-            .zipWith((x, sign) => sign * x)(plusMinus);
-
-    const partialLeibnizSums  = partialSumSeq(leib_seq);
-    const leibniz             = 4 * limit(1e-3, partialLeibnizSums );
-
-    const partialNilaSums     = partialSumSeq(nila_seq);
-    const nilakantha          = 3 + 4 * limit(1e-8, partialNilaSums );
-
-    const [lout] = select(document.body, "#leibnizOut");
-    lout.textContent = `
+            const [lout] = select(document.body, '#leibnizOut')
+            lout.textContent = `
 Partial sum sequence
 ${partialLeibnizSums.show()}
 
 Limit * 4:      ${leibniz}
-    `;
+    `
 
-    const [nilaOut] = select(document.body, "#nilaOut");
-    nilaOut.textContent = `
+            const [nilaOut] = select(document.body, '#nilaOut')
+            nilaOut.textContent = `
 Partial sum sequence
 ${partialNilaSums.show()}
 
 limit * 4 + 3:   ${nilakantha}
-    `;
-</script>
-
-
-</body>
+    `
+        </script>
+    </body>
 </html>

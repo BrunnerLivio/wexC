@@ -1,5 +1,5 @@
-import {createMonadicSequence} from "../../sequencePrototype.js";
-import {iteratorOf}            from "../../util/helpers.js";
+import { createMonadicSequence } from '../../sequencePrototype.js'
+import { iteratorOf } from '../../util/helpers.js'
 
 export { zipWith }
 
@@ -32,38 +32,37 @@ export { zipWith }
  * @template _T_
  * @type { ZipWithOperationType<_T_> }
  */
-const zipWith = zipper => it1 => it2 => {
-  /**
-   * @template _V_
-   * @type _V_
-   * */
-  let zippedValue;
-
-  const zipWithIterator = () =>  {
-    const inner1 = iteratorOf(it1);
-    const inner2 = iteratorOf(it2);
-
+const zipWith = (zipper) => (it1) => (it2) => {
     /**
-     *
      * @template _V_
-     * @returns { IteratorResult<_V_,_V_> }
-     */
-    const next = () => {
-      const { done: done1, value: value1 } = inner1.next();
-      const { done: done2, value: value2 } = inner2.next();
+     * @type _V_
+     * */
+    let zippedValue
 
-      /**@type boolean */
-      const done = done1 || done2;
+    const zipWithIterator = () => {
+        const inner1 = iteratorOf(it1)
+        const inner2 = iteratorOf(it2)
 
-      if (!done) zippedValue = zipper(value1, value2);
-      return {
-        done:  done,
-        value: zippedValue
-      };
-    };
-    return { next };
-  };
+        /**
+         *
+         * @template _V_
+         * @returns { IteratorResult<_V_,_V_> }
+         */
+        const next = () => {
+            const { done: done1, value: value1 } = inner1.next()
+            const { done: done2, value: value2 } = inner2.next()
 
+            /**@type boolean */
+            const done = done1 || done2
 
-  return createMonadicSequence(zipWithIterator);
-};
+            if (!done) zippedValue = zipper(value1, value2)
+            return {
+                done: done,
+                value: zippedValue,
+            }
+        }
+        return { next }
+    }
+
+    return createMonadicSequence(zipWithIterator)
+}
