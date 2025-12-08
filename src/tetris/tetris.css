@@ -4,10 +4,13 @@
     --unit: 1cqmin;
     --box-width: calc(6 * var(--unit));
 
+    --background: var(--color-purple-700);
+
     --color-cyan-500: #02ffffff;
     --color-cyan-400: #9effffff;
     --color-cyan-300: #c2ffffff;
     --color-cyan-200: #e0ffffff;
+    --color-purple-700: #4c1c59ff;
     --color-purple-500: #8447ffff;
     --color-purple-400: #be9effff;
     --color-purple-300: #d6c2ffff;
@@ -57,6 +60,32 @@
     --axis-button-bg: #1a0d2e;
     --axis-button-active: #ff74d4;
     --axis-frame-color: #ff74d4;
+}
+
+:root {
+    &:has([data-axis='roll'].dragging) {
+        --background: #5da9ff;
+    }
+
+    &:has(.mode-room [data-axis='roll'].dragging) {
+        --background: #8447ff;
+    }
+
+    &:has([data-axis='pitch'].dragging) {
+        --background: #02ffff;
+    }
+
+    &:has(.mode-room [data-axis='pitch'].dragging) {
+        --background: #ff35d0;
+    }
+
+    &:has([data-axis='yaw'].dragging) {
+        --background: #afff02;
+    }
+
+    &:has(.mode-room [data-axis='yaw'].dragging) {
+        --background: #fb0f5a;
+    }
 }
 
 html {
@@ -111,11 +140,8 @@ body {
     grid-template-columns: 100%;
     grid-template-rows: 1fr max-content;
     margin: 0;
-    /* todo! design animation for use orientation horizontal */
-    background-image: url('../../img/background/synthwave-bg.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+    background: var(--color-purple-700);
+    transition: background 0.5s ease-in-out;
 }
 
 footer {
@@ -605,27 +631,35 @@ footer {
 
 /* Drop shadows for each ring color */
 .axis-ring[data-axis='roll'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 6px var(--color-blue-500));
+    --axis-color: #5da9ff;
 }
 
 .axis-ring[data-axis='roll'] .ring-track-room {
-    filter: drop-shadow(0 0 6px var(--color-purple-500));
+    --axis-color: #8447ff;
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 6px var(--color-cyan-500));
+    --axis-color: #02ffff;
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-room {
-    filter: drop-shadow(0 0 6px var(--color-pink-500));
+    --axis-color: #ff35d0;
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 6px var(--color-green-500));
+    --axis-color: #afff02;
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-room {
-    filter: drop-shadow(0 0 6px var(--color-red-500));
+    --axis-color: #fb0f5a;
+}
+
+.axis-ring .ring-track-tetromino {
+    filter: drop-shadow(0 0 6px var(--axis-color));
+}
+
+.axis-ring .ring-track-room {
+    filter: drop-shadow(0 0 6px var(--axis-color));
 }
 
 /* Show tetromino gradients by default, hide room gradients */
@@ -651,4 +685,80 @@ footer {
     inset: 0;
     z-index: 999;
     pointer-events: none;
+}
+
+:root {
+    --hue-rotation: 10;
+    --background-darker: lch(from var(--background) calc(l + 20) c h);
+    --outrun-grid-color: lch(
+        from var(--background) calc(l + 40) c calc(h + var(--hue-rotation))
+    );
+}
+
+.outrun {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.outrun-grid-perspective {
+    perspective: 1000px;
+    overflow: hidden;
+    height: 300px;
+    position: relative;
+}
+
+.outrun-grid-perspective::after {
+    content: '';
+    display: block;
+    height: 300px;
+    width: 100%;
+    box-shadow: inset 0 20px 50px -20px var(--background-darker);
+
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    transition: all 0.5s ease-in-out;
+}
+
+.outrun-grid-container {
+    width: 100%;
+    height: 660px;
+    border: 2px solid var(--outrun-grid-color);
+    transition: all 0.5s ease-in-out;
+    box-sizing: border-box;
+    transform-origin: top;
+    transform: rotateX(70deg) translateY(10%);
+    overflow: hidden;
+    position: relative;
+}
+
+.vert {
+    display: inline-block;
+    height: 100%;
+    width: 2px;
+    background-color: var(--outrun-grid-color);
+    transition: all 0.5s ease-in-out;
+    margin-left: 12%;
+    box-shadow: 0 2px 21px var(--outrun-grid-color);
+    margin-left: 4.5%;
+}
+
+.moving-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 300%;
+}
+
+.hor {
+    width: 100%;
+    height: 3px;
+    background-color: var(--outrun-grid-color);
+    margin-top: 19%;
+    box-shadow: 2px 0 21px var(--outrun-grid-color);
+    transition: all 0.5s ease-in-out;
+    margin-top: 4.8%;
 }
