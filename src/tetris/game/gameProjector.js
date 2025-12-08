@@ -103,11 +103,7 @@ const projectMain = (gameController) => {
                 <!--    tetrominos to be added here -->
             </div>
         </main>
-        <footer>
-            Use mouse or touch to rotate the coords.
-            Arrow keys to move the tetromino.
-            Shift + arrow keys to rotate.
-        </footer>`)
+        `)
 
     // view binding
     const main = mainElements[0]
