@@ -316,6 +316,8 @@ const projectAxisControl = (gameController) => {
           <g class="axis-ring" data-axis="roll">
             <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="110" stroke="url(#rollGradient)" />
             <circle class="ring-track ring-track-room" cx="110" cy="110" r="110" stroke="url(#rollGradientRoom)" />
+            <!-- White neon center line -->
+            <circle class="ring-neon-line" cx="110" cy="110" r="110" stroke="white" stroke-width="3" fill="none" opacity="0.8" />
             <!-- Invisible hit area for easier selection -->
             <circle class="ring-hit-area" cx="110" cy="110" r="110" stroke="transparent" stroke-width="20" fill="none" />
           </g>
@@ -324,6 +326,8 @@ const projectAxisControl = (gameController) => {
           <g class="axis-ring" data-axis="pitch">
             <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="80" stroke="url(#pitchGradient)" />
             <circle class="ring-track ring-track-room" cx="110" cy="110" r="80" stroke="url(#pitchGradientRoom)" />
+            <!-- White neon center line -->
+            <circle class="ring-neon-line" cx="110" cy="110" r="80" stroke="white" stroke-width="3" fill="none" opacity="0.8" />
             <!-- Invisible hit area for easier selection -->
             <circle class="ring-hit-area" cx="110" cy="110" r="80" stroke="transparent" stroke-width="20" fill="none" />
           </g>
@@ -332,6 +336,8 @@ const projectAxisControl = (gameController) => {
           <g class="axis-ring" data-axis="yaw">
             <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="50" stroke="url(#yawGradient)" />
             <circle class="ring-track ring-track-room" cx="110" cy="110" r="50" stroke="url(#yawGradientRoom)" />
+            <!-- White neon center line -->
+            <circle class="ring-neon-line" cx="110" cy="110" r="50" stroke="white" stroke-width="3" fill="none" opacity="0.8" />
             <!-- Invisible hit area for easier selection -->
             <circle class="ring-hit-area" cx="110" cy="110" r="50" stroke="transparent" stroke-width="20" fill="none" />
           </g>
