@@ -21,7 +21,7 @@ export { AxisController }
  *   onActivePlayerIdChanged: (callback: Function) => void,
  * }} playerController
  * @property {{
- *   getCurrentMode: () => ("tetronimo" | "room"),
+ *   getCurrentMode: () => ("tetromino" | "room"),
  *   onModeChanged: (callback: Function) => void,
  * }} switchModeController
  */
@@ -39,7 +39,7 @@ export { AxisController }
  * }} AxisState
  */
 
-const ROTATION_THRESHOLD = 45 // degrees needed to trigger one rotation
+const ROTATION_THRESHOLD = 30 // degrees needed to trigger one rotation
 
 /**
  * @param { import("../../kolibri/observable/observableMap").ObservableMapType } om

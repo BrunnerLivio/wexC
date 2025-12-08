@@ -4,6 +4,31 @@
     --unit: 1cqmin;
     --box-width: calc(6 * var(--unit));
 
+    --color-cyan-500: #02FFFFFF;
+    --color-cyan-400: #9EFFFFFF;
+    --color-cyan-300: #C2FFFFFF;
+    --color-cyan-200: #E0FFFFFF;
+    --color-purple-500: #8447FFFF;
+    --color-purple-400: #BE9EFFFF;
+    --color-purple-300: #D6C2FFFF;
+    --color-purple-200: #EAE0FFFF;
+    --color-green-500: #AFFF02FF;
+    --color-green-400: #E0FF9EFF;
+    --color-green-300: #ECFFC2FF;
+    --color-green-200: #F5FFE0FF;
+    --color-red-500: #FB0F5AFF;
+    --color-red-400: #FF6D9BFF;
+    --color-red-300: #FFC2D6FF;
+    --color-red-200: #FFE0EAFF;
+    --color-blue-500: #5DA9FFFF;
+    --color-blue-400: #8CC2FFFF;
+    --color-blue-300: #B6D8FFFF;
+    --color-blue-200: #DCECFFFF;
+    --color-pink-500: #FF35D0FF;
+    --color-pink-400: #FF6BDDFF;
+    --color-pink-300: #FFA4EAFF;
+    --color-pink-200: #FFD4F5FF;
+
     --joystick-size: 9em;
     --joystick-border-thickness: 0.75em;
     --joystick-border-radius: 26px;
@@ -506,41 +531,28 @@ footer {
 
 .axis-control {
     position: fixed;
-    inset: 0 2em 0 auto;
+    inset: 0 0 0 auto;
     z-index: 12;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 3em;
-    color: var(--axis-control-color);
     pointer-events: none;
-    width: 200px;
-}
-
-.axis-control[data-in-charge='other'] .axis-frame {
-    opacity: 0.7;
+    width: 220px;
 }
 
 .axis-frame {
     width: 100%;
-    padding: 0;
-    border-radius: 50%;
-    box-shadow: none;
-    display: grid;
-    place-items: center;
-    transition: opacity 0.2s ease-out;
-    pointer-events: auto;
+    height: 100%;
     position: relative;
 }
 
 .axis-rings {
     position: absolute;
+    top: 50%;
+    margin-top: -250px;
     right: -100%;
-    width: 400px;
+    width: 440px;
     height: 500px;
     overflow: visible;
     touch-action: none;
+    pointer-events: auto;
 }
 
 .axis-ring {
@@ -555,74 +567,51 @@ footer {
 
 .ring-track {
     fill: none;
-    opacity: 0.2;
-    stroke-width: 2;
+    stroke-width: 5;
     transition: all 0.3s ease;
-    filter: drop-shadow(0 0 15px currentColor);
 }
 
-.axis-ring:hover .ring-track {
-    opacity: 0.4;
-    filter: drop-shadow(0 0 25px currentColor);
+/* Drop shadows for each ring color */
+.axis-ring[data-axis='roll'] .ring-track-tetromino {
+    filter: drop-shadow(0 0 4px #5DA9FF);
+}
+
+.axis-ring[data-axis='roll'] .ring-track-room {
+    filter: drop-shadow(0 0 4px #8447FF);
+}
+
+.axis-ring[data-axis='pitch'] .ring-track-tetromino {
+    filter: drop-shadow(0 0 4px #02FFFF);
+}
+
+.axis-ring[data-axis='pitch'] .ring-track-room {
+    filter: drop-shadow(0 0 4px #FF35D0);
+}
+
+.axis-ring[data-axis='yaw'] .ring-track-tetromino {
+    filter: drop-shadow(0 0 4px #AFFF02);
+}
+
+.axis-ring[data-axis='yaw'] .ring-track-room {
+    filter: drop-shadow(0 0 4px #FB0F5A);
+}
+
+/* Show tetromino gradients by default, hide room gradients */
+.ring-track-room {
+    display: none;
+}
+
+/* In room mode, show room gradients and hide tetromino gradients */
+.mode-room .ring-track-tetromino {
+    display: none;
+}
+
+.mode-room .ring-track-room {
+    display: block;
 }
 
 .axis-ring.dragging .ring-track {
-    opacity: 0.6;
-    stroke-width: 3;
-    filter: drop-shadow(0 0 35px currentColor);
-}
-
-.ring-handle {
-    fill: rgba(255, 255, 255, 0.8);
-    stroke: rgba(255, 255, 255, 0.9);
-    stroke-width: 2;
-    cursor: grab;
-    transition: all 0.3s ease;
-    touch-action: none;
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
-}
-
-.axis-ring:hover .ring-handle {
-    fill: white;
-    r: 10;
-    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1));
-}
-
-.axis-ring.dragging .ring-handle {
-    cursor: grabbing;
-    fill: white;
-    r: 12;
-    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 1));
-}
-
-.ring-label {
-    fill: rgba(255, 255, 255, 0.7);
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    pointer-events: none;
-    user-select: none;
-}
-
-.axis-ring.dragging .ring-label {
-    fill: white;
-}
-
-/* Color rings differently based on axis */
-.axis-ring[data-axis='roll'] .ring-track,
-.axis-ring[data-axis='roll'] .ring-handle {
-    stroke: #00ffff;
-}
-
-.axis-ring[data-axis='pitch'] .ring-track,
-.axis-ring[data-axis='pitch'] .ring-handle {
-    stroke: #afff02;
-}
-
-.axis-ring[data-axis='yaw'] .ring-track,
-.axis-ring[data-axis='yaw'] .ring-handle {
-    stroke: #fff;
+    stroke-width: 6;
 }
 
 /* Responsive adjustments */
