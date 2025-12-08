@@ -315,19 +315,25 @@ const projectAxisControl = (gameController) => {
           <!-- Roll ring (outer) -->
           <g class="axis-ring" data-axis="roll">
             <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="110" stroke="url(#rollGradient)" />
-            <circle class="ring-track ring-track-room" cx="100" cy="100" r="110" stroke="url(#rollGradientRoom)" />
+            <circle class="ring-track ring-track-room" cx="110" cy="110" r="110" stroke="url(#rollGradientRoom)" />
+            <!-- Invisible hit area for easier selection -->
+            <circle class="ring-hit-area" cx="110" cy="110" r="110" stroke="transparent" stroke-width="20" fill="none" />
           </g>
           
           <!-- Pitch ring (middle) -->
           <g class="axis-ring" data-axis="pitch">
             <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="80" stroke="url(#pitchGradient)" />
-            <circle class="ring-track ring-track-room" cx="100" cy="100" r="80" stroke="url(#pitchGradientRoom)" />
+            <circle class="ring-track ring-track-room" cx="110" cy="110" r="80" stroke="url(#pitchGradientRoom)" />
+            <!-- Invisible hit area for easier selection -->
+            <circle class="ring-hit-area" cx="110" cy="110" r="80" stroke="transparent" stroke-width="20" fill="none" />
           </g>
           
           <!-- Yaw ring (inner) -->
           <g class="axis-ring" data-axis="yaw">
             <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="50" stroke="url(#yawGradient)" />
-            <circle class="ring-track ring-track-room" cx="100" cy="100" r="50" stroke="url(#yawGradientRoom)" />
+            <circle class="ring-track ring-track-room" cx="110" cy="110" r="50" stroke="url(#yawGradientRoom)" />
+            <!-- Invisible hit area for easier selection -->
+            <circle class="ring-hit-area" cx="110" cy="110" r="50" stroke="transparent" stroke-width="20" fill="none" />
           </g>
         </svg>
       </div>
