@@ -700,6 +700,7 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
+    z-index: -1;
 }
 
 .outrun-grid-perspective {
@@ -775,7 +776,6 @@ footer {
     background: var(--sun-color);
     border-radius: 400px 400px 0 0;
     opacity: 0.8;
-    z-index: 2;
     transition: all 0.5s ease-in-out;
     box-shadow: 0 0 100px var(--sun-shadow);
     overflow: hidden;
