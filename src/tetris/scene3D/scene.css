@@ -71,3 +71,84 @@
     user-select: none !important;
     touch-action: none !important;
 }
+
+:root {
+  --primary-darker: #0a0030;
+  --accent: #ff00ff;
+}
+
+/* Parent perspective wrapper */
+.outrun-grid-perspective {
+  perspective: 1000px;
+  overflow: hidden;
+  height: 300px;
+  position: relative;
+}
+
+.outrun-grid-perspective::after {
+  content: "";
+  display: block;
+  height: 300px;
+  width: 100%;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.001) 0%,
+    var(--primary-darker) 100%
+  );
+  position: absolute;
+  z-index: 3;
+  top: 0;
+}
+
+/* Grid container */
+.outrun-grid-container {
+  width: 100%;
+  height: 660px;
+  border: 2px solid var(--accent);
+  box-sizing: border-box;
+  transform-origin: top;
+  transform: rotateX(70deg) translateY(10%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Vertical lines */
+.vert {
+  display: inline-block;
+  height: 100%;
+  width: 2px;
+  background-color: var(--accent);
+  margin-left: 12%;
+  box-shadow: 0 2px 21px var(--accent);
+}
+
+/* Responsive adjustment originally from styled-components-breakpoint */
+@media (min-width: 768px) {
+  .vert {
+    margin-left: 4.5%;
+  }
+}
+
+/* Moving lines wrapper */
+.moving-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300%;
+}
+
+/* Horizontal lines */
+.hor {
+  width: 100%;
+  height: 3px;
+  background-color: var(--accent);
+  margin-top: 19%;
+  box-shadow: 2px 0 21px var(--accent);
+}
+
+@media (min-width: 768px) {
+  .hor {
+    margin-top: 4.8%;
+  }
+}

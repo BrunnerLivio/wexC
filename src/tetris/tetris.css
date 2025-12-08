@@ -46,9 +46,9 @@
     --joystick-stroke: #fff;
     --joystick-glow: rgba(130, 157, 255, 0.22);
 
-    --switch-width: 140px; /* corresponds to viewbox of right icon */
-    --switch-height: 75px;
-    --track-pad: 10px;
+    --switch-width: 120px; /* corresponds to viewbox of right icon */
+    --switch-height: 55px;
+    --track-pad: 5px;
     --dot-size: 45px; /* corresponds to viewbox properties of both left and right icon */
     --travel-gap: 6px; /* small extra offset so dot sits nicely inside stroke */
     --transition: 320ms cubic-bezier(0.2, 0.9, 0.3, 1);
@@ -111,7 +111,11 @@ body {
     grid-template-columns: 100%;
     grid-template-rows: 1fr max-content;
     margin: 0;
-    background: linear-gradient(in srgb-linear, blue, orange);
+    /* todo! design animation for use orientation horizontal */
+    background-image: url('../../img/background/synthwave-bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 footer {
@@ -128,7 +132,7 @@ footer {
     width: 100%;
     height: 100%;
     background-image: repeating-conic-gradient(
-        transparent 0deg 90deg,
+        cyan 0deg 90deg,
         black 90deg 180deg
     );
     background-size: calc(var(--box-width) * 2) calc(var(--box-width) * 2);
@@ -175,8 +179,7 @@ footer {
     scale: 10;
     translate: calc(var(--x) * var(--box-width))
         calc(var(--y) * var(--box-width)) calc((-1 / 2) * var(--box-width));
-    transition:
-        translate 0.7s cubic-bezier(1, 0.7, 1, 1),
+    transition: translate 0.7s cubic-bezier(1, 0.7, 1, 1),
         scale 0.6s 0.6s ease-out;
 }
 
@@ -184,9 +187,7 @@ footer {
     opacity: 0;
     filter: blur(0.2cqmin);
     transform: rotateY(0deg) rotateX(0deg);
-    transition:
-        transform 1s 0.4s linear,
-        opacity 0.5s 1s linear,
+    transition: transform 1s 0.4s linear, opacity 0.5s 1s linear,
         filter 0.6s 0.5s linear;
 }
 
@@ -196,7 +197,7 @@ footer {
     background: grey;
     opacity: 0.8;
     border-radius: 3%;
-    border: 1px solid #c9ff;
+    border: 1px solid #9c5bb2ae;
 }
 
 /* the transform origin for rotate is center by default, so rotations must first */
@@ -233,34 +234,34 @@ footer {
 /* center, then around X-axis to the bottom */
 
 .charI .face {
-    background-color: cyan;
+    background-color: rgb(42, 255, 255);
 }
 .charT .face {
-    background-color: red;
+    background-color: rgb(108, 255, 35);
 }
 .charO .face {
-    background-color: blueviolet;
+    background-color: rgb(155, 49, 255);
 }
 .charS .face {
-    background-color: yellow;
+    background-color: rgb(255, 255, 46);
 }
 .charZ .face {
-    background-color: lime;
+    background-color: rgb(47, 252, 146);
 }
 .charL .face {
-    background-color: orange;
+    background-color: rgb(254, 182, 49);
 }
 .charF .face {
     background-color: white;
 }
 .branch .face {
-    background-color: magenta;
+    background-color: rgb(255, 41, 255);
 }
 .screwRight .face {
-    background-color: yellow;
+    background-color: rgb(56, 42, 255);
 }
 .screwLeft .face {
-    background-color: lime;
+    background-color: rgb(255, 42, 145);
 }
 
 .ghost .face {
@@ -270,16 +271,16 @@ footer {
 
 .ghost.show .face:nth-child(2) {
     /* floor face */
-    background-color: yellow;
-    box-shadow: 0 0 3cqmin yellow;
+    background-color: cyan;
+    box-shadow: 0 0 3cqmin cyan;
     opacity: 1;
 }
 
 .plane {
-    border: 4px solid #99fe;
+    border: 4px solid #9c5bb2ae;
 
     &.show {
-        background: #99f9;
+        background: #9c5bb26c;
     }
 }
 
@@ -288,10 +289,19 @@ footer {
     transform: rotateY(-90deg);
 }
 
-.joystick-position-control {
+.left-side-control {
     position: fixed;
-    inset: 1.5em auto auto 1.5em;
+    top: 50%;
+    left: 1.5em;
+    transform: translateY(-50%);
     z-index: 12;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.joystick-position-control {
     display: grid;
     gap: 0.6em;
     color: var(--joystick-title-color);
@@ -407,9 +417,7 @@ footer {
             var(--joystick-center-offset-y, 0px)
         )
         scale(var(--joystick-center-scale, 1));
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     pointer-events: none;
     border: 1px solid var(--joystick-stroke);
     box-shadow: 0 0 10.4px 5px var(--joystick-glow);
@@ -427,8 +435,7 @@ footer {
 
 .joystick-pad[data-direction] .joystick-center {
     --joystick-center-scale: 1.04;
-    box-shadow:
-        inset 0 0 18px rgba(255, 255, 255, 0.85),
+    box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.85),
         0 0 38px rgba(255, 255, 255, 0.5);
 }
 
@@ -450,17 +457,14 @@ footer {
 }
 
 .switch {
+    position: relative;
     display: inline-block;
     width: var(--switch-width);
     height: var(--switch-height);
-    position: fixed;
-    inset: auto auto 2em 1.5em;
-    z-index: 12;
 }
 
 /* keep input accessible but visually hidden */
 .switch input {
-    position: absolute;
     inset: 0;
     margin: 0;
     opacity: 0;
@@ -470,11 +474,10 @@ footer {
 
 .switch .track {
     position: absolute;
-    left: var(--track-pad);
-    right: var(--track-pad);
-    top: var(--track-pad);
-    bottom: var(--track-pad);
-    border-radius: 27px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
     background: transparent;
     border: 1px solid #eeeeee;
     pointer-events: none;
@@ -642,4 +645,11 @@ footer {
         width: 150px;
         height: 400px;
     }
+}
+
+#fisheye {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
 }
