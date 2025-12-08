@@ -762,3 +762,44 @@ footer {
     transition: all 0.5s ease-in-out;
     margin-top: 4.8%;
 }
+
+.outrun-sun {
+    --sun-color: lch(from var(--outrun-grid-color) 80 145 h);
+    --sun-shadow: lch(from var(--outrun-grid-color) calc(l - 20) 100 h);
+    position: absolute;
+    bottom: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 200px;
+    background: var(--sun-color);
+    border-radius: 400px 400px 0 0;
+    opacity: 0.8;
+    z-index: 2;
+    transition: all 0.5s ease-in-out;
+    box-shadow: 0 0 100px var(--sun-shadow);
+    overflow: hidden;
+}
+
+.shimmer {
+    position: absolute;
+    background: var(--color-purple-700);
+    width: 100%;
+    opacity: 0.8;
+    transition: all 0.5s ease-in-out;
+}
+
+.outrun-sun .shimmer:nth-child(1) {
+    bottom: 5%;
+    height: 10%;
+}
+
+.outrun-sun .shimmer:nth-child(2) {
+    bottom: 25%;
+    height: 5%;
+}
+
+.outrun-sun .shimmer:nth-child(3) {
+    bottom: 40%;
+    height: 2%;
+}
