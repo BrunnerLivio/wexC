@@ -605,27 +605,27 @@ footer {
 
 /* Drop shadows for each ring color */
 .axis-ring[data-axis='roll'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 4px #5da9ff);
+    filter: drop-shadow(0 0 6px var(--color-blue-500));
 }
 
 .axis-ring[data-axis='roll'] .ring-track-room {
-    filter: drop-shadow(0 0 4px #8447ff);
+    filter: drop-shadow(0 0 6px var(--color-purple-500));
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 4px #02ffff);
+    filter: drop-shadow(0 0 6px var(--color-cyan-500));
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-room {
-    filter: drop-shadow(0 0 4px #ff35d0);
+    filter: drop-shadow(0 0 6px var(--color-pink-500));
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 4px #afff02);
+    filter: drop-shadow(0 0 6px var(--color-green-500));
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-room {
-    filter: drop-shadow(0 0 4px #fb0f5a);
+    filter: drop-shadow(0 0 6px var(--color-red-500));
 }
 
 /* Show tetromino gradients by default, hide room gradients */
