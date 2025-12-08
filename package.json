@@ -1,9 +1,5 @@
 {
     "scripts": {
-        "dev": "vite --host 0.0.0.0",
-        "build": "vite build"
-    },
-    "devDependencies": {
-        "vite": "^7.2.2"
+        "dev": "npx live-server"
     }
 }

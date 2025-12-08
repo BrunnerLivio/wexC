@@ -103,6 +103,13 @@ const AxisController = (om, dependencies) => {
         return playerController.areWeInCharge()
     }
 
+    const playClickSound = () => {
+        console.log('play click sound')
+        const audio = new Audio('/sounds/click.wav')
+        audio.volume = 0.2
+        audio.play()
+    }
+
     /**
      * @param {AxisState} state
      */
@@ -143,6 +150,7 @@ const AxisController = (om, dependencies) => {
 
             if (targetRotations !== currentRotations) {
                 const diff = targetRotations - currentRotations
+                playClickSound()
                 const handlers = axisHandlers[axis]
 
                 const handler = diff > 0 ? handlers.right : handlers.left
