@@ -4,30 +4,30 @@
     --unit: 1cqmin;
     --box-width: calc(6 * var(--unit));
 
-    --color-cyan-500: #02FFFFFF;
-    --color-cyan-400: #9EFFFFFF;
-    --color-cyan-300: #C2FFFFFF;
-    --color-cyan-200: #E0FFFFFF;
-    --color-purple-500: #8447FFFF;
-    --color-purple-400: #BE9EFFFF;
-    --color-purple-300: #D6C2FFFF;
-    --color-purple-200: #EAE0FFFF;
-    --color-green-500: #AFFF02FF;
-    --color-green-400: #E0FF9EFF;
-    --color-green-300: #ECFFC2FF;
-    --color-green-200: #F5FFE0FF;
-    --color-red-500: #FB0F5AFF;
-    --color-red-400: #FF6D9BFF;
-    --color-red-300: #FFC2D6FF;
-    --color-red-200: #FFE0EAFF;
-    --color-blue-500: #5DA9FFFF;
-    --color-blue-400: #8CC2FFFF;
-    --color-blue-300: #B6D8FFFF;
-    --color-blue-200: #DCECFFFF;
-    --color-pink-500: #FF35D0FF;
-    --color-pink-400: #FF6BDDFF;
-    --color-pink-300: #FFA4EAFF;
-    --color-pink-200: #FFD4F5FF;
+    --color-cyan-500: #02ffffff;
+    --color-cyan-400: #9effffff;
+    --color-cyan-300: #c2ffffff;
+    --color-cyan-200: #e0ffffff;
+    --color-purple-500: #8447ffff;
+    --color-purple-400: #be9effff;
+    --color-purple-300: #d6c2ffff;
+    --color-purple-200: #eae0ffff;
+    --color-green-500: #afff02ff;
+    --color-green-400: #e0ff9eff;
+    --color-green-300: #ecffc2ff;
+    --color-green-200: #f5ffe0ff;
+    --color-red-500: #fb0f5aff;
+    --color-red-400: #ff6d9bff;
+    --color-red-300: #ffc2d6ff;
+    --color-red-200: #ffe0eaff;
+    --color-blue-500: #5da9ffff;
+    --color-blue-400: #8cc2ffff;
+    --color-blue-300: #b6d8ffff;
+    --color-blue-200: #dcecffff;
+    --color-pink-500: #ff35d0ff;
+    --color-pink-400: #ff6bddff;
+    --color-pink-300: #ffa4eaff;
+    --color-pink-200: #ffd4f5ff;
 
     --joystick-size: 9em;
     --joystick-border-thickness: 0.75em;
@@ -197,7 +197,8 @@ footer {
     background: grey;
     opacity: 0.8;
     border-radius: 3%;
-    border: 1px solid #9c5bb2ae;
+    border: 1px solid #e0ffff;
+    box-shadow: 0 0 10px 0 #00d9ff;
 }
 
 /* the transform origin for rotate is center by default, so rotations must first */
@@ -232,41 +233,71 @@ footer {
 }
 
 /* center, then around X-axis to the bottom */
-
+/* Neon palette tuned for color-blind distinguishability */
 .charI .face {
-    background-color: rgb(42, 255, 255);
+    background-color: rgba(0, 245, 255, 0.95); /* #00F5FF */
+    border-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 0 10px 0 rgba(0, 245, 255, 0.95);
 }
+
 .charT .face {
-    background-color: rgb(108, 255, 35);
+    background-color: rgba(0, 229, 183, 0.95); /* #00E5B7 */
+    border-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 0 10px 0 rgba(0, 229, 183, 0.95);
 }
+
 .charO .face {
-    background-color: rgb(155, 49, 255);
+    background-color: rgba(255, 45, 149, 0.95); /* #FF2D95 */
+    border-color: rgba(255, 238, 245, 0.98);
+    box-shadow: 0 0 10px 0 rgba(255, 45, 149, 0.95);
 }
+
 .charS .face {
-    background-color: rgb(255, 255, 46);
+    background-color: rgba(124, 255, 0, 0.95); /* #7CFF00 */
+    border-color: rgba(255, 255, 245, 0.98);
+    box-shadow: 0 0 10px 0 rgba(124, 255, 0, 0.95);
 }
+
 .charZ .face {
-    background-color: rgb(47, 252, 146);
+    background-color: rgba(178, 59, 255, 0.95); /* #B23BFF */
+    border-color: rgba(255, 247, 255, 0.98);
+    box-shadow: 0 0 10px 0 rgba(178, 59, 255, 0.95);
 }
+
 .charL .face {
-    background-color: rgb(254, 182, 49);
+    background-color: rgba(90, 45, 255, 0.95); /* #5A2DFF */
+    border-color: rgba(242, 235, 255, 0.98);
+    box-shadow: 0 0 10px 0 rgba(90, 45, 255, 0.95);
 }
+
 .charF .face {
-    background-color: white;
+    background-color: rgba(0, 214, 143, 0.95); /* #00D68F */
+    border-color: rgba(236, 255, 249, 0.98);
+    box-shadow: 0 0 10px 0 rgba(0, 214, 143, 0.95);
 }
+
 .branch .face {
-    background-color: rgb(255, 41, 255);
+    background-color: rgba(255, 61, 142, 0.95); /* #FF3D8E */
+    border-color: rgba(255, 235, 242, 0.98);
+    box-shadow: 0 0 10px 0 rgba(255, 61, 142, 0.95);
 }
+
 .screwRight .face {
-    background-color: rgb(56, 42, 255);
+    background-color: rgba(0, 102, 255, 0.95); /* #0066FF */
+    border-color: rgba(233, 236, 253, 0.98);
+    box-shadow: 0 0 10px 0 rgba(0, 102, 255, 0.95);
 }
+
 .screwLeft .face {
-    background-color: rgb(255, 42, 145);
+    background-color: rgba(255, 138, 75, 0.95); /* #FF8A4B */
+    border-color: rgba(251, 237, 233, 0.98);
+    box-shadow: 0 0 10px 0 rgba(255, 138, 75, 0.95);
 }
 
 .ghost .face {
     background-color: transparent;
     border: none;
+    box-shadow: none;
 }
 
 .ghost.show .face:nth-child(2) {
@@ -277,7 +308,8 @@ footer {
 }
 
 .plane {
-    border: 4px solid #9c5bb2ae;
+    border: 2px solid #9c5bb2ae;
+    box-shadow: 0 0 5px 0 #ce6dee;
 
     &.show {
         background: #9c5bb26c;
@@ -573,27 +605,27 @@ footer {
 
 /* Drop shadows for each ring color */
 .axis-ring[data-axis='roll'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 4px #5DA9FF);
+    filter: drop-shadow(0 0 4px #5da9ff);
 }
 
 .axis-ring[data-axis='roll'] .ring-track-room {
-    filter: drop-shadow(0 0 4px #8447FF);
+    filter: drop-shadow(0 0 4px #8447ff);
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 4px #02FFFF);
+    filter: drop-shadow(0 0 4px #02ffff);
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-room {
-    filter: drop-shadow(0 0 4px #FF35D0);
+    filter: drop-shadow(0 0 4px #ff35d0);
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 4px #AFFF02);
+    filter: drop-shadow(0 0 4px #afff02);
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-room {
-    filter: drop-shadow(0 0 4px #FB0F5A);
+    filter: drop-shadow(0 0 4px #fb0f5a);
 }
 
 /* Show tetromino gradients by default, hide room gradients */
@@ -612,19 +644,6 @@ footer {
 
 .axis-ring.dragging .ring-track {
     stroke-width: 6;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .axis-control {
-        inset: 0 1em 0 auto;
-        gap: 2em;
-    }
-
-    .axis-rings {
-        width: 150px;
-        height: 400px;
-    }
 }
 
 #fisheye {
