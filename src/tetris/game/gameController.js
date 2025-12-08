@@ -16,6 +16,7 @@ import { AxisController } from '../axisController/axisController.js'
 import { BoxController } from '../box/boxController.js'
 import { GameStateController } from '../gameState/gameStateController.js'
 import { JoystickPositionController } from '../joystickPositionController/joystickPositionController.js'
+import { MusicController } from '../musicController/musicController.js'
 import { PlayerController } from '../player/playerController.js'
 import {
     moveBack,
@@ -54,6 +55,7 @@ const log = LoggerFactory('ch.fhnw.tetris.game.gameController')
  * @property switchModeController
  * @property axisController
  * @property setRoomRotationCallbacks
+ * @property musicController
  */
 
 /**
@@ -344,6 +346,7 @@ const GameController = (om) => {
     )
 
     const joystickPositionController = JoystickPositionController()
+    const musicController = MusicController()
     const switchModeController = SwitchModeController(om)
 
     // room rotation callbacks (will be set by projector)
@@ -417,6 +420,7 @@ const GameController = (om) => {
         boxController.startListening()
         tetrominoController.startListening()
         playerController.startListening()
+        musicController.init()
 
         registerKeyListener()
     }
@@ -432,5 +436,6 @@ const GameController = (om) => {
         switchModeController,
         axisController,
         setRoomRotationCallbacks,
+        musicController,
     }
 }
