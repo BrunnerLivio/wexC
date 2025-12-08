@@ -39,7 +39,7 @@ export { AxisController }
  * }} AxisState
  */
 
-const ROTATION_THRESHOLD = 45 // degrees needed to trigger one rotation
+const ROTATION_THRESHOLD = 30 // degrees needed to trigger one rotation
 
 /**
  * @param { import("../../kolibri/observable/observableMap").ObservableMapType } om

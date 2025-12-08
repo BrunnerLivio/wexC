@@ -531,16 +531,10 @@ footer {
 
 .axis-control {
     position: fixed;
-    inset: 0 2em 0 auto;
+    inset: 0 0 0 auto;
     z-index: 12;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 3em;
-    color: var(--axis-control-color);
     pointer-events: none;
-    width: 200px;
+    width: 220px;
 }
 
 .axis-frame {
@@ -554,7 +548,7 @@ footer {
     top: 50%;
     margin-top: -250px;
     right: -100%;
-    width: 400px;
+    width: 440px;
     height: 500px;
     overflow: visible;
     touch-action: none;
@@ -573,7 +567,7 @@ footer {
 
 .ring-track {
     fill: none;
-    stroke-width: 3;
+    stroke-width: 5;
     transition: all 0.3s ease;
 }
 
@@ -617,21 +611,7 @@ footer {
 }
 
 .axis-ring.dragging .ring-track {
-    stroke-width: 4;
-}
-
-.ring-label {
-    fill: rgba(255, 255, 255, 0.7);
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    pointer-events: none;
-    user-select: none;
-}
-
-.axis-ring.dragging .ring-label {
-    fill: white;
+    stroke-width: 6;
 }
 
 /* Responsive adjustments */

@@ -19,11 +19,11 @@ const SwitchModeController = (om) => {
     const changeMode = (value) => {
         if (value) {
             currentMode = modes[1]
-            document.body.classList.toggle('mode-room')
         } else {
             currentMode = modes[0]
         }
-
+        
+        document.body.classList.toggle('mode-room')
         console.log('new mode', currentMode)
         modeObservers.forEach((observer) => observer(currentMode))
     }

@@ -273,7 +273,7 @@ const projectAxisControl = (gameController) => {
     const view = dom(`
     <aside class="axis-control" data-in-charge="other">
       <div class="axis-frame">
-        <svg class="axis-rings" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <svg class="axis-rings" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="rollGradient" gradientTransform="rotate(-30 0.5 0.5)">
               <stop offset="0%" style="stop-color: var(--color-blue-500); stop-opacity: 1" />
@@ -314,23 +314,20 @@ const projectAxisControl = (gameController) => {
           </defs>
           <!-- Roll ring (outer) -->
           <g class="axis-ring" data-axis="roll">
-            <circle class="ring-track ring-track-tetromino" cx="100" cy="100" r="85" stroke="url(#rollGradient)" />
-            <circle class="ring-track ring-track-room" cx="100" cy="100" r="85" stroke="url(#rollGradientRoom)" />
-            <text class="ring-label" x="100" y="8" text-anchor="middle">Roll</text>
+            <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="110" stroke="url(#rollGradient)" />
+            <circle class="ring-track ring-track-room" cx="100" cy="100" r="110" stroke="url(#rollGradientRoom)" />
           </g>
           
           <!-- Pitch ring (middle) -->
           <g class="axis-ring" data-axis="pitch">
-            <circle class="ring-track ring-track-tetromino" cx="100" cy="100" r="65" stroke="url(#pitchGradient)" />
-            <circle class="ring-track ring-track-room" cx="100" cy="100" r="65" stroke="url(#pitchGradientRoom)" />
-            <text class="ring-label" x="100" y="28" text-anchor="middle">Pitch</text>
+            <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="80" stroke="url(#pitchGradient)" />
+            <circle class="ring-track ring-track-room" cx="100" cy="100" r="80" stroke="url(#pitchGradientRoom)" />
           </g>
           
           <!-- Yaw ring (inner) -->
           <g class="axis-ring" data-axis="yaw">
-            <circle class="ring-track ring-track-tetromino" cx="100" cy="100" r="45" stroke="url(#yawGradient)" />
-            <circle class="ring-track ring-track-room" cx="100" cy="100" r="45" stroke="url(#yawGradientRoom)" />
-            <text class="ring-label" x="100" y="48" text-anchor="middle">Yaw</text>
+            <circle class="ring-track ring-track-tetromino" cx="110" cy="110" r="50" stroke="url(#yawGradient)" />
+            <circle class="ring-track ring-track-room" cx="100" cy="100" r="50" stroke="url(#yawGradientRoom)" />
           </g>
         </svg>
       </div>
@@ -378,7 +375,7 @@ const projectAxisControl = (gameController) => {
      * @param {number} angle
      */
     const updateRingRotation = (ring, angle) => {
-        ring.setAttribute('transform', `rotate(${angle} 100 100)`)
+        ring.setAttribute('transform', `rotate(${angle} 110 110)`)
     }
 
     let dragState = null
