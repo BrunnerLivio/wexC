@@ -172,6 +172,7 @@ header {
 
 .bottom-control {
     display: flex;
+    justify-content: center;
     gap: 0.5em;
     padding: 0.5em;
 }
@@ -180,7 +181,7 @@ header {
 .start-button,
 .modal-button {
     background: none;
-    border: 2px solid aliceblue;
+    border: 1.5px solid aliceblue;
     border-radius: 0.3em;
     color: aliceblue;
     padding: 0.3em;
@@ -599,6 +600,12 @@ footer {
     z-index: -1;
 }
 
+.left-side-bottom-control {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
 .toggle-button {
     display: inline-flex;
     align-items: center;
@@ -671,6 +678,38 @@ footer {
 .toggle-button input:checked ~ .icon-wrapper .circle-face {
     background: var(--color-red-500); /* room red/pink */
     box-shadow: 0 -4px 4px 0 var(--color-purple-500) inset;
+}
+
+.fast-down-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px; /* hit target */
+    height: 64px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+}
+
+.fast-down-btn .circle-face {
+    background: #00d68f; /* default face color */
+    transition: transform 120ms ease, background 140ms ease;
+    box-shadow: 0 -4px 4px 0 var(--color-blue-500) inset;
+}
+
+.fast-down-btn .icon {
+    color: #ffffff; /* SVG stroke uses currentColor */
+    display: block;
+}
+
+/* pressed visual state (controller-driven) */
+.fast-down-btn.pressed .circle-face {
+    background: #ff3d8e; /* pressed color (tweakable) */
+    transform: translateY(1px) scale(0.985);
 }
 
 .axis-control {

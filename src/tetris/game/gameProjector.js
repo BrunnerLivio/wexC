@@ -464,6 +464,32 @@ const projectSwitchModeControl = (gameController) => {
     return view
 }
 
+const projectFastDownControl = (gameController) => {
+    const view = dom(`
+        <button class="fast-down-btn" type="button">
+            <span class="icon-wrapper">
+                <span class="circle-face"></span>
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"
+                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 4h6"
+                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+        </button>
+    `)
+
+    const btn = view[0]
+
+    gameController.fastDownController.registerPointerHandlers(btn)
+
+    gameController.fastDownController.onDirectionChanged((active) => {
+        btn.classList.toggle('pressed', active)
+    })
+
+    return view
+}
+
 const projectJoystickPositionControl = (gameController) => {
     const view = dom(`
     <aside class="joystick-position-control">
@@ -617,7 +643,7 @@ const projectStartRestart = (gameController) => {
     // Using direct property assignment (onclick) overwrites any previous listeners
     // Only the last assignment will be executed when the button is clicked
     startButton.onclick = (_) => {
-        startButton.textContent = '↩'
+        startButton.textContent = '↺'
         startButton.setAttribute('disabled', '') // double-click protection
         gameController.restart(() => {
             if (!playerController.areWeInCharge()) return
@@ -648,7 +674,10 @@ const projectLeftSideControl = (gameController) => {
     )
     const bottomControls = bottomControlView[0]
 
-    bottomControls.append(...projectSwitchModeControl(gameController))
+    bottomControls.append(
+        ...projectSwitchModeControl(gameController),
+        ...projectFastDownControl(gameController)
+    )
 
     mainElement.append(
         ...projectJoystickPositionControl(gameController),

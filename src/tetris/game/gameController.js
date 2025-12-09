@@ -37,6 +37,7 @@ import {
     toppleRollRight,
 } from '../shape/shapeController.js'
 import { SwitchModeController } from '../switchModeController/switchModeController.js'
+import { FastDownController } from '../fastDown/fastDownController.js'
 import { TetrominoController } from '../tetromino/tetrominoController.js'
 import { NO_TETROMINO } from '../tetromino/tetrominoModel.js'
 
@@ -54,6 +55,7 @@ const log = LoggerFactory('ch.fhnw.tetris.game.gameController')
  * @property restart
  * @property joystickPositionController
  * @property switchModeController
+ * @property fastDownController
  * @property axisController
  * @property setRoomRotationCallbacks
  * @property musicController
@@ -351,6 +353,7 @@ const GameController = (om) => {
     const musicController = MusicController()
     const menuController = MenuController()
     const switchModeController = SwitchModeController(om)
+    const fastDownController = FastDownController()
 
     // room rotation callbacks (will be set by projector)
     let roomRotationCallbacks = {
@@ -389,6 +392,7 @@ const GameController = (om) => {
     })
 
     joystickPositionController.onDirectionChanged((direction) => {
+        if (!playerController.areWeInCharge()) return
         switch (direction) {
             case 'up':
                 movePosition(moveBack)
@@ -402,6 +406,13 @@ const GameController = (om) => {
             case 'right':
                 movePosition(moveRight)
                 break
+        }
+    })
+
+    fastDownController.onDirectionChanged((moveFast) => {
+        if (!playerController.areWeInCharge()) return
+        if (moveFast) {
+            movePosition(moveDown)
         }
     })
 
@@ -437,6 +448,7 @@ const GameController = (om) => {
         restart,
         joystickPositionController,
         switchModeController,
+        fastDownController,
         axisController,
         setRoomRotationCallbacks,
         musicController,
