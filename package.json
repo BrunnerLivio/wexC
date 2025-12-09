@@ -1,5 +1,5 @@
 {
     "scripts": {
-        "dev": "npx live-server"
+        "dev": "echo \"🏎️ Söttsch es äuä mitm Telefon uf http://$(npx -y internal-ip-cli --ipv4):8080/src/tetris erreiche chönne\" && npx -y live-server --host=0.0.0.0"
     }
 }
