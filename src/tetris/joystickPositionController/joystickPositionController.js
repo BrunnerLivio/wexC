@@ -8,7 +8,7 @@ export { JoystickPositionController }
  * @typedef {"up" | "down" | "left" | "right" | null} JoystickDirection
  */
 
-const REPEAT_DELAY = 180
+const REPEAT_DELAY = 270
 
 const JoystickPositionController = () => {
     /** @type {Observable<JoystickDirection>} */
