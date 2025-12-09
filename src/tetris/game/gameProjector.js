@@ -646,8 +646,8 @@ const projectGameControlButtons = (gameController) => {
     const mainElement = view[0]
     mainElement.append(
         ...projectMenu(gameController),
-        ...projectMusic(gameController),
-        ...projectStartRestart(gameController)
+        ...projectStartRestart(gameController),
+        ...projectMusic(gameController)
     )
     return view
 }
@@ -668,7 +668,7 @@ const projectLeftSideControl = (gameController) => {
  */
 const projectGame = (gameController) => {
     return [
-        ...projectGameState(gameController.gameStateController),
+        ...projectGameState(gameController),
         ...projectControlPanel(gameController),
         ...projectMain(gameController),
         ...projectGameControlButtons(gameController),

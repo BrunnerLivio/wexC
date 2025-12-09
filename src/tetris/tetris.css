@@ -4,8 +4,6 @@
     --unit: 1cqmin;
     --box-width: calc(6 * var(--unit));
 
-    --background: var(--color-purple-700);
-
     --color-cyan-500: #02ffffff;
     --color-cyan-400: #9effffff;
     --color-cyan-300: #c2ffffff;
@@ -31,6 +29,8 @@
     --color-pink-400: #ff6bddff;
     --color-pink-300: #ffa4eaff;
     --color-pink-200: #ffd4f5ff;
+
+    --background: var(--color-purple-700);
 
     --joystick-size: 9em;
     --joystick-border-thickness: 0.75em;
@@ -163,6 +163,11 @@ header {
     width: 100%;
     display: flex;
     justify-content: center;
+
+    &.active {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
 }
 
 .bottom-control {
@@ -185,7 +190,6 @@ header {
     height: 2em;
     transition: all 0.2s ease;
     display: flex;
-    align-items: center;
     justify-content: center;
     line-height: 1em; /* force centering within button */
 
@@ -201,8 +205,8 @@ header {
     }
 
     &#closeModalBtn {
-        border-color: #7c0076;
-        color: #7c0076;
+        border-color: var(--background);
+        color: var(--background);
         font-size: 0.8em;
     }
 }
@@ -908,12 +912,56 @@ footer {
 
 /* Modal content box */
 .modal-content {
-    background: white;
+    background: aliceblue;
     color: black;
-    max-width: 400px;
+    max-width: 500px;
     width: 100%;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     font-size: 0.8em;
+    display: flex;
+    gap: 1em;
+    align-items: start;
+
+    .modal-right {
+        background-color: #4c1c59ab; /* transparent background value */
+        padding: 0.5em 1em;
+        border-radius: 0.5em;
+        color-scheme: dark;
+        font-size: 0.75em;
+        color: aliceblue;
+
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.3em;
+        justify-items: start;
+        align-items: center;
+
+        &.active {
+            border: 3px solid var(--background);
+        }
+
+        & input {
+            font-size: 1em;
+        }
+
+        & div.playerList {
+            padding: 0.3em 0.5em;
+            background-color: #ffffff18;
+            border-radius: 0.3em;
+
+            & ul {
+                overflow-y: scroll;
+                max-height: 5lh;
+                max-width: 10ch;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                & li {
+                    text-wrap: nowrap;
+                }
+            }
+        }
+    }
 }
