@@ -90,27 +90,44 @@
 
 html {
     overscroll-behavior: none;
-    font-family: system-ui;
+    font-family: 'Press Start 2P', system-ui;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.25em;
+}
+
+button,
+input,
+.press-start-2p-regular {
+    font-family: 'Press Start 2P', system-ui;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.25em;
 }
 
 header {
     position: fixed;
     z-index: 10;
-    inset: 1em 1em auto auto;
+    inset: 1em auto auto 1em;
     background-color: #fff2;
     padding: 0.5em 1em;
     border-radius: 0.5em;
     color: aliceblue;
     color-scheme: dark;
+    font-size: 0.75em;
 
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 0.3em;
-    justify-items: right;
+    justify-items: start;
     align-items: center;
 
     &.active {
         border: 2px solid white;
+    }
+
+    & input {
+        font-size: 1em;
     }
 
     & div.playerList {
@@ -132,7 +149,14 @@ header {
     }
 }
 
-.audio-control {
+.bottom-control {
+    display: flex;
+    gap: 0.5em;
+    padding: 0.5em;
+}
+
+.audio-control,
+.start-button {
     background: none;
     border: 2px solid aliceblue;
     border-radius: 0.3em;
@@ -140,11 +164,13 @@ header {
     padding: 0.3em;
     cursor: pointer;
     font-size: 1.2em;
-    width: 2em;
+    min-width: 2em;
     height: 2em;
-    display: grid;
-    place-items: center;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1em; /* force centering within button */
 
     &:hover {
         background-color: #ffffff18;
@@ -170,6 +196,9 @@ body {
     margin: 0;
     background: var(--color-purple-700);
     transition: background 0.5s ease-in-out;
+    font-family: 'Press Start 2P';
+    font-weight: 400;
+    font-style: normal;
 }
 
 footer {
@@ -446,6 +475,7 @@ footer {
 .joystick-border {
     position: absolute;
     stroke: var(--border-color);
+    stroke-width: 2px;
     filter: drop-shadow(0 0 4px var(--border-color));
 }
 
@@ -565,7 +595,7 @@ footer {
     height: 100%;
     border-radius: 30px;
     background: transparent;
-    border: 1px solid #eeeeee;
+    border: 2px solid #eeeeee;
     pointer-events: none;
 }
 
@@ -785,7 +815,7 @@ footer {
         left: 0;
         width: 100%;
         height: 300%;
-        animation: moveLines 20s linear infinite;
+        animation: moveLines 15s linear infinite;
     }
 
     .outrun-sun {
@@ -829,7 +859,7 @@ footer {
 
 @keyframes moveLines {
     from {
-        transform: translateY(-50%);
+        transform: translateY(-30%);
     }
     to {
         transform: translateY(0);
