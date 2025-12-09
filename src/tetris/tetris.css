@@ -965,3 +965,10 @@ footer {
         }
     }
 }
+
+/* Responsive adjustments */
+@media (max-height: 500px) {
+    header {
+        display: none;
+    }
+}

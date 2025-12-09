@@ -137,7 +137,7 @@ const AxisController = (om, dependencies) => {
             if (axis === 'roll') {
                 rotateRoomZ(delta) // Roll rotates around Z axis (barrel roll)
             } else if (axis === 'pitch') {
-                rotateRoomX(delta) // Pitch rotates around X axis (nose up/down)
+                rotateRoomX(-1 * delta) // Pitch rotates around X axis (nose up/down)
             } else if (axis === 'yaw') {
                 rotateRoomY(delta) // Yaw rotates around Y axis (turn left/right)
             }
