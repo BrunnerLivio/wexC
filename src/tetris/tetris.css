@@ -4,10 +4,13 @@
     --unit: 1cqmin;
     --box-width: calc(6 * var(--unit));
 
+    --background: var(--color-purple-700);
+
     --color-cyan-500: #02ffffff;
     --color-cyan-400: #9effffff;
     --color-cyan-300: #c2ffffff;
     --color-cyan-200: #e0ffffff;
+    --color-purple-700: #4c1c59ff;
     --color-purple-500: #8447ffff;
     --color-purple-400: #be9effff;
     --color-purple-300: #d6c2ffff;
@@ -59,6 +62,32 @@
     --axis-frame-color: #ff74d4;
 }
 
+:root {
+    &:has([data-axis='roll'].dragging) {
+        --background: #5da9ff;
+    }
+
+    &:has(.mode-room [data-axis='roll'].dragging) {
+        --background: #8447ff;
+    }
+
+    &:has([data-axis='pitch'].dragging) {
+        --background: #02ffff;
+    }
+
+    &:has(.mode-room [data-axis='pitch'].dragging) {
+        --background: #ff35d0;
+    }
+
+    &:has([data-axis='yaw'].dragging) {
+        --background: #afff02;
+    }
+
+    &:has(.mode-room [data-axis='yaw'].dragging) {
+        --background: #fb0f5a;
+    }
+}
+
 html {
     overscroll-behavior: none;
     font-family: system-ui;
@@ -75,9 +104,10 @@ header {
     color-scheme: dark;
 
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr auto;
     gap: 0.3em;
     justify-items: right;
+    align-items: center;
 
     &.active {
         border: 2px solid white;
@@ -101,6 +131,33 @@ header {
         }
     }
 }
+
+.audio-control {
+    background: none;
+    border: 2px solid aliceblue;
+    border-radius: 0.3em;
+    color: aliceblue;
+    padding: 0.3em;
+    cursor: pointer;
+    font-size: 1.2em;
+    width: 2em;
+    height: 2em;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: #ffffff18;
+        transform: scale(1.05);
+    }
+
+    &.muted {
+        opacity: 0.5;
+        border-color: #ff6b6b;
+        color: #ff6b6b;
+    }
+}
+
 li.active {
     text-decoration: underline;
 }
@@ -111,11 +168,8 @@ body {
     grid-template-columns: 100%;
     grid-template-rows: 1fr max-content;
     margin: 0;
-    /* todo! design animation for use orientation horizontal */
-    background-image: url('../../img/background/synthwave-bg.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+    background: var(--color-purple-700);
+    transition: background 0.5s ease-in-out;
 }
 
 footer {
@@ -605,27 +659,35 @@ footer {
 
 /* Drop shadows for each ring color */
 .axis-ring[data-axis='roll'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 6px var(--color-blue-500));
+    --axis-color: var(--color-blue-500);
 }
 
 .axis-ring[data-axis='roll'] .ring-track-room {
-    filter: drop-shadow(0 0 6px var(--color-purple-500));
+    --axis-color: var(--color-purple-500);
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 6px var(--color-cyan-500));
+    --axis-color: var(--color-cyan-500);
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-room {
-    filter: drop-shadow(0 0 6px var(--color-pink-500));
+    --axis-color: var(--color-pink-500);
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-tetromino {
-    filter: drop-shadow(0 0 6px var(--color-green-500));
+    --axis-color: var(--color-green-500);
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-room {
-    filter: drop-shadow(0 0 6px var(--color-red-500));
+    --axis-color: var(--color-red-500);
+}
+
+.axis-ring .ring-track-tetromino {
+    filter: drop-shadow(0 0 6px var(--axis-color));
+}
+
+.axis-ring .ring-track-room {
+    filter: drop-shadow(0 0 6px var(--axis-color));
 }
 
 /* Show tetromino gradients by default, hide room gradients */
@@ -651,4 +713,125 @@ footer {
     inset: 0;
     z-index: 999;
     pointer-events: none;
+}
+
+.outrun {
+    --height: 50vh;
+    --grid-color: lch(from var(--background) calc(l + 40) c calc(h));
+    --sunset: lch(from var(--background) calc(l + 20) c h);
+    --sun-color: lch(from var(--grid-color) 80 145 h);
+    --sun-shadow: lch(from var(--grid-color) calc(l - 20) 100 h);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+
+    .outrun-grid-perspective {
+        perspective: 1000px;
+        overflow: hidden;
+        height: var(--height);
+        position: relative;
+    }
+
+    .outrun-grid-perspective::after {
+        content: '';
+        display: block;
+        height: var(--height);
+        width: 100%;
+        position: absolute;
+        z-index: 3;
+        box-shadow: inset 0 20px 50px -20px var(--sunset);
+        top: 0;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .outrun-grid-container {
+        width: 100%;
+        height: 300%;
+        border: 2px solid var(--grid-color);
+        transition: all 0.5s ease-in-out;
+        box-sizing: border-box;
+        transform-origin: top;
+        transform: rotateX(70deg) translateY(10%);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .vert {
+        display: inline-block;
+        height: 100%;
+        width: 2px;
+        background-color: var(--grid-color);
+        transition: all 0.5s ease-in-out;
+        margin-left: 12%;
+        box-shadow: 0 2px 21px var(--grid-color);
+        margin-left: 4.5%;
+    }
+
+    .hor {
+        width: 100%;
+        height: 3px;
+        background-color: var(--grid-color);
+        box-shadow: 2px 0 21px var(--grid-color);
+        transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out,
+            box-shadow 0.5s ease-in-out;
+        margin-bottom: 4.8%;
+    }
+
+    .moving-lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 300%;
+        animation: moveLines 20s linear infinite;
+    }
+
+    .outrun-sun {
+        position: absolute;
+        bottom: var(--height);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 400px;
+        height: min(200px, var(--height));
+        background: var(--sun-color);
+        border-radius: 400px 400px 0 0;
+        opacity: 0.8;
+        transition: all 0.5s ease-in-out;
+        box-shadow: 0 0 100px var(--sun-shadow);
+        overflow: hidden;
+
+        .shimmer {
+            position: absolute;
+            background: var(--color-purple-700);
+            width: 100%;
+            opacity: 0.8;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .shimmer:nth-child(1) {
+            bottom: 5%;
+            height: 10%;
+        }
+
+        .shimmer:nth-child(2) {
+            bottom: 25%;
+            height: 5%;
+        }
+
+        .shimmer:nth-child(3) {
+            bottom: 40%;
+            height: 2%;
+        }
+    }
+}
+
+@keyframes moveLines {
+    from {
+        transform: translateY(-50%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }

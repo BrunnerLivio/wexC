@@ -106,7 +106,7 @@ const AxisController = (om, dependencies) => {
     const playClickSound = () => {
         console.log('play click sound')
         const audio = new Audio('/sounds/click.wav')
-        audio.volume = 0.2
+        audio.volume = 0.5 // ensure click sounds are audible when music plays
         audio.play()
     }
 

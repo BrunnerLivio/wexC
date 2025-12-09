@@ -103,11 +103,7 @@ const projectMain = (gameController) => {
                 <!--    tetrominos to be added here -->
             </div>
         </main>
-        <footer>
-            Use mouse or touch to rotate the coords.
-            Arrow keys to move the tetromino.
-            Shift + arrow keys to rotate.
-        </footer>`)
+        `)
 
     // view binding
     const main = mainElements[0]
@@ -589,6 +585,44 @@ const projectJoystickPositionControl = (gameController) => {
     return view
 }
 
+const projectMusic = (gameController) => {
+    const view = dom(`
+      <div>
+        <button class="audio-control" title="Toggle Music">🎵</button>
+        <audio id="background-music" loop>
+            <source src="/sounds/music.mp3" type="audio/mpeg">
+        </audio>
+        </div>`)
+
+    const mainElement = view[0]
+    const [audioButton] = select(mainElement, '.audio-control')
+    const [audio] = select(mainElement, 'audio')
+
+    // Audio control functionality
+    const musicController = gameController.musicController
+
+    musicController.onMute(() => {
+        audio.pause()
+        audioButton.classList.add('muted')
+        audioButton.textContent = '🔇'
+    })
+
+    musicController.onPlay(() => {
+        audio.play().catch((e) => console.log('Audio play failed:', e))
+        audioButton.classList.remove('muted')
+        audioButton.textContent = '🎵'
+    })
+
+    // Set audio volume to a reasonable level
+    audio.volume = 0.2
+
+    audioButton.onclick = () => {
+        musicController.toggle()
+    }
+
+    return view
+}
+
 const projectLeftSideControl = (gameController) => {
     const view = dom(`<aside class="left-side-control"></aside>`)
     const mainElement = view[0]
@@ -607,6 +641,7 @@ const projectGame = (gameController) => {
     return [
         ...projectControlPanel(gameController),
         ...projectMain(gameController),
+        ...projectMusic(gameController),
         ...projectControlPanel(gameController),
         ...projectLeftSideControl(gameController),
         ...projectAxisControl(gameController),
