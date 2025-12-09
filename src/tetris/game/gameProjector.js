@@ -614,7 +614,7 @@ const projectMusic = (gameController) => {
     })
 
     // Set audio volume to a reasonable level
-    audio.volume = 0.3
+    audio.volume = 0.2
 
     audioButton.onclick = () => {
         musicController.toggle()
