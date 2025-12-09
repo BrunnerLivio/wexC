@@ -659,27 +659,27 @@ footer {
 
 /* Drop shadows for each ring color */
 .axis-ring[data-axis='roll'] .ring-track-tetromino {
-    --axis-color: #5da9ff;
+    --axis-color: var(--color-blue-500);
 }
 
 .axis-ring[data-axis='roll'] .ring-track-room {
-    --axis-color: #8447ff;
+    --axis-color: var(--color-purple-500);
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-tetromino {
-    --axis-color: #02ffff;
+    --axis-color: var(--color-cyan-500);
 }
 
 .axis-ring[data-axis='pitch'] .ring-track-room {
-    --axis-color: #ff35d0;
+    --axis-color: var(--color-pink-500);
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-tetromino {
-    --axis-color: #afff02;
+    --axis-color: var(--color-green-500);
 }
 
 .axis-ring[data-axis='yaw'] .ring-track-room {
-    --axis-color: #fb0f5a;
+    --axis-color: var(--color-red-500);
 }
 
 .axis-ring .ring-track-tetromino {
