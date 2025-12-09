@@ -68,7 +68,7 @@ const projectMain = (gameController) => {
             <div class="coords" style="
                     --coords-rotate-x:  85;
                     --coords-rotate-y: -15;
-                    top:                75cqh;
+                    top:                70cqh;
                     left:               45cqw;
             ">
                 <div class="floor">

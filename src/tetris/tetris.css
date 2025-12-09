@@ -486,6 +486,7 @@ footer {
     display: grid;
     place-items: center;
     filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.25));
+    -webkit-filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.25));
     cursor: grab;
     pointer-events: auto;
     transition: transform 0.18s ease;
@@ -504,6 +505,7 @@ footer {
     stroke: var(--border-color);
     stroke-width: 2px;
     filter: drop-shadow(0 0 4px var(--border-color));
+    -webkit-filter: drop-shadow(0 0 4px var(--border-color));
 }
 
 .joystick-border-up {
@@ -741,10 +743,12 @@ footer {
 
 .axis-ring .ring-track-tetromino {
     filter: drop-shadow(0 0 6px var(--axis-color));
+    -webkit-filter: drop-shadow(0 0 6px var(--axis-color));
 }
 
 .axis-ring .ring-track-room {
     filter: drop-shadow(0 0 6px var(--axis-color));
+    -webkit-filter: drop-shadow(0 0 6px var(--axis-color));
 }
 
 /* Show tetromino gradients by default, hide room gradients */
@@ -970,5 +974,10 @@ footer {
 @media (max-height: 500px) {
     header {
         display: none;
+    }
+
+    .left-side-control {
+        transform: scale(0.8) translateY(-50%);
+        left: 1em;
     }
 }
