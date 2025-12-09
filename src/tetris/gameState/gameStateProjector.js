@@ -11,7 +11,7 @@ const log = LoggerFactory('ch.fhnw.tetris.gameState.gameStateProjector')
  */
 const projectGameState = (gameStateController) => {
     const view = dom(`
-        <div>score: <span class="score">0</span></div>
+        <div class="score-container">score: <span class="score">0</span></div>
     `)
     const scoreDiv = view[0]
 
@@ -21,7 +21,8 @@ const projectGameState = (gameStateController) => {
         /** @type { import('./gameStateModel.js').GameStateModelType } */ (
             gameState
         ) => {
-            scoreDiv.children[0].textContent = gameState.score
+            const padded = String(gameState.score).padStart(3, '0')
+            scoreDiv.children[0].textContent = padded
         }
     )
 

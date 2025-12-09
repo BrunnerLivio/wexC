@@ -149,6 +149,18 @@ header {
     }
 }
 
+.score-container {
+    position: fixed;
+    z-index: 10;
+    padding: 0.5em;
+    color: aliceblue;
+    color-scheme: dark;
+    font-size: 0.85em;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .bottom-control {
     display: flex;
     gap: 0.5em;

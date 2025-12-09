@@ -25,8 +25,6 @@ const projectControlPanel = (gameController) => {
 
     const playerController = gameController.playerController
     header.append(...projectPlayerList(playerController))
-    header.prepend(...dom('<div></div>'))
-    header.prepend(...projectGameState(gameController.gameStateController))
 
     const [selfInput] = select(header, 'div.self input')
 
@@ -668,6 +666,7 @@ const projectLeftSideControl = (gameController) => {
  */
 const projectGame = (gameController) => {
     return [
+        ...projectGameState(gameController.gameStateController),
         ...projectControlPanel(gameController),
         ...projectMain(gameController),
         ...projectGameControlButtons(gameController),
