@@ -437,37 +437,24 @@ const projectAxisControl = (gameController) => {
 
 const projectSwitchModeControl = (gameController) => {
     const view = dom(`
-      <label class="switch" title="Switch mode" for="mode-switch">
-        <input type="checkbox" id="mode-switch" aria-label="Switch mode">
-        <span class="track"></span>
+        <label class="toggle-button" aria-label="Toggle mode">
+            <input type="checkbox" aria-hidden="false" />
 
-        <!-- moving round dot that shows only one SVG at a time -->
-        <span class="dot">
-          <!-- left icon (green) -->
-          <svg class="icon icon-left"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 45 45"
-              preserveAspectRatio="xMidYMid slice"
-              aria-hidden="true">
-            <circle cx="22.5" cy="22.5" r="22.5" fill="#AFFF02"/>
-            <g transform="matrix(0.6 0 0 0.6 0 3)">
-              <path d="M56 43C56 43.76 55.58 44.42 54.94 44.76L39.14 53.64C38.82 53.88 38.42 54 38 54C37.58 54 37.18 53.88 36.86 53.64L21.06 44.76C20.42 44.42 20 43.76 20 43V25C20 24.24 20.42 23.58 21.06 23.24L36.86 14.36C37.18 14.12 37.58 14 38 14C38.42 14 38.82 14.12 39.14 14.36L54.94 23.24C55.58 23.58 56 24.24 56 25V43ZM26.08 25L38 31.7L49.92 25L38 18.3L26.08 25ZM24 41.82L36 48.58V35.16L24 28.42V41.82ZM52 41.82V28.42L40 35.16V48.58L52 41.82Z" fill="white"/>
-            </g>
-          </svg>
+            <!-- visible UI: white ring + inner colored face + svg glyphs -->
+            <span class="icon-wrapper" aria-hidden="true">
+                <span class="circle-face"></span>
 
-          <!-- right icon (red). viewbox needs to correspond to --switch-width and the cx of the circle to half that -->
-          <svg class="icon icon-right"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 140 45"
-              preserveAspectRatio="xMidYMid slice"
-              aria-hidden="true">
-            <circle cx="70" cy="22.5" r="22.5" fill="#FB0F5A"/>
-            <g transform="matrix(0.6 0 0 0.6 -6 3)">
-              <path d="M147 25C147 24.24 146.58 23.58 145.94 23.24L130.14 14.36C129.82 14.12 129.42 14 129 14C128.58 14 128.18 14.12 127.86 14.36L112.06 23.24C111.42 23.58 111 24.24 111 25V43C111 43.76 111.42 44.42 112.06 44.76L127.86 53.64C128.18 53.88 128.58 54 129 54C129.42 54 129.82 53.88 130.14 53.64L145.94 44.76C146.58 44.42 147 43.76 147 43V25ZM115 26.18L127 19.42V32.84L115 39.58V26.18ZM143 26.18V39.58L131 32.84V19.42L143 26.18Z" fill="white"/>
-            </g>
-          </svg>
-        </span>
-      </label>
+                <!-- LEFT (green) - original SVG content -->
+                <svg class="icon icon-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 40" aria-hidden="true">
+                <path d="M36 29C36 29.76 35.58 30.42 34.94 30.76L19.14 39.64C18.82 39.88 18.42 40 18 40C17.58 40 17.18 39.88 16.86 39.64L1.06 30.76C0.42 30.42 0 29.76 0 29V11C0 10.24 0.42 9.58 1.06 9.24L16.86 0.36C17.18 0.12 17.58 0 18 0C18.42 0 18.82 0.12 19.14 0.36L34.94 9.24C35.58 9.58 36 10.24 36 11V29ZM6.08 11L18 17.7L29.92 11L18 4.3L6.08 11ZM4 27.82L16 34.58V21.16L4 14.42V27.82ZM32 27.82V14.42L20 21.16V34.58L32 27.82Z" fill="white"/>
+                </svg>
+
+                <!-- RIGHT (red) - original SVG content -->
+                <svg class="icon icon-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 40" aria-hidden="true">
+                <path d="M36 11C36 10.24 35.58 9.58 34.94 9.24L19.14 0.360001C18.82 0.119999 18.42 0 18 0C17.58 0 17.18 0.119999 16.86 0.360001L1.06 9.24C0.42 9.58 0 10.24 0 11V29C0 29.76 0.42 30.42 1.06 30.76L16.86 39.64C17.18 39.88 17.58 40 18 40C18.42 40 18.82 39.88 19.14 39.64L34.94 30.76C35.58 30.42 36 29.76 36 29V11ZM4 12.18L16 5.42V18.84L4 25.58V12.18ZM32 12.18V25.58L20 18.84V5.42L32 12.18Z" fill="white"/>
+                </svg>
+            </span>
+        </label>
     `)
 
     const elements = Array.from(view)
@@ -655,10 +642,19 @@ const projectGameControlButtons = (gameController) => {
 const projectLeftSideControl = (gameController) => {
     const view = dom(`<aside class="left-side-control"></aside>`)
     const mainElement = view[0]
+
+    const bottomControlView = dom(
+        '<div class="left-side-bottom-control"></div>'
+    )
+    const bottomControls = bottomControlView[0]
+
+    bottomControls.append(...projectSwitchModeControl(gameController))
+
     mainElement.append(
         ...projectJoystickPositionControl(gameController),
-        ...projectSwitchModeControl(gameController)
+        bottomControls
     )
+
     return view
 }
 
