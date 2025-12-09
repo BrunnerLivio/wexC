@@ -3,6 +3,7 @@ import { LoggerFactory } from '../../kolibri/logger/loggerFactory.js'
 import '../../kolibri/util/array.js'
 import { dom, select } from '../../kolibri/util/dom.js'
 import { projectGameState } from '../gameState/gameStateProjector.js'
+import { projectMenu } from '../menu/menuProjector.js'
 import { projectPlayerList } from '../player/playerProjector.js'
 import { registerForMouseAndTouch } from '../scene3D/scene.js'
 
@@ -644,6 +645,7 @@ const projectGameControlButtons = (gameController) => {
     const view = dom(`<div class="bottom-control"></div>`)
     const mainElement = view[0]
     mainElement.append(
+        ...projectMenu(gameController),
         ...projectMusic(gameController),
         ...projectStartRestart(gameController)
     )

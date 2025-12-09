@@ -105,6 +105,10 @@ input,
     line-height: 1.25em;
 }
 
+button {
+    cursor: pointer;
+}
+
 header {
     position: fixed;
     z-index: 10;
@@ -168,7 +172,8 @@ header {
 }
 
 .audio-control,
-.start-button {
+.start-button,
+.modal-button {
     background: none;
     border: 2px solid aliceblue;
     border-radius: 0.3em;
@@ -193,6 +198,12 @@ header {
         opacity: 0.5;
         border-color: #ff6b6b;
         color: #ff6b6b;
+    }
+
+    &#closeModalBtn {
+        border-color: #7c0076;
+        color: #7c0076;
+        font-size: 0.8em;
     }
 }
 
@@ -876,4 +887,33 @@ footer {
     to {
         transform: translateY(0);
     }
+}
+
+/* Overlay */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none; /* hidden by default */
+    align-items: center; /* center content */
+    justify-content: center;
+    padding: 20px; /* easy breathing room on mobile */
+    z-index: 9999;
+}
+
+/* When visible */
+.modal.show {
+    display: flex;
+}
+
+/* Modal content box */
+.modal-content {
+    background: white;
+    color: black;
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    font-size: 0.8em;
 }
