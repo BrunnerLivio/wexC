@@ -12,7 +12,7 @@ const projectGameState = (gameController) => {
         <div class="score-container">score: <span class="score">0</span></div>
     `)
     const scoreContainerDiv = view[0]
-    const scoreText = select(scoreContainerDiv, '.score')
+    const [scoreText] = select(scoreContainerDiv, '.score')
 
     // data binding
 

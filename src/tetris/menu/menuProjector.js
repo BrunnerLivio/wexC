@@ -38,8 +38,6 @@ const projectMenu = (gameController) => {
     const modal = view[1]
     const [closeButton] = select(modal, '#closeModalBtn')
 
-    console.log(button, openButton, modal, closeButton)
-
     // Menu Control
     const menuController = gameController.menuController
 
