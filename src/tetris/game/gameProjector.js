@@ -3,6 +3,7 @@ import { LoggerFactory } from '../../kolibri/logger/loggerFactory.js'
 import '../../kolibri/util/array.js'
 import { dom, select } from '../../kolibri/util/dom.js'
 import { projectGameState } from '../gameState/gameStateProjector.js'
+import { projectMenu } from '../menu/menuProjector.js'
 import { projectPlayerList } from '../player/playerProjector.js'
 import { registerForMouseAndTouch } from '../scene3D/scene.js'
 
@@ -19,27 +20,17 @@ const projectControlPanel = (gameController) => {
     const view = dom(`
     <header>
         <div class="self"><input size=10></div>
-        <button disabled>Start/Restart</button>
     </header>`)
 
     const [header] = view
 
     const playerController = gameController.playerController
     header.append(...projectPlayerList(playerController))
-    header.append(...projectGameState(gameController.gameStateController))
 
     const [selfInput] = select(header, 'div.self input')
-    const [startButton] = select(header, 'button')
 
     // data binding
 
-    playerController.onActivePlayerIdChanged((_) => {
-        if (playerController.areWeInCharge()) {
-            startButton.removeAttribute('disabled')
-        } else {
-            startButton.setAttribute('disabled', '')
-        }
-    })
     playerController.onActivePlayerIdChanged((_) => {
         if (playerController.areWeInCharge()) {
             header.classList.add('active')
@@ -60,16 +51,6 @@ const projectControlPanel = (gameController) => {
         playerController.setOwnName(selfInput.value)
     }
 
-    // Using direct property assignment (onclick) overwrites any previous listeners
-    // Only the last assignment will be executed when the button is clicked
-    startButton.onclick = (_) => {
-        startButton.setAttribute('disabled', '') // double-click protection
-        gameController.restart(() => {
-            if (!playerController.areWeInCharge()) return
-            startButton.removeAttribute('disabled')
-        })
-    }
-
     return view
 }
 
@@ -87,7 +68,8 @@ const projectMain = (gameController) => {
             <div class="coords" style="
                     --coords-rotate-x:  85;
                     --coords-rotate-y: -15;
-                    top:                60cqh;
+                    top:                70cqh;
+                    left:               45cqw;
             ">
                 <div class="floor">
                     <div class="toplight"></div>
@@ -623,6 +605,53 @@ const projectMusic = (gameController) => {
     return view
 }
 
+const projectStartRestart = (gameController) => {
+    const view = dom(`
+      <div>
+        <button class="start-button" title="Start / Restart">▶</button>
+      </div>`)
+
+    const mainElement = view[0]
+    const [startButton] = select(mainElement, '.start-button')
+
+    // data binding
+
+    const playerController = gameController.playerController
+    playerController.onActivePlayerIdChanged((_) => {
+        if (playerController.areWeInCharge()) {
+            startButton.classList.remove('muted')
+            startButton.removeAttribute('disabled')
+        } else {
+            startButton.classList.add('muted')
+            startButton.setAttribute('disabled', '')
+        }
+    })
+
+    // Using direct property assignment (onclick) overwrites any previous listeners
+    // Only the last assignment will be executed when the button is clicked
+    startButton.onclick = (_) => {
+        startButton.textContent = '↩'
+        startButton.setAttribute('disabled', '') // double-click protection
+        gameController.restart(() => {
+            if (!playerController.areWeInCharge()) return
+            startButton.removeAttribute('disabled')
+        })
+    }
+
+    return view
+}
+
+const projectGameControlButtons = (gameController) => {
+    const view = dom(`<div class="bottom-control"></div>`)
+    const mainElement = view[0]
+    mainElement.append(
+        ...projectMenu(gameController),
+        ...projectStartRestart(gameController),
+        ...projectMusic(gameController)
+    )
+    return view
+}
+
 const projectLeftSideControl = (gameController) => {
     const view = dom(`<aside class="left-side-control"></aside>`)
     const mainElement = view[0]
@@ -639,9 +668,10 @@ const projectLeftSideControl = (gameController) => {
  */
 const projectGame = (gameController) => {
     return [
+        ...projectGameState(gameController),
         ...projectControlPanel(gameController),
         ...projectMain(gameController),
-        ...projectMusic(gameController),
+        ...projectGameControlButtons(gameController),
         ...projectControlPanel(gameController),
         ...projectLeftSideControl(gameController),
         ...projectAxisControl(gameController),

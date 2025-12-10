@@ -1,27 +1,39 @@
-import { dom } from '../../kolibri/util/dom.js'
+import { dom, select } from '../../kolibri/util/dom.js'
 import { LoggerFactory } from '../../kolibri/logger/loggerFactory.js'
 
 export { projectGameState }
 
-const log = LoggerFactory('ch.fhnw.tetris.gameState.gameStateProjector')
-
 /**
- * @param { GameStateControllerType } gameStateController
+ * @param { import('../game/gameController.js').GameControllerType } gameController
  * @return { HTMLCollection }
  */
-const projectGameState = (gameStateController) => {
+const projectGameState = (gameController) => {
     const view = dom(`
-        <div class="score">0</div>
+        <div class="score-container">score: <span class="score">0</span></div>
     `)
-    const scoreDiv = view[0]
+    const scoreContainerDiv = view[0]
+    const scoreText = select(scoreContainerDiv, '.score')
 
     // data binding
 
+    const gameStateController = gameController.gameStateController
     gameStateController.onGameStateChanged(
-        /** @type { GameStateModelType } */ (gameState) => {
-            scoreDiv.textContent = gameState.score
+        /** @type { import('./gameStateModel.js').GameStateModelType } */ (
+            gameState
+        ) => {
+            const padded = String(gameState.score).padStart(3, '0')
+            scoreText.textContent = padded
         }
     )
+
+    const playerController = gameController.playerController
+    playerController.onActivePlayerIdChanged((_) => {
+        if (playerController.areWeInCharge()) {
+            scoreContainerDiv.classList.add('active')
+        } else {
+            scoreContainerDiv.classList.remove('active')
+        }
+    })
 
     return view
 }

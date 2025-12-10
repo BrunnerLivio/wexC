@@ -4,8 +4,6 @@
     --unit: 1cqmin;
     --box-width: calc(6 * var(--unit));
 
-    --background: var(--color-purple-700);
-
     --color-cyan-500: #02ffffff;
     --color-cyan-400: #9effffff;
     --color-cyan-300: #c2ffffff;
@@ -31,6 +29,8 @@
     --color-pink-400: #ff6bddff;
     --color-pink-300: #ffa4eaff;
     --color-pink-200: #ffd4f5ff;
+
+    --background: var(--color-purple-700);
 
     --joystick-size: 9em;
     --joystick-border-thickness: 0.75em;
@@ -90,27 +90,48 @@
 
 html {
     overscroll-behavior: none;
-    font-family: system-ui;
+    font-family: 'Press Start 2P', system-ui;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.25em;
+}
+
+button,
+input,
+.press-start-2p-regular {
+    font-family: 'Press Start 2P', system-ui;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.25em;
+}
+
+button {
+    cursor: pointer;
 }
 
 header {
     position: fixed;
     z-index: 10;
-    inset: 1em 1em auto auto;
+    inset: 1em auto auto 1em;
     background-color: #fff2;
     padding: 0.5em 1em;
     border-radius: 0.5em;
     color: aliceblue;
     color-scheme: dark;
+    font-size: 0.75em;
 
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 0.3em;
-    justify-items: right;
+    justify-items: start;
     align-items: center;
 
     &.active {
         border: 2px solid white;
+    }
+
+    & input {
+        font-size: 1em;
     }
 
     & div.playerList {
@@ -132,7 +153,32 @@ header {
     }
 }
 
-.audio-control {
+.score-container {
+    position: fixed;
+    z-index: 10;
+    padding: 0.5em;
+    color: aliceblue;
+    color-scheme: dark;
+    font-size: 0.85em;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    &.active {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+}
+
+.bottom-control {
+    display: flex;
+    gap: 0.5em;
+    padding: 0.5em;
+}
+
+.audio-control,
+.start-button,
+.modal-button {
     background: none;
     border: 2px solid aliceblue;
     border-radius: 0.3em;
@@ -140,11 +186,12 @@ header {
     padding: 0.3em;
     cursor: pointer;
     font-size: 1.2em;
-    width: 2em;
+    min-width: 2em;
     height: 2em;
-    display: grid;
-    place-items: center;
     transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    line-height: 1em; /* force centering within button */
 
     &:hover {
         background-color: #ffffff18;
@@ -155,6 +202,12 @@ header {
         opacity: 0.5;
         border-color: #ff6b6b;
         color: #ff6b6b;
+    }
+
+    &#closeModalBtn {
+        border-color: var(--background);
+        color: var(--background);
+        font-size: 0.8em;
     }
 }
 
@@ -170,6 +223,9 @@ body {
     margin: 0;
     background: var(--color-purple-700);
     transition: background 0.5s ease-in-out;
+    font-family: 'Press Start 2P';
+    font-weight: 400;
+    font-style: normal;
 }
 
 footer {
@@ -430,6 +486,7 @@ footer {
     display: grid;
     place-items: center;
     filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.25));
+    -webkit-filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.25));
     cursor: grab;
     pointer-events: auto;
     transition: transform 0.18s ease;
@@ -446,7 +503,9 @@ footer {
 .joystick-border {
     position: absolute;
     stroke: var(--border-color);
+    stroke-width: 2px;
     filter: drop-shadow(0 0 4px var(--border-color));
+    -webkit-filter: drop-shadow(0 0 4px var(--border-color));
 }
 
 .joystick-border-up {
@@ -565,7 +624,7 @@ footer {
     height: 100%;
     border-radius: 30px;
     background: transparent;
-    border: 1px solid #eeeeee;
+    border: 2px solid #eeeeee;
     pointer-events: none;
 }
 
@@ -684,10 +743,12 @@ footer {
 
 .axis-ring .ring-track-tetromino {
     filter: drop-shadow(0 0 6px var(--axis-color));
+    -webkit-filter: drop-shadow(0 0 6px var(--axis-color));
 }
 
 .axis-ring .ring-track-room {
     filter: drop-shadow(0 0 6px var(--axis-color));
+    -webkit-filter: drop-shadow(0 0 6px var(--axis-color));
 }
 
 /* Show tetromino gradients by default, hide room gradients */
@@ -785,7 +846,7 @@ footer {
         left: 0;
         width: 100%;
         height: 300%;
-        animation: moveLines 20s linear infinite;
+        animation: moveLines 15s linear infinite;
     }
 
     .outrun-sun {
@@ -829,9 +890,94 @@ footer {
 
 @keyframes moveLines {
     from {
-        transform: translateY(-50%);
+        transform: translateY(-30%);
     }
     to {
         transform: translateY(0);
+    }
+}
+
+/* Overlay */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none; /* hidden by default */
+    align-items: center; /* center content */
+    justify-content: center;
+    padding: 20px; /* easy breathing room on mobile */
+    z-index: 9999;
+}
+
+/* When visible */
+.modal.show {
+    display: flex;
+}
+
+/* Modal content box */
+.modal-content {
+    background: aliceblue;
+    color: black;
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    font-size: 0.8em;
+    display: flex;
+    gap: 1em;
+    align-items: start;
+
+    .modal-right {
+        background-color: #4c1c59ab; /* transparent background value */
+        padding: 0.5em 1em;
+        border-radius: 0.5em;
+        color-scheme: dark;
+        font-size: 0.75em;
+        color: aliceblue;
+
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.3em;
+        justify-items: start;
+        align-items: center;
+
+        &.active {
+            border: 3px solid var(--background);
+        }
+
+        & input {
+            font-size: 1em;
+        }
+
+        & div.playerList {
+            padding: 0.3em 0.5em;
+            background-color: #ffffff18;
+            border-radius: 0.3em;
+
+            & ul {
+                overflow-y: scroll;
+                max-height: 5lh;
+                max-width: 10ch;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                & li {
+                    text-wrap: nowrap;
+                }
+            }
+        }
+    }
+}
+
+/* Responsive adjustments */
+@media (max-height: 500px) {
+    header {
+        display: none;
+    }
+
+    .left-side-control {
+        transform: scale(0.8) translateY(-50%);
+        left: 1em;
     }
 }
