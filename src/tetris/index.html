@@ -17,29 +17,15 @@
         />
     </head>
     <body>
-        <button
-            id="startButton"
-            onclick="init()"
-            style="
-                font-size: 250%;
-                font-weight: bold;
-                border: 2px solid cyan;
-                box-shadow: 0 0 10px 0 cyan;
-                border-radius: 0.5em;
-                place-self: center;
-                padding: 1em 3em;
-                margin: 0 1em;
-                background-color: #fff2;
-                color: white;
-            "
-        >
-            Join the 3D Tetris
-        </button>
+        <div class="start-screen" id="startMenu" onclick="init()">
+            <h1>Meronimo</h1>
+            <button id="startButton">Join the 3D Tetris</button>
+        </div>
 
         <script>
             // we need the join button to prevent Safari from pre-rendering, which would create an additional user
             function init() {
-                startButton.remove()
+                startMenu.remove()
                 import('./startRemote.js')
             }
         </script>
