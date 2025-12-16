@@ -85,6 +85,19 @@ const projectMenu = (gameController) => {
         modal.classList.remove('show')
         modal.setAttribute('aria-hidden', 'true')
         document.body.style.overflow = '' // restore scroll
+        
+        // Auto-start the game when modal is closed
+        // Use setTimeout to avoid double-ticking by ensuring takeCharge completes first
+        setTimeout(() => {
+            if (!gameController.playerController.areWeInCharge()) {
+                gameController.playerController.takeCharge()
+            }
+            setTimeout(() => {
+                gameController.restart(() => {
+                    console.log('Game auto-started after modal close')
+                })
+            }, 100) // Small delay to ensure takeCharge is processed
+        }, 0)
     }
 }
 

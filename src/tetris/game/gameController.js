@@ -200,6 +200,7 @@ const GameController = (om) => {
      * Principle game loop implementation: let the current tetromino fall down slowly and check for the end of the game.
      */
     const fallTask = () => {
+        fallTimeoutId = null // clear the timeout id since we're now executing
         if (!playerController.areWeInCharge()) {
             log.info('stop falling since we are not in charge')
             currentlyFalling = false
@@ -216,13 +217,16 @@ const GameController = (om) => {
         registerNextFallTask()
     }
 
+    let fallTimeoutId = null // track the timeout to prevent duplicates
+    
     const registerNextFallTask = () => {
-        if (currentlyFalling) {
-            // we already fall => avoid falling twice
+        if (currentlyFalling || fallTimeoutId !== null) {
+            // we already fall or have a pending fall task => avoid falling twice
+            console.log('registerNextFallTask: already falling or timeout pending, skipping')
             return
         }
         currentlyFalling = true
-        setTimeout(fallTask, 1 * 1000)
+        fallTimeoutId = setTimeout(fallTask, 1 * 1000)
     }
 
     const isDisallowedBoxPosition = ({ xPos, yPos }) => {
